@@ -1,0 +1,3 @@
+spring:
+  application:
+    name: beer_pet_project
