@@ -1,0 +1,22 @@
+databaseChangeLog:
+  - changeSet:
+      id: roles-table
+      author: Alexey Savchic
+      changes:
+        - createTable:
+            tableName: roles
+            columns:
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: user_foreign_key
+                    referencedTableName: users
+                    referencedColumnNames: id
+                    onDelete: cascade
+              - column:
+                  name: role
+                  type: varchar(20)
+                  constraints:
+                    nullable: false

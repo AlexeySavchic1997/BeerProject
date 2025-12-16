@@ -1,0 +1,26 @@
+databaseChangeLog:
+  - changeSet:
+      id: warehouse-beer-info-table
+      author: Alexey Savchic
+      changes:
+        - createTable:
+            tableName: warehouse_beer_info
+            columns:
+              - column:
+                  name: beer_id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    foreignKeyName: warehouse_beer_info_foreign_key
+                    referencedTableName: beers
+                    referencedColumnNames: id
+              - column:
+                  name: zone
+                  type: varchar(20)
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: amount
+                  type: integer
+                  constraints:
+                    nullable: false

@@ -1,0 +1,32 @@
+databaseChangeLog:
+  - changeSet:
+      id: subscription-table
+      author: Alexey Savchic
+      changes:
+        - createTable:
+            tableName: subscription
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: beer_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: subscription_beer_foreign_key
+                    referencedTableName: beers
+                    referencedColumnNames: id
+              - column:
+                  name: time_of_expiration
+                  type: timestamp without time zone
+                  constraints:
+                    nullable: false
+              - column:
+                  name: type_of_subscribe
+                  type: varchar(20)
+                  constraints:
+                    nullable: false

@@ -1,0 +1,27 @@
+databaseChangeLog:
+  - changeSet:
+      id: order-item-table
+      author: Alexey Savchic
+      changes:
+        - createTable:
+            tableName: order_item
+            columns:
+              - column:
+                  name: order_id
+                  type: bigint
+                  autoIncrement: false
+                  constraints:
+                    primaryKey: true
+                    foreignKeyName: order_foreign_key
+                    onDelete: cascade
+                    referencedTableName: orders
+                    referencedColumnNames: id
+              - column:
+                  name: beer_id
+                  type: bigint
+                  autoIncrement: false
+                  constraints:
+                    primaryKey: true
+                    foreignKeyName: beer_foreign_key
+                    referencedTableName: beers
+                    referencedColumnNames: id
