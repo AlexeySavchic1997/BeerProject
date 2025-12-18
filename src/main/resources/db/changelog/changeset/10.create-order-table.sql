@@ -4,6 +4,6 @@ create table orders
 (
 id serial primary key,
 user_id integer references users (id) on delete cascade not null,
-date date not null,
-summary_price integer not null
+order_date timestamp without time zone not null,
+summary_price integer check (summary_price>=0) not null
 );

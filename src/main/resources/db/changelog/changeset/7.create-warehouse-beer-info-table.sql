@@ -1,9 +1,10 @@
 --liquibase formatted sql
 --changeset Alexey Savchic:warehouse-beer-info-table
+create type zone_type AS ENUM ('shipment', 'booked', 'sorting', 'unloading');
 create table warehouse_beer_info
 (
 beer_id integer references beers (id),
-zone varchar(20),
+zone zone_type not null,
 amount integer not null,
 primary key (beer_id, zone)
 );
