@@ -5,6 +5,6 @@ create table warehouse_beer_info
 (
 beer_id integer references beers (id),
 zone zone_type not null,
-amount integer not null,
+amount integer check(amount>=0) not null,
 primary key (beer_id, zone)
 );
