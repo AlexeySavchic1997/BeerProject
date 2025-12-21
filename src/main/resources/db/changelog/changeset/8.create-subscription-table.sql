@@ -1,9 +1,8 @@
 --liquibase formatted sql
 --changeset Alexey Savchic:subscription-table
+create type type_of_subscription AS ENUM ('Beer of the mounth', 'Your favorite beer');
 create table subscription
 (
-id serial primary key,
-beer_id integer references beers (id) not null,
-time_of_expiration timestamp without time zone not null,
-type_of_subscribe varchar(20) not null
+subscription_type type_of_subscription primary key,
+discription text
 );
