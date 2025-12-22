@@ -4,8 +4,8 @@ create table beer
 (
 id serial primary key,
 name varchar(20) not null,
-discription text,
-volume smallint check (volume>0) not null,
+description text,
+volume real check (volume>0) not null,
 price integer check (price>0) not null,
 brand_id integer references beer_brand (id) on delete cascade not null
 );
