@@ -6,11 +6,11 @@ databaseChangeLog:
   - include:
       file: db/changelog/changeset/3.create-beer-brand-table.sql
   - include:
-      file: db/changelog/changeset/4.create-beers-table.sql
+      file: db/changelog/changeset/4.create-beer-table.sql
   - include:
       file: db/changelog/changeset/5.create-beer-of-the-month-table.sql
   - include:
-      file: db/changelog/changeset/6.create-beer-characteristics-table.sql
+      file: db/changelog/changeset/6.create-beer-characteristic-table.sql
   - include:
       file: db/changelog/changeset/7.create-warehouse-beer-info-table.sql
   - include:
@@ -18,6 +18,6 @@ databaseChangeLog:
   - include:
       file: db/changelog/changeset/9.create-user-subscription-table.sql
   - include:
-      file: db/changelog/changeset/10.create-order-table.sql
+      file: db/changelog/changeset/10.create-orders-table.sql
   - include:
       file: db/changelog/changeset/11.create-order-item-table.sql

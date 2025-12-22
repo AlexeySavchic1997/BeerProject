@@ -1,6 +1,6 @@
 --liquibase formatted sql
---changeset Alexey Savchic:beers-table
-create table beers
+--changeset Alexey Savchic:beer-table
+create table beer
 (
 id serial primary key,
 name varchar(20) not null,

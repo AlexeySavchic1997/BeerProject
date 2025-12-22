@@ -3,7 +3,7 @@
 create type zone_type AS ENUM ('shipment', 'booked', 'sorting', 'unloading');
 create table warehouse_beer_info
 (
-beer_id integer references beers (id),
+beer_id integer references beer (id),
 zone zone_type not null,
 amount integer check(amount>=0) not null,
 primary key (beer_id, zone)
