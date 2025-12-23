@@ -1,41 +1,56 @@
 package by.alexeysavchic.beer_pet_project.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import java.util.List;
 
-import java.util.EnumMap;
-import java.util.HashMap;
-@Entity
-@Table(name = "beer")
 @Getter
 @Setter
 @NoArgsConstructor
+@Entity
+@Table(name = "beer")
 public class Beer
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     Integer id;
+
     @Column(name = "name")
+    @Size(min = 2, max = 20, message = "beer name must be between 2 and 20 symbols")
+    @NotBlank
     String name;
+
     @Column(name = "description")
     String description;
+
     @Column(name = "volume")
+    @Positive
     Float volume;
+
     @Column(name = "price")
-    Integer price;
+    @Positive
+    Float price;
+
     @ManyToOne
     @JoinColumn(name="brand_id")
     BeerBrand beerBrand;
 
-    EnumMap<Beer_Characteristic, Float> characteristics;
+    @OneToMany(mappedBy = "beer", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
+    List<BeerCharacteristics> characteristics;
 }

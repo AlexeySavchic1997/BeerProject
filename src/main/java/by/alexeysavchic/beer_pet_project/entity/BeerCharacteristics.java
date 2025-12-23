@@ -1,8 +1,12 @@
 package by.alexeysavchic.beer_pet_project.entity;
 
-import by.alexeysavchic.beer_pet_project.entity.IDs.OrderItemId;
+import by.alexeysavchic.beer_pet_project.entity.IDs.BeerCharacteristicsId;
+import by.alexeysavchic.beer_pet_project.entity.enums.BeerCharacteristic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
 import jakarta.persistence.JoinColumn;
@@ -16,27 +20,22 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@IdClass(OrderItemId.class)
+@IdClass(BeerCharacteristicsId.class)
 @Entity
-@Table(name = "order_item")
-public class OrderItem
+@Table(name = "beer_characteristic")
+public class BeerCharacteristics
 {
-    @Id
-    @ManyToOne
-    @JoinColumn(name = "order_id")
-    Order order;
-
     @Id
     @ManyToOne
     @JoinColumn(name = "beer_id")
     Beer beer;
 
-    @Column(name = "quantity")
-    @Positive
-    Integer quantity;
+    @Id
+    @Column(name = "characteristic")
+    @Enumerated(EnumType.STRING)
+    BeerCharacteristic characteristic;
 
-    @Column(name = "price")
+    @Column(name = "value")
     @Positive
-    Integer price;
-
+    Float value;
 }

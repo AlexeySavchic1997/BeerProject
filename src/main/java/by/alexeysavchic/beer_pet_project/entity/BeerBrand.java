@@ -6,7 +6,14 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "beer_brand")
 public class BeerBrand
@@ -15,6 +22,8 @@ public class BeerBrand
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     Integer id;
+
     @Column(name = "brandName")
+    @NotBlank
     String brandName;
 }

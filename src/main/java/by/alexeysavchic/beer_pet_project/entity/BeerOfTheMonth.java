@@ -3,19 +3,39 @@ package by.alexeysavchic.beer_pet_project.entity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.IdClass;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@IdClass(BeerOfTheMonth.class)
 @Entity
 @Table(name = "beer_of_the_month")
 public class BeerOfTheMonth
 {
+    @Id
+    @Column(name = "month")
+    @Min(value = 1)
+    @Max(value = 12)
+    Byte month;
 
     @Id
-    @Column(name = "month")
-    Byte month;
-    @Id
-    @Column(name = "month")
+    @Column(name = "year")
+    @Min(value = 2024)
+    @Max(value = 2050)
     Integer year;
 
+    @ManyToOne
+    @JoinColumn(name = "beer_id")
     Beer beer;
 }
+
+
