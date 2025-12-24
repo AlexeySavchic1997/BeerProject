@@ -24,21 +24,21 @@ public class UserSubscription
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    Integer id;
+    private Integer id;
 
     @Column(name = "time_of_expiration")
     @FutureOrPresent
-    LocalDateTime timeOfExpiration;
+    private LocalDateTime timeOfExpiration;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    User user;
+    private User user;
 
     @ManyToOne
     @JoinColumn(name = "beer_id")
-    Beer beer;
+    private Beer beer;
 
     @ManyToOne
     @JoinColumn(name = "subscription_type")
-    Subscription subscription;
+    private Subscription subscription;
 }

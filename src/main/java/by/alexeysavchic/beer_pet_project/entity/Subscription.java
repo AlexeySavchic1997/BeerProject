@@ -21,8 +21,8 @@ public class Subscription
 @Id
 @Column(name = "subscription_type")
 @Enumerated(EnumType.STRING)
-Type_of_subscription subscriptionType;
+private Type_of_subscription subscriptionType;
 
 @Column(name = "description")
-String description;
+private String description;
 }

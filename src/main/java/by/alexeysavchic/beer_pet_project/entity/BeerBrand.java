@@ -21,9 +21,9 @@ public class BeerBrand
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    Integer id;
+    private Integer id;
 
     @Column(name = "brandName")
     @NotBlank
-    String brandName;
+    private String brandName;
 }

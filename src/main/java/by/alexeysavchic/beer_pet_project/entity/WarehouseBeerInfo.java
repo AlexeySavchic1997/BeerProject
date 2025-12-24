@@ -27,14 +27,14 @@ public class WarehouseBeerInfo
 @Id
 @Column(name = "zone")
 @Enumerated(EnumType.STRING)
-ZoneType zoneType;
+private ZoneType zoneType;
 
 @Id
 @ManyToOne
 @JoinColumn(name = "beer_id")
-Beer beer;
+private Beer beer;
 
 @Column(name = "amount")
 @Positive
-Integer amount;
+private Integer amount;
 }

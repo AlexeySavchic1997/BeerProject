@@ -34,31 +34,31 @@ public class User
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    Integer id;
+    private Integer id;
 
     @Column(name = "username")
     @Size(min = 2, max = 20, message = "username must be between 2 and 20 symbols")
     @NotBlank
-    String username;
+    private String username;
 
     @Column(name = "password")
     @NotBlank
-    String password;
+    private String password;
 
     @Column(name = "email")
     @Email
     @NotBlank
-    String email;
+    private String email;
 
     @ElementCollection
     @CollectionTable(name = "role", joinColumns = @JoinColumn(name = "user_id"))
     @Column(name = "role")
     @Enumerated(EnumType.STRING)
-    Set<Role> roles;
+    private Set<Role> roles;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
-    List<UserSubscription> subscriptions;
+    private List<UserSubscription> subscriptions;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
-    List<Order> orders;
+    private List<Order> orders;
 }

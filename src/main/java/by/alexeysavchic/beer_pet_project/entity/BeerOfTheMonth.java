@@ -25,17 +25,17 @@ public class BeerOfTheMonth
     @Column(name = "month")
     @Min(value = 1)
     @Max(value = 12)
-    Byte month;
+    private Byte month;
 
     @Id
     @Column(name = "year")
     @Min(value = 2024)
     @Max(value = 2050)
-    Integer year;
+    private Integer year;
 
     @ManyToOne
     @JoinColumn(name = "beer_id")
-    Beer beer;
+    private Beer beer;
 }
 
 

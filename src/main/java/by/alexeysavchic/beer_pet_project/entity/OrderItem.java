@@ -24,19 +24,19 @@ public class OrderItem
     @Id
     @ManyToOne
     @JoinColumn(name = "order_id")
-    Order order;
+    private Order order;
 
     @Id
     @ManyToOne
     @JoinColumn(name = "beer_id")
-    Beer beer;
+    private Beer beer;
 
     @Column(name = "quantity")
     @Positive
-    Integer quantity;
+    private Integer quantity;
 
     @Column(name = "price")
     @Positive
-    Integer price;
+    private Integer price;
 
 }

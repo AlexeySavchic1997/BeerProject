@@ -6,7 +6,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
 import jakarta.persistence.JoinColumn;
@@ -28,14 +27,14 @@ public class BeerCharacteristics
     @Id
     @ManyToOne
     @JoinColumn(name = "beer_id")
-    Beer beer;
+    private Beer beer;
 
     @Id
     @Column(name = "characteristic")
     @Enumerated(EnumType.STRING)
-    BeerCharacteristic characteristic;
+    private BeerCharacteristic characteristic;
 
     @Column(name = "value")
     @Positive
-    Float value;
+    private Float value;
 }

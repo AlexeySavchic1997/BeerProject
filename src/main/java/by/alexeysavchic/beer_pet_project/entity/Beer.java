@@ -29,28 +29,28 @@ public class Beer
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    Integer id;
+    private Integer id;
 
     @Column(name = "name")
     @Size(min = 2, max = 20, message = "beer name must be between 2 and 20 symbols")
     @NotBlank
-    String name;
+    private String name;
 
     @Column(name = "description")
-    String description;
+    private String description;
 
     @Column(name = "volume")
     @Positive
-    Float volume;
+    private Float volume;
 
     @Column(name = "price")
     @Positive
-    Float price;
+    private Float price;
 
     @ManyToOne
     @JoinColumn(name="brand_id")
-    BeerBrand beerBrand;
+    private BeerBrand beerBrand;
 
     @OneToMany(mappedBy = "beer", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
-    List<BeerCharacteristics> characteristics;
+    private List<BeerCharacteristics> characteristics;
 }

@@ -30,20 +30,20 @@ public class Order
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    Integer id;
+    private Integer id;
 
     @Column(name = "order_date")
     @FutureOrPresent
-    LocalDateTime orderTime;
+    private LocalDateTime orderTime;
 
     @Column(name = "summary_price")
     @Positive
-    Integer summaryPrice;
+    private Integer summaryPrice;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    User user;
+    private User user;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
-    List<OrderItem> orderItems;
+    private List<OrderItem> orderItems;
 }
