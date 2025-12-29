@@ -44,6 +44,7 @@ public class Order
     @JoinColumn(name = "user_id")
     private User user;
 
+    //I will think about fetch and loading strategy when I will write services and repositories
     @OneToMany(mappedBy = "order", cascade = CascadeType.REMOVE)
     private List<OrderItem> orderItems;
 }

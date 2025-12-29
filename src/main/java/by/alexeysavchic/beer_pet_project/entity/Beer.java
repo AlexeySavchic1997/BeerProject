@@ -36,7 +36,7 @@ public class Beer
     @NotBlank
     private String name;
 
-    @Column(name = "descrn")
+    @Column(name = "description")
     private String description;
 
     @Column(name = "volume")
