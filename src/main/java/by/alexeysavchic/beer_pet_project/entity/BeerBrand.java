@@ -23,6 +23,9 @@ public class BeerBrand
     @Column(name = "id")
     private Integer id;
 
+    @Column(name = "description")
+    private String description;
+
     @Column(name = "brandName")
     @NotBlank
     private String brandName;

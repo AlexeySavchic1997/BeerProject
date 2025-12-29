@@ -3,5 +3,6 @@
 create table beer_brand
 (
 id serial primary key,
+description text,
 brand_name varchar(30) unique not null
 );

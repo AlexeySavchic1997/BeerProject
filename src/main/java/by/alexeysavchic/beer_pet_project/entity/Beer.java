@@ -36,16 +36,16 @@ public class Beer
     @NotBlank
     private String name;
 
-    @Column(name = "description")
+    @Column(name = "descrn")
     private String description;
 
     @Column(name = "volume")
     @Positive
-    private Float volume;
+    private Double volume;
 
     @Column(name = "price")
     @Positive
-    private Float price;
+    private Double price;
 
     @ManyToOne
     @JoinColumn(name="brand_id")

@@ -1,6 +1,6 @@
 package by.alexeysavchic.beer_pet_project.entity;
 
-import by.alexeysavchic.beer_pet_project.entity.enums.Type_of_subscription;
+import by.alexeysavchic.beer_pet_project.entity.enums.TypeOfSubscription;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -21,7 +21,7 @@ public class Subscription
 @Id
 @Column(name = "subscription_type")
 @Enumerated(EnumType.STRING)
-private Type_of_subscription subscriptionType;
+private TypeOfSubscription subscriptionType;
 
 @Column(name = "description")
 private String description;

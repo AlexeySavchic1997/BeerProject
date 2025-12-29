@@ -37,6 +37,6 @@ public class OrderItem
 
     @Column(name = "price")
     @Positive
-    private Integer price;
+    private Double price;
 
 }

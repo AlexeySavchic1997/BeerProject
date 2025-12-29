@@ -5,9 +5,11 @@ import by.alexeysavchic.beer_pet_project.entity.enums.BeerCharacteristic;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 @NoArgsConstructor
 @EqualsAndHashCode
-public class BeerCharacteristicsId
+public class BeerCharacteristicsId implements Serializable
 {
     Beer beer;
     BeerCharacteristic characteristic;

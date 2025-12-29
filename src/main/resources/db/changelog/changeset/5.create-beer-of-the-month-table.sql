@@ -3,7 +3,7 @@
 create table beer_of_the_month
 (
 beer_id integer references beer (id) on delete cascade not null,
-year integer check(year between 2024 and 2050) not null,
+year smallint check(year between 2024 and 2050) not null,
 month smallint check(month between 1 and 12),
 primary key (year,month)
 );

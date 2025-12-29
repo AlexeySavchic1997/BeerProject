@@ -36,5 +36,5 @@ public class BeerCharacteristics
 
     @Column(name = "value")
     @Positive
-    private Float value;
+    private Double value;
 }
