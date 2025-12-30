@@ -17,6 +17,8 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.math.BigDecimal;
 import java.util.List;
 
 @Getter
@@ -29,7 +31,7 @@ public class Beer
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Integer id;
+    private Long id;
 
     @Column(name = "name")
     @Size(min = 2, max = 20, message = "beer name must be between 2 and 20 symbols")
@@ -45,12 +47,12 @@ public class Beer
 
     @Column(name = "price")
     @Positive
-    private Double price;
+    private BigDecimal price;
 
     @ManyToOne
     @JoinColumn(name="brand_id")
     private BeerBrand beerBrand;
 
-    @OneToMany(mappedBy = "beer", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "beer", cascade = CascadeType.REMOVE)
     private List<BeerCharacteristics> characteristics;
 }

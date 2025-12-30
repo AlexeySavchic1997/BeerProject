@@ -9,6 +9,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.FutureOrPresent;
+import jakarta.validation.constraints.PastOrPresent;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,7 +25,11 @@ public class UserSubscription
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Integer id;
+    private Long id;
+
+    @Column(name = "subscribe_date")
+    @PastOrPresent
+    private LocalDateTime subscribeDate;
 
     @Column(name = "time_of_expiration")
     @FutureOrPresent
@@ -39,6 +44,6 @@ public class UserSubscription
     private Beer beer;
 
     @ManyToOne
-    @JoinColumn(name = "subscription_type")
+    @JoinColumn(name = "subscription_id")
     private Subscription subscription;
 }

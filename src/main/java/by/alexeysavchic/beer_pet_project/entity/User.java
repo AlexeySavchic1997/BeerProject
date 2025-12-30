@@ -34,7 +34,7 @@ public class User
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Integer id;
+    private Long id;
 
     @Column(name = "username")
     @Size(min = 2, max = 20, message = "username must be between 2 and 20 symbols")

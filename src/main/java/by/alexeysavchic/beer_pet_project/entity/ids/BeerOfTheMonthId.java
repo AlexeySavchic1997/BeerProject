@@ -1,4 +1,4 @@
-package by.alexeysavchic.beer_pet_project.entity.IDs;
+package by.alexeysavchic.beer_pet_project.entity.id;
 
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;

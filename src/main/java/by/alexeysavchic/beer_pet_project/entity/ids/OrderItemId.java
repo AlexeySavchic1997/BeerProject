@@ -1,7 +1,8 @@
-package by.alexeysavchic.beer_pet_project.entity.IDs;
+package by.alexeysavchic.beer_pet_project.entity.id;
+
 
 import by.alexeysavchic.beer_pet_project.entity.Beer;
-import by.alexeysavchic.beer_pet_project.entity.enums.ZoneType;
+import by.alexeysavchic.beer_pet_project.entity.Order;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
@@ -9,8 +10,8 @@ import java.io.Serializable;
 
 @NoArgsConstructor
 @EqualsAndHashCode
-public class WarehouseBeerInfoId implements Serializable
+public class OrderItemId implements Serializable
 {
-    ZoneType zoneType;
+    Order order;
     Beer beer;
 }

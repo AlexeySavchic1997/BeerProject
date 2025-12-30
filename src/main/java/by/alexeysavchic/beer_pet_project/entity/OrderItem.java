@@ -1,6 +1,6 @@
 package by.alexeysavchic.beer_pet_project.entity;
 
-import by.alexeysavchic.beer_pet_project.entity.IDs.OrderItemId;
+import by.alexeysavchic.beer_pet_project.entity.id.OrderItemId;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -12,6 +12,8 @@ import jakarta.validation.constraints.Positive;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.math.BigDecimal;
 
 @Getter
 @Setter
@@ -37,6 +39,6 @@ public class OrderItem
 
     @Column(name = "price")
     @Positive
-    private Double price;
+    private BigDecimal price;
 
 }

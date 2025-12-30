@@ -2,10 +2,10 @@
 --changeset Alexey Savchic:beer-table
 create table beer
 (
-id serial primary key,
+id bigserial primary key,
 name varchar(20) not null,
 description text,
 volume double precision  check (volume>0) not null,
-price double precision  check (price>0) not null,
-brand_id integer references beer_brand (id) on delete cascade not null
+price decimal(7,2)  check (price>0) not null,
+brand_id bigint references beer_brand (id) on delete cascade not null
 );

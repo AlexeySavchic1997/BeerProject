@@ -3,7 +3,6 @@ package by.alexeysavchic.beer_pet_project.entity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -16,7 +15,7 @@ import jakarta.validation.constraints.Positive;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -30,7 +29,7 @@ public class Order
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Integer id;
+    private Long id;
 
     @Column(name = "order_date")
     @FutureOrPresent
@@ -38,13 +37,12 @@ public class Order
 
     @Column(name = "summary_price")
     @Positive
-    private Integer summaryPrice;
+    private BigDecimal summaryPrice;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    //I will think about fetch and loading strategy when I will write services and repositories
     @OneToMany(mappedBy = "order", cascade = CascadeType.REMOVE)
     private List<OrderItem> orderItems;
 }
