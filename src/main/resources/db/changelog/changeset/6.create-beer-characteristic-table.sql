@@ -5,6 +5,6 @@ create table beer_characteristic
 (
 beer_id bigint references beer (id) on delete cascade,
 characteristic beer_characteristic_type not null,
-value double precision not null,
+value decimal(3,1) not null,
 primary key (beer_id,characteristic)
 );

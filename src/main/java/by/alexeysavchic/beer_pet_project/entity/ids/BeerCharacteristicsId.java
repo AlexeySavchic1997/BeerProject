@@ -1,4 +1,4 @@
-package by.alexeysavchic.beer_pet_project.entity.id;
+package by.alexeysavchic.beer_pet_project.entity.ids;
 
 import by.alexeysavchic.beer_pet_project.entity.Beer;
 import by.alexeysavchic.beer_pet_project.entity.enums.BeerCharacteristic;
@@ -11,6 +11,6 @@ import java.io.Serializable;
 @EqualsAndHashCode
 public class BeerCharacteristicsId implements Serializable
 {
-    Beer beer;
-    BeerCharacteristic characteristic;
+    private Beer beer;
+    private BeerCharacteristic characteristic;
 }

@@ -1,6 +1,6 @@
 package by.alexeysavchic.beer_pet_project.entity;
 
-import by.alexeysavchic.beer_pet_project.entity.id.OrderItemId;
+import by.alexeysavchic.beer_pet_project.entity.ids.OrderItemId;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
