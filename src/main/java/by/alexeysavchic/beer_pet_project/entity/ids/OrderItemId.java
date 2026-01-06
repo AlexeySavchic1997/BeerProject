@@ -12,6 +12,6 @@ import java.io.Serializable;
 @EqualsAndHashCode
 public class OrderItemId implements Serializable
 {
-    Order order;
-    Beer beer;
+    private Order order;
+    private Beer beer;
 }

@@ -9,6 +9,6 @@ import java.io.Serializable;
 @EqualsAndHashCode
 public class BeerOfTheMonthId implements Serializable
 {
-    Byte month;
-    Integer year;
+    private Byte month;
+    private Integer year;
 }
