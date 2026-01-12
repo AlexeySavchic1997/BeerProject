@@ -11,6 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.Positive;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,7 +21,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "warehouse_beer_info")
+@Table(name = "warehouse_beer_info", uniqueConstraints = {@UniqueConstraint(columnNames = {"zone", "beer_id"})})
 public class WarehouseBeerInfo
 {
     @Id

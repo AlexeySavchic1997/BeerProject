@@ -1,6 +1,6 @@
 package by.alexeysavchic.beer_pet_project.entity;
 
-import by.alexeysavchic.beer_pet_project.entity.ids.BeerCharacteristicsId;
+import by.alexeysavchic.beer_pet_project.entity.id.BeerCharacteristicsId;
 import by.alexeysavchic.beer_pet_project.entity.enums.BeerCharacteristic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

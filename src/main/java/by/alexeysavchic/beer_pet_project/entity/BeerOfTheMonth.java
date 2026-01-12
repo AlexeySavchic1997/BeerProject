@@ -1,5 +1,6 @@
 package by.alexeysavchic.beer_pet_project.entity;
 
+import by.alexeysavchic.beer_pet_project.entity.id.BeerOfTheMonthId;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -16,7 +17,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@IdClass(BeerOfTheMonth.class)
+@IdClass(BeerOfTheMonthId.class)
 @Entity
 @Table(name = "beer_of_the_month")
 public class BeerOfTheMonth
@@ -29,8 +30,8 @@ public class BeerOfTheMonth
 
     @Id
     @Column(name = "year")
-    @Min(value = 2024)
-    @Max(value = 2050)
+    @Min(value = 2000)
+    @Max(value = 2100)
     private Short year;
 
     @ManyToOne

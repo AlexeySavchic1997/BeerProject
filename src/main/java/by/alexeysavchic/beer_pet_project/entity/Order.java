@@ -33,7 +33,7 @@ public class Order
 
     @Column(name = "order_date")
     @FutureOrPresent
-    private LocalDateTime orderTime;
+    private LocalDateTime orderDate;
 
     @Column(name = "summary_price")
     @Positive
