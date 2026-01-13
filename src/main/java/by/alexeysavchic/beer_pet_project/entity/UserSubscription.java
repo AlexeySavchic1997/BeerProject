@@ -15,8 +15,12 @@ import jakarta.validation.constraints.PastOrPresent;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
 import java.time.LocalDateTime;
-import java.util.Set;
+import java.util.List;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -47,7 +51,11 @@ public class UserSubscription
     name = "beer_user_subscription",
     joinColumns = {@JoinColumn(name = "beer_id")},
     inverseJoinColumns = {@JoinColumn(name = "user_subscription_id")})
-    private Set<Beer> beers;
+    private List<Beer> beers;
+
+    @Column(name = "id_quantity", columnDefinition = "jsonb")
+    @JdbcTypeCode(SqlTypes.JSON)
+    Map<Long, Integer> idQuantity;
 
     @ManyToOne
     @JoinColumn(name = "subscription_id")

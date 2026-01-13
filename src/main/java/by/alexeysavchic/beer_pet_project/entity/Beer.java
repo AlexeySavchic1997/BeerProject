@@ -58,5 +58,5 @@ public class Beer
     private List<BeerCharacteristics> characteristics;
 
     @ManyToMany(mappedBy = "beers")
-    private Set<UserSubscription> userSubscriptions;
+    private List<UserSubscription> userSubscriptions;
 }
