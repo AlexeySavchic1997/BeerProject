@@ -53,9 +53,9 @@ public class UserSubscription
     inverseJoinColumns = {@JoinColumn(name = "user_subscription_id")})
     private List<Beer> beers;
 
-    @Column(name = "id_quantity", columnDefinition = "jsonb")
+    @Column(name = "subscription_info", columnDefinition = "jsonb")
     @JdbcTypeCode(SqlTypes.JSON)
-    Map<Long, Integer> idQuantity;
+    String subscriptionInfo;
 
     @ManyToOne
     @JoinColumn(name = "subscription_id")
