@@ -1,0 +1,18 @@
+package by.alexeysavchic.beer_pet_project.dto;
+
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import lombok.Data;
+
+@Data
+public class UserCredentialsDTO
+{
+    @Email
+    @NotBlank
+    String email;
+
+    @NotBlank
+    @Size(min = 8, max = 15, message = "password must be between 8 and 15 symbols")
+    String password;
+}
