@@ -1,4 +1,4 @@
-package by.alexeysavchic.beer_pet_project.security;
+package by.alexeysavchic.beer_pet_project.security.jwt;
 
 import by.alexeysavchic.beer_pet_project.dto.JwtAuthentificationDTO;
 import io.jsonwebtoken.Claims;
@@ -13,13 +13,14 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 
-@Component
+@Service
 public class JwtService
 {
     private static final Logger logger= LogManager.getLogger(JwtService.class);

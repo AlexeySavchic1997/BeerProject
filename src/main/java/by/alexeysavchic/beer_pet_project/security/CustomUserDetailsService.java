@@ -5,7 +5,9 @@ import by.alexeysavchic.beer_pet_project.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
 
+@Service
 public class CustomUserDetailsService implements UserDetailsService
 {
     private final UserRepository userRepository;
@@ -15,9 +17,10 @@ public class CustomUserDetailsService implements UserDetailsService
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findUserByUsername(username).orElseThrow(()->
-                new UsernameNotFoundException("User not found with username: " + username));
+    public CustomUserDetails loadUserByUsername(String email) throws UsernameNotFoundException
+    {
+        User user = userRepository.findUserByEmail(email).orElseThrow(()->
+                new UsernameNotFoundException("User not found with email: " + email));
 
         return new CustomUserDetails(user);
     }

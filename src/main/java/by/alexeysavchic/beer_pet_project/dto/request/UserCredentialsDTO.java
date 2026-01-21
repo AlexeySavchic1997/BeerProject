@@ -1,4 +1,4 @@
-package by.alexeysavchic.beer_pet_project.dto;
+package by.alexeysavchic.beer_pet_project.dto.request;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
