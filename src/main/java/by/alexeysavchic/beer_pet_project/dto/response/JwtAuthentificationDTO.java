@@ -1,4 +1,4 @@
-package by.alexeysavchic.beer_pet_project.dto;
+package by.alexeysavchic.beer_pet_project.dto.response;
 
 import lombok.Data;
 

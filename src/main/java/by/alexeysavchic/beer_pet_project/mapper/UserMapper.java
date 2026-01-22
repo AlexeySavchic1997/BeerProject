@@ -19,6 +19,8 @@ public abstract class UserMapper
     @Autowired
     protected PasswordEncoder passwordEncoder;
 
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "roles", expression = "java(enumToRoles())")
     @Mapping(target = "password", expression = "java(passwordEncoder.encode(userRegisterRequest.getPassword()))")
     public abstract User userRegisterRequestToUser(UserRegisterRequest userRegisterRequest);
 

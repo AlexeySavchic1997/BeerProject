@@ -1,58 +1,64 @@
 package by.alexeysavchic.beer_pet_project.service.Implementation;
 
-import by.alexeysavchic.beer_pet_project.dto.JwtAuthentificationDTO;
+import by.alexeysavchic.beer_pet_project.dto.request.RefreshTokenRequest;
+import by.alexeysavchic.beer_pet_project.dto.response.JwtAuthentificationDTO;
+import by.alexeysavchic.beer_pet_project.dto.request.LogInRequest;
 import by.alexeysavchic.beer_pet_project.dto.request.UserRegisterRequest;
-import by.alexeysavchic.beer_pet_project.dto.response.GetUserResponse;
 import by.alexeysavchic.beer_pet_project.entity.User;
 import by.alexeysavchic.beer_pet_project.mapper.UserMapper;
 import by.alexeysavchic.beer_pet_project.repository.UserRepository;
 import by.alexeysavchic.beer_pet_project.security.jwt.JwtService;
 import by.alexeysavchic.beer_pet_project.service.Interface.UserService;
+import jakarta.transaction.Transactional;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserServiceImpl implements UserService
 {
 
-    UserRepository repository;
+    UserRepository userRepository;
 
     JwtService jwtService;
 
     UserMapper userMapper;
 
-    public UserServiceImpl(UserRepository repository, JwtService jwtService, UserMapper userMapper) {
-        this.repository = repository;
+    PasswordEncoder passwordEncoder;
+
+    public UserServiceImpl(UserRepository userRepository, JwtService jwtService, UserMapper userMapper, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
         this.jwtService = jwtService;
         this.userMapper = userMapper;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
-    public JwtAuthentificationDTO signUp(UserRegisterRequest request)
+    @Transactional
+    public void signUp(UserRegisterRequest request)
     {
         User user = userMapper.userRegisterRequestToUser(request);
-        repository.save(user);
+        userRepository.save(user);
+    }
+
+    @Override
+    @Transactional
+    public JwtAuthentificationDTO logIn(LogInRequest request)
+    {
+        User user=userRepository.findUserByEmail(request.getEmail()).orElseThrow(()->new RuntimeException("no user"));
+
+        if(!passwordEncoder.matches(request.getPassword(), user.getPassword()))
+        {
+            throw new RuntimeException("password missmatch");
+        }
+
         return jwtService.generateAuthToken(request.getEmail());
     }
 
     @Override
-    public GetUserResponse findUserById(Long id)
+    public JwtAuthentificationDTO refreshToken (RefreshTokenRequest request)
     {
-        return null;
+        return jwtService.refreshBaseToken(request.getEmail(), request.getRefreshToken());
     }
 
-    @Override
-    public GetUserResponse findUserByUsername(String username)
-    {
-        return null;
-    }
 
-    @Override
-    public GetUserResponse findUserByEmail(String email) {
-        return null;
-    }
-
-    @Override
-    public void deleteUser(Long id) {
-
-    }
 }

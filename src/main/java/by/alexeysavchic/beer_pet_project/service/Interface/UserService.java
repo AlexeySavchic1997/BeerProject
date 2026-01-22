@@ -1,20 +1,16 @@
 package by.alexeysavchic.beer_pet_project.service.Interface;
 
-import by.alexeysavchic.beer_pet_project.dto.JwtAuthentificationDTO;
+import by.alexeysavchic.beer_pet_project.dto.request.RefreshTokenRequest;
+import by.alexeysavchic.beer_pet_project.dto.response.JwtAuthentificationDTO;
+import by.alexeysavchic.beer_pet_project.dto.request.LogInRequest;
 import by.alexeysavchic.beer_pet_project.dto.request.UserRegisterRequest;
 import by.alexeysavchic.beer_pet_project.dto.response.GetUserResponse;
 
-import java.util.List;
-
 public interface UserService
 {
-    public JwtAuthentificationDTO signUp(UserRegisterRequest request);
+    public void signUp(UserRegisterRequest request);
 
-    public GetUserResponse findUserById(Long id);
+    public JwtAuthentificationDTO logIn(LogInRequest request);
 
-    public GetUserResponse findUserByUsername(String username);
-
-    public GetUserResponse findUserByEmail(String email);
-
-    public void deleteUser(Long id);
+    public JwtAuthentificationDTO refreshToken (RefreshTokenRequest request);
 }

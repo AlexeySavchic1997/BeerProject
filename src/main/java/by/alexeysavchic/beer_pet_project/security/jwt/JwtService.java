@@ -1,6 +1,6 @@
 package by.alexeysavchic.beer_pet_project.security.jwt;
 
-import by.alexeysavchic.beer_pet_project.dto.JwtAuthentificationDTO;
+import by.alexeysavchic.beer_pet_project.dto.response.JwtAuthentificationDTO;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -12,7 +12,6 @@ import io.jsonwebtoken.security.SecurityException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
@@ -24,7 +23,7 @@ import java.util.Date;
 public class JwtService
 {
     private static final Logger logger= LogManager.getLogger(JwtService.class);
-    @Value("b1148302f5d1c2a3234b97b8e9f07478")
+    @Value("8b8bc66f6b3525d94e39f4927e518f75c7769409388c4e62868fd6bc3e781220f141edc1")
     String jwtSecret;
 
     public JwtAuthentificationDTO generateAuthToken(String email)

@@ -29,7 +29,8 @@ public class SecurityConfig {
         http.csrf(csrf -> csrf.disable()).
                 httpBasic(httpBasic->httpBasic.disable()).
                 authorizeHttpRequests(auth -> auth.
-                        anyRequest().authenticated()).
+                        requestMatchers("/test").authenticated().
+                        anyRequest().permitAll()).
                 sessionManagement(sess -> sess.
                         sessionCreationPolicy(SessionCreationPolicy.STATELESS)).
                 addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
