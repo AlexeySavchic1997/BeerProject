@@ -4,6 +4,7 @@ import by.alexeysavchic.beer_pet_project.security.CustomUserDetails;
 import by.alexeysavchic.beer_pet_project.security.CustomUserDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
@@ -16,7 +17,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 
 @Component
-public class JwtFilter extends OncePerRequestFilter {
+public class JwtFilter extends OncePerRequestFilter
+{
 
     private final JwtService jwtService;
     private final CustomUserDetailsService customUserDetailsService;
@@ -51,9 +53,19 @@ public class JwtFilter extends OncePerRequestFilter {
     private String getTokenFromRequest(HttpServletRequest request)
     {
         String bearerToken = request.getHeader(HttpHeaders.AUTHORIZATION);
-        if (bearerToken !=null && bearerToken.startsWith("Bearer "))
+        if (bearerToken != null && bearerToken.startsWith("Bearer "))
         {
             return bearerToken.substring(7);
+        }
+        else if (request.getCookies() != null)
+        {
+            for (Cookie cookie : request.getCookies())
+            {
+                if ("jwt".equals(cookie.getName()))
+                {
+                    return cookie.getValue();
+                }
+            }
         }
         return null;
     }

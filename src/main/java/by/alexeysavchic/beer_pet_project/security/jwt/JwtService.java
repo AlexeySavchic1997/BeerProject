@@ -12,6 +12,7 @@ import io.jsonwebtoken.security.SecurityException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
@@ -26,20 +27,20 @@ public class JwtService
     @Value("8b8bc66f6b3525d94e39f4927e518f75c7769409388c4e62868fd6bc3e781220f141edc1")
     String jwtSecret;
 
-    public JwtAuthentificationDTO generateAuthToken(String email)
+    public ResponseCookie generateJwtCookie(String email)
     {
-        JwtAuthentificationDTO jwtDTO=new JwtAuthentificationDTO();
-        jwtDTO.setToken(generateJwtToken(email));
-        jwtDTO.setRefreshToken(generateRefreshJwtToken(email));
-        return jwtDTO;
-    }
+        String jwt= Jwts.builder().
+                setSubject(email).
+                signWith(getSignInKey()).compact();
 
-    public JwtAuthentificationDTO refreshBaseToken(String email, String refreshToken)
-    {
-        JwtAuthentificationDTO jwtDTO=new JwtAuthentificationDTO();
-        jwtDTO.setToken(generateJwtToken(email));
-        jwtDTO.setRefreshToken(refreshToken);
-        return jwtDTO;
+        ResponseCookie cookie = ResponseCookie.from("jwt", jwt)
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge(24 * 60 * 60)
+                .sameSite("Strict")
+                .build();
+        return cookie;
     }
 
     public String getEmailFromToken(String token)
@@ -83,24 +84,6 @@ public class JwtService
             logger.error("Invalid token", e);
         }
         return false;
-    }
-
-    private String generateJwtToken(String email)
-    {
-        Date timeOfExpiration = Date.from(LocalDateTime.now().plusMinutes(30).atZone(ZoneId.systemDefault()).toInstant());
-        return Jwts.builder().
-                setSubject(email).
-                setExpiration(timeOfExpiration).
-                signWith(getSignInKey()).compact();
-    }
-
-    private String generateRefreshJwtToken(String email)
-    {
-        Date timeOfExpiration = Date.from(LocalDateTime.now().plusDays(1).atZone(ZoneId.systemDefault()).toInstant());
-        return Jwts.builder().
-                setSubject(email).
-                setExpiration(timeOfExpiration).
-                signWith(getSignInKey()).compact();
     }
 
     private SecretKey getSignInKey()

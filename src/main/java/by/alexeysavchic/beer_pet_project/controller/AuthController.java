@@ -6,6 +6,7 @@ import by.alexeysavchic.beer_pet_project.dto.request.LogInRequest;
 import by.alexeysavchic.beer_pet_project.dto.request.UserRegisterRequest;
 import by.alexeysavchic.beer_pet_project.service.Interface.UserService;
 import jakarta.validation.Valid;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,16 +32,9 @@ public class AuthController
     }
 
     @PostMapping("/login")
-    public ResponseEntity<JwtAuthentificationDTO> logIn(@Valid @RequestBody LogInRequest request)
+    public ResponseEntity<ResponseCookie> logIn(@Valid @RequestBody LogInRequest request)
     {
         return ResponseEntity.ok(userService.logIn(request));
     }
-
-    public ResponseEntity<JwtAuthentificationDTO> refreshBaseToken(RefreshTokenRequest request)
-    {
-        return ResponseEntity.ok(userService.refreshToken(request));
-    }
-
-
 
 }

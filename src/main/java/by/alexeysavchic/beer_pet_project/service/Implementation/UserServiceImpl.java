@@ -10,6 +10,7 @@ import by.alexeysavchic.beer_pet_project.repository.UserRepository;
 import by.alexeysavchic.beer_pet_project.security.jwt.JwtService;
 import by.alexeysavchic.beer_pet_project.service.Interface.UserService;
 import jakarta.transaction.Transactional;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -42,7 +43,7 @@ public class UserServiceImpl implements UserService
 
     @Override
     @Transactional
-    public JwtAuthentificationDTO logIn(LogInRequest request)
+    public ResponseCookie logIn(LogInRequest request)
     {
         User user=userRepository.findUserByEmail(request.getEmail()).orElseThrow(()->new RuntimeException("no user"));
 
@@ -51,14 +52,9 @@ public class UserServiceImpl implements UserService
             throw new RuntimeException("password missmatch");
         }
 
-        return jwtService.generateAuthToken(request.getEmail());
+        return jwtService.generateJwtCookie(request.getEmail());
     }
 
-    @Override
-    public JwtAuthentificationDTO refreshToken (RefreshTokenRequest request)
-    {
-        return jwtService.refreshBaseToken(request.getEmail(), request.getRefreshToken());
-    }
 
 
 }
