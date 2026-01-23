@@ -8,14 +8,26 @@ spring:
     username: postgres
     password: Dataparole
 
-  jpa:
+com:
+  group:
+    project:
+      jwt:
+        secret: 8b8bc66f6b3525d94e39f4927e518f75c7769409388c4e62868fd6bc3e781220f141edc1
+        expires-in: 900
+      cookie:
+        name: authToken
+        expires-in: 900
+
+jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
      hibernate:
-       ddl-auto: validate
-     show-sql: true
-     properties:
-      hibernate:
-        format_sql: true
-        dialect:
-         org:
-          hibernate:
-             dialect:PostgreSQLDialect
+       format_sql: true
+       dialect:
+        org:
+        hibernate:
+            dialect:PostgreSQLDialect
+
+

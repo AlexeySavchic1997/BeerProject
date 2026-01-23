@@ -1,6 +1,6 @@
 package by.alexeysavchic.beer_pet_project.security.jwt;
 
-import by.alexeysavchic.beer_pet_project.dto.response.JwtAuthentificationDTO;
+import by.alexeysavchic.beer_pet_project.security.CookieJwtConfig;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -11,36 +11,26 @@ import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SecurityException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Date;
 
 @Service
 public class JwtService
 {
     private static final Logger logger= LogManager.getLogger(JwtService.class);
-    @Value("8b8bc66f6b3525d94e39f4927e518f75c7769409388c4e62868fd6bc3e781220f141edc1")
-    String jwtSecret;
 
-    public ResponseCookie generateJwtCookie(String email)
+    private final CookieJwtConfig config;
+
+    public JwtService(CookieJwtConfig config) {
+        this.config = config;
+    }
+
+    public String generateJwtToken(String email)
     {
-        String jwt= Jwts.builder().
+        return  Jwts.builder().
                 setSubject(email).
                 signWith(getSignInKey()).compact();
-
-        ResponseCookie cookie = ResponseCookie.from("jwt", jwt)
-                .httpOnly(true)
-                .secure(true)
-                .path("/")
-                .maxAge(24 * 60 * 60)
-                .sameSite("Strict")
-                .build();
-        return cookie;
     }
 
     public String getEmailFromToken(String token)
@@ -88,7 +78,7 @@ public class JwtService
 
     private SecretKey getSignInKey()
     {
-        byte[] keyBytes = Decoders.BASE64.decode(jwtSecret);
+        byte[] keyBytes = Decoders.BASE64.decode(config.getJwt().getSecret());
         return Keys.hmacShaKeyFor(keyBytes);
     }
 }
