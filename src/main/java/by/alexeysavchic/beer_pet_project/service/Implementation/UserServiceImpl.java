@@ -1,57 +1,43 @@
 package by.alexeysavchic.beer_pet_project.service.Implementation;
 
-import by.alexeysavchic.beer_pet_project.dto.request.LogInRequest;
-import by.alexeysavchic.beer_pet_project.dto.request.UserRegisterRequest;
+import by.alexeysavchic.beer_pet_project.dto.request.ChangeCredentialsRequest;
 import by.alexeysavchic.beer_pet_project.entity.User;
-import by.alexeysavchic.beer_pet_project.mapper.UserMapper;
+import by.alexeysavchic.beer_pet_project.exception.UserNotFoundException;
+import by.alexeysavchic.beer_pet_project.exception.WrongPasswordException;
 import by.alexeysavchic.beer_pet_project.repository.UserRepository;
-import by.alexeysavchic.beer_pet_project.security.jwt.JwtService;
+import by.alexeysavchic.beer_pet_project.security.SecurityContextService;
 import by.alexeysavchic.beer_pet_project.service.Interface.UserService;
-import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
+@AllArgsConstructor
 public class UserServiceImpl implements UserService
 {
-
     UserRepository userRepository;
 
-    JwtService jwtService;
-
-    UserMapper userMapper;
+    SecurityContextService securityContextService;
 
     PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository userRepository, JwtService jwtService, UserMapper userMapper, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.jwtService = jwtService;
-        this.userMapper = userMapper;
-        this.passwordEncoder = passwordEncoder;
-    }
-
     @Override
-    @Transactional
-    public void signUp(UserRegisterRequest request)
+    public void changeCredentials(ChangeCredentialsRequest request)
     {
-        User user = userMapper.userRegisterRequestToUser(request);
+        User user = userRepository.findUserById(securityContextService.getCurrentUser().getId()).orElseThrow(()->
+                new UserNotFoundException());
+
+        user.setUsername(request.getUsername());
+        user.setEmail(request.getEmail());
+
+        if (passwordEncoder.matches(request.getOldPassword(), user.getPassword()))
+        {
+            user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        }
+        else
+        {
+            throw new WrongPasswordException();
+        }
         userRepository.save(user);
     }
-
-    @Override
-    @Transactional
-    public String logIn(LogInRequest request)
-    {
-        User user=userRepository.findUserByEmail(request.getEmail()).orElseThrow(()->new RuntimeException("no user"));
-
-        if(!passwordEncoder.matches(request.getPassword(), user.getPassword()))
-        {
-            throw new RuntimeException("password missmatch");
-        }
-
-        return jwtService.generateJwtToken(request.getEmail());
-    }
-
-
-
 }

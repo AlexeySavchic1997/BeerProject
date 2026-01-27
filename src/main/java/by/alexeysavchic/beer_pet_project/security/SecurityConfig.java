@@ -1,10 +1,9 @@
 package by.alexeysavchic.beer_pet_project.security;
 
 import by.alexeysavchic.beer_pet_project.security.jwt.JwtFilter;
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -17,20 +16,18 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
+@AllArgsConstructor
 public class SecurityConfig {
-    private final JwtFilter jwtFilter;
 
-    public SecurityConfig(JwtFilter jwtFilter) {
-        this.jwtFilter = jwtFilter;
-    }
+    private final JwtFilter jwtFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable()).
                 httpBasic(httpBasic->httpBasic.disable()).
                 authorizeHttpRequests(auth -> auth.
-                        requestMatchers("/test").authenticated().
-                        anyRequest().permitAll()).
+                        requestMatchers("/auth/**").permitAll().
+                        anyRequest().authenticated()).
                 sessionManagement(sess -> sess.
                         sessionCreationPolicy(SessionCreationPolicy.STATELESS)).
                 addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
@@ -41,10 +38,5 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder()
     {
         return new BCryptPasswordEncoder();
-    }
-
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config)
-    {
-        return config.getAuthenticationManager();
     }
 }
