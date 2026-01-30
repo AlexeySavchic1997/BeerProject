@@ -8,7 +8,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class UniqueUsernameValidator implements ConstraintValidator<UniqueUsername, String> {
 
-    UserRepository repository;
+    private final UserRepository repository;
 
     @Override
     public boolean isValid(String username, ConstraintValidatorContext constraintValidatorContext) {

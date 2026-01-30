@@ -16,8 +16,8 @@ public class UserController
 {
     UserService userService;
 
-    @PutMapping("/change_credentials")
-    public ResponseEntity<String> changeCredentials(@RequestBody @Valid ChangeCredentialsRequest request)
+    @PutMapping("/update")
+    public ResponseEntity<String> changeCredentials(@RequestBody ChangeCredentialsRequest request)
     {
         userService.changeCredentials(request);
         return ResponseEntity.status(HttpStatus.OK).build();

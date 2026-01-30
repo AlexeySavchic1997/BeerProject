@@ -15,4 +15,7 @@ public final class ErrorMessages
     public final static String userNotFound = "User not found";
 
     public final static String wrongPassword= "Wrong Password";
+
+    public final static String absentRefreshCookie= "Refresh cookie is absent";
+
 }

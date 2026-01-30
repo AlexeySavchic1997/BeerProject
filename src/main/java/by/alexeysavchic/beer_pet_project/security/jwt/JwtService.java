@@ -17,6 +17,8 @@ import io.jsonwebtoken.security.SecurityException;
 import lombok.AllArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.tomcat.util.http.SameSiteCookies;
+import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
@@ -32,7 +34,29 @@ public class JwtService
 
     private final JwtConfig config;
 
-    public String generateBaseToken(String email)
+    public ResponseCookie createBaseCookie(String email)
+    {
+        return ResponseCookie.from("baseToken", generateBaseToken(email))
+                .httpOnly(true)
+                .secure(false)
+                .path("/")
+                .maxAge(900)
+                .sameSite(SameSiteCookies.STRICT.toString())
+                .build();
+    }
+
+    public ResponseCookie createRefreshCookie(String email)
+    {
+        return ResponseCookie.from("refreshToken", generateRefreshToken(email))
+                .httpOnly(true)
+                .secure(false)
+                .path("/refresh")
+                .maxAge(86400)
+                .sameSite(SameSiteCookies.STRICT.toString())
+                .build();
+    }
+
+    private String generateBaseToken(String email)
     {
         Date timeOfExpiration = Date.from(LocalDateTime.now().plusSeconds(config.getBaseTokenExpiresIn()).
                 atZone(ZoneId.systemDefault()).toInstant());
@@ -42,7 +66,7 @@ public class JwtService
                 signWith(getSignInKey()).compact();
     }
 
-    public String generateRefreshToken(String email)
+    private String generateRefreshToken(String email)
     {
         Date timeOfExpiration = Date.from(LocalDateTime.now().plusSeconds(config.getRefreshTokenExpiresIn()).
                 atZone(ZoneId.systemDefault()).toInstant());

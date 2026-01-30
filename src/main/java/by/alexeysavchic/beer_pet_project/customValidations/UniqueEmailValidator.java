@@ -8,7 +8,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class UniqueEmailValidator implements ConstraintValidator<UniqueEmail, String> {
 
-    UserRepository repository;
+    private final UserRepository repository;
 
     @Override
     public boolean isValid(String email, ConstraintValidatorContext constraintValidatorContext) {
