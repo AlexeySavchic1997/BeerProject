@@ -11,7 +11,8 @@ public class GlobalExceptionHandler
 {
     @ExceptionHandler({ExpiredJwtTokenException.class, InvalidTokenException.class, MalformedJwtTokenException.class,
     SecurityJwtException.class, UnsupportedJwtTokenException.class, WrongPasswordException.class,
-            RefreshTokenIsAbsentException.class, WrongTokenType.class})
+            RefreshTokenIsAbsentException.class, WrongTokenType.class, UsernameAlreadyExistsException.class,
+            EmailAlreadyExistsException.class})
     public ResponseEntity<String> authentificationExceptions(
             RuntimeException ex) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).build();

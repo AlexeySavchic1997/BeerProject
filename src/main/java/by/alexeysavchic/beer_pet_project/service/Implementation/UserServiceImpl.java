@@ -2,7 +2,9 @@ package by.alexeysavchic.beer_pet_project.service.Implementation;
 
 import by.alexeysavchic.beer_pet_project.dto.request.ChangeCredentialsRequest;
 import by.alexeysavchic.beer_pet_project.entity.User;
+import by.alexeysavchic.beer_pet_project.exception.EmailAlreadyExistsException;
 import by.alexeysavchic.beer_pet_project.exception.UserNotFoundException;
+import by.alexeysavchic.beer_pet_project.exception.UsernameAlreadyExistsException;
 import by.alexeysavchic.beer_pet_project.exception.WrongPasswordException;
 import by.alexeysavchic.beer_pet_project.repository.UserRepository;
 import by.alexeysavchic.beer_pet_project.security.SecurityContextService;
@@ -16,11 +18,11 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class UserServiceImpl implements UserService
 {
-    UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    SecurityContextService securityContextService;
+    private final SecurityContextService securityContextService;
 
-    PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public void changeCredentials(@Valid ChangeCredentialsRequest request)
@@ -28,6 +30,16 @@ public class UserServiceImpl implements UserService
         Long userId=securityContextService.getCurrentUser().getId();
         User user = userRepository.findUserById(userId).orElseThrow(()->
                 new UserNotFoundException(userId));
+
+        if(userRepository.existsByUsername(request.getUsername()) && !user.getUsername().equals(request.getUsername()))
+        {
+            throw new UsernameAlreadyExistsException(request.getUsername());
+        }
+
+        if(userRepository.existsByEmail(request.getEmail()) && !user.getEmail().equals(request.getEmail()))
+        {
+            throw new EmailAlreadyExistsException(request.getEmail());
+        }
 
         user.setUsername(request.getUsername());
         user.setEmail(request.getEmail());

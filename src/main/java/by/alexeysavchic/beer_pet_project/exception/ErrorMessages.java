@@ -14,10 +14,14 @@ public final class ErrorMessages
 
     public final static String userNotFound = "User with id=%d not found";
 
-    public final static String wrongPassword= "Wrong Password";
+    public final static String wrongPassword= "You have entered invalid password";
 
     public final static String absentRefreshToken= "Refresh cookie is absent";
 
     public final static String wrongTokenType= "Wrong token Type";
+
+    public final static String usernameAlreadyExists= "User with username %s already exists";
+
+    public final static String emailAlreadyExists= "User with email %s already exists";
 
 }

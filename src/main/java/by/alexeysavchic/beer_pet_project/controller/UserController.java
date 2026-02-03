@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 public class UserController
 {
-    UserService userService;
+    private final UserService userService;
 
     @PutMapping("/update")
     public ResponseEntity<String> changeCredentials(@RequestBody ChangeCredentialsRequest request)

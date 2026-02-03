@@ -2,10 +2,12 @@ package by.alexeysavchic.beer_pet_project.service.Implementation;
 
 import by.alexeysavchic.beer_pet_project.dto.request.LogInRequest;
 import by.alexeysavchic.beer_pet_project.dto.request.UserRegisterRequest;
-import by.alexeysavchic.beer_pet_project.dto.response.JwtDTO;
+import by.alexeysavchic.beer_pet_project.dto.response.JwtResponseDTO;
 import by.alexeysavchic.beer_pet_project.entity.User;
+import by.alexeysavchic.beer_pet_project.exception.EmailAlreadyExistsException;
 import by.alexeysavchic.beer_pet_project.exception.ErrorMessages;
 import by.alexeysavchic.beer_pet_project.exception.RefreshTokenIsAbsentException;
+import by.alexeysavchic.beer_pet_project.exception.UsernameAlreadyExistsException;
 import by.alexeysavchic.beer_pet_project.exception.WrongPasswordException;
 import by.alexeysavchic.beer_pet_project.mapper.UserMapper;
 import by.alexeysavchic.beer_pet_project.repository.UserRepository;
@@ -26,31 +28,42 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class AuthServiceImpl implements AuthService
 {
-    UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    JwtService jwtService;
+    private final JwtService jwtService;
 
-    UserMapper userMapper;
+    private final UserMapper userMapper;
 
-    PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     private static final Logger logger= LogManager.getLogger(AuthServiceImpl.class);
 
     @Override
-    public JwtDTO signUp(@Valid UserRegisterRequest request)
+    public JwtResponseDTO signUp(@Valid UserRegisterRequest request)
     {
         User user = userMapper.userRegisterRequestToUser(request);
+
+        if(userRepository.existsByUsername(request.getUsername()))
+        {
+            throw new UsernameAlreadyExistsException(request.getUsername());
+        }
+
+        if(userRepository.existsByEmail(request.getEmail()))
+        {
+            throw new EmailAlreadyExistsException(request.getEmail());
+        }
+
         userRepository.save(user);
 
-        JwtDTO jwtDTO = new JwtDTO();
-        jwtDTO.setBaseToken(jwtService.generateBaseToken(request.getEmail()));
-        jwtDTO.setRefreshToken(jwtService.generateRefreshToken(request.getEmail()));
+        JwtResponseDTO jwtResponseDTO = new JwtResponseDTO();
+        jwtResponseDTO.setBaseToken(jwtService.generateBaseToken(request.getEmail()));
+        jwtResponseDTO.setRefreshToken(jwtService.generateRefreshToken(request.getEmail()));
 
-        return jwtDTO;
+        return jwtResponseDTO;
     }
 
     @Override
-    public JwtDTO logIn(@Valid LogInRequest request)
+    public JwtResponseDTO logIn(@Valid LogInRequest request)
     {
         User user=userRepository.findUserByEmail(request.getEmail()).orElseThrow(()->
                 new UsernameNotFoundException("User with email" + request.getEmail() + "not found"));
@@ -61,21 +74,24 @@ public class AuthServiceImpl implements AuthService
             throw new WrongPasswordException();
         }
 
-        JwtDTO jwtDTO = new JwtDTO();
-        jwtDTO.setBaseToken(jwtService.generateBaseToken(request.getEmail()));
-        jwtDTO.setRefreshToken(jwtService.generateRefreshToken(request.getEmail()));
+        JwtResponseDTO jwtResponseDTO = new JwtResponseDTO();
+        jwtResponseDTO.setBaseToken(jwtService.generateBaseToken(request.getEmail()));
+        jwtResponseDTO.setRefreshToken(jwtService.generateRefreshToken(request.getEmail()));
 
-        return jwtDTO;
+        return jwtResponseDTO;
     }
 
     @Override
-    public String refresh(HttpServletRequest request)
+    public JwtResponseDTO refresh(HttpServletRequest request)
     {
+        JwtResponseDTO response = new JwtResponseDTO();
         String bearerToken = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (bearerToken !=null && bearerToken.startsWith("Bearer "))
         {
-            return jwtService.generateBaseToken(jwtService.
-                    getEmailFromToken(request.getHeader(HttpHeaders.AUTHORIZATION).substring(7)));
+            response.setBaseToken(jwtService.generateBaseToken(jwtService.
+                    getEmailFromToken(request.getHeader(HttpHeaders.AUTHORIZATION).substring(7))));
+            response.setRefreshToken(bearerToken.substring(7));
+            return response;
         }
         logger.error(ErrorMessages.absentRefreshToken);
         throw new RefreshTokenIsAbsentException();
