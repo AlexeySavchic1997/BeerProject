@@ -2,8 +2,8 @@ package by.alexeysavchic.beer_pet_project.exception;
 
 public class UserNotFoundException extends RuntimeException
 {
-    public UserNotFoundException()
+    public UserNotFoundException(Long id)
     {
-        super(ErrorMessages.userNotFound);
+        super(String.format(ErrorMessages.userNotFound, id));
     }
 }

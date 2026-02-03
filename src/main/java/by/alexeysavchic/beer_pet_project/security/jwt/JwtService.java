@@ -3,9 +3,9 @@ package by.alexeysavchic.beer_pet_project.security.jwt;
 import by.alexeysavchic.beer_pet_project.exception.ErrorMessages;
 import by.alexeysavchic.beer_pet_project.exception.ExpiredJwtTokenException;
 import by.alexeysavchic.beer_pet_project.exception.InvalidTokenException;
+import by.alexeysavchic.beer_pet_project.exception.MalformedJwtTokenException;
 import by.alexeysavchic.beer_pet_project.exception.SecurityJwtException;
 import by.alexeysavchic.beer_pet_project.exception.UnsupportedJwtTokenException;
-import by.alexeysavchic.beer_pet_project.security.JwtConfig;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -17,8 +17,6 @@ import io.jsonwebtoken.security.SecurityException;
 import lombok.AllArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.tomcat.util.http.SameSiteCookies;
-import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
@@ -34,44 +32,24 @@ public class JwtService
 
     private final JwtConfig config;
 
-    public ResponseCookie createBaseCookie(String email)
-    {
-        return ResponseCookie.from("baseToken", generateBaseToken(email))
-                .httpOnly(true)
-                .secure(false)
-                .path("/")
-                .maxAge(900)
-                .sameSite(SameSiteCookies.STRICT.toString())
-                .build();
-    }
-
-    public ResponseCookie createRefreshCookie(String email)
-    {
-        return ResponseCookie.from("refreshToken", generateRefreshToken(email))
-                .httpOnly(true)
-                .secure(false)
-                .path("/refresh")
-                .maxAge(86400)
-                .sameSite(SameSiteCookies.STRICT.toString())
-                .build();
-    }
-
-    private String generateBaseToken(String email)
+    public String generateBaseToken(String email)
     {
         Date timeOfExpiration = Date.from(LocalDateTime.now().plusSeconds(config.getBaseTokenExpiresIn()).
                 atZone(ZoneId.systemDefault()).toInstant());
         return  Jwts.builder().
                 expiration(timeOfExpiration).
+                claim("type", "Base").
                 subject(email).
                 signWith(getSignInKey()).compact();
     }
 
-    private String generateRefreshToken(String email)
+    public String generateRefreshToken(String email)
     {
         Date timeOfExpiration = Date.from(LocalDateTime.now().plusSeconds(config.getRefreshTokenExpiresIn()).
                 atZone(ZoneId.systemDefault()).toInstant());
         return  Jwts.builder().
                 expiration(timeOfExpiration).
+                claim("type", "Refresh").
                 subject(email).
                 signWith(getSignInKey()).compact();
     }
@@ -86,6 +64,16 @@ public class JwtService
             return claims.getSubject();
     }
 
+    public String getTypeFromToken(String token)
+    {
+        Claims claims=Jwts.parser().
+                verifyWith(getSignInKey()).
+                build().
+                parseSignedClaims(token).
+                getPayload();
+        return claims.get("type", String.class);
+    }
+
     public boolean validateJwtToken(String token)
     {
         try {
@@ -98,25 +86,29 @@ public class JwtService
         }
         catch (ExpiredJwtException e)
         {
-            logger.error(ErrorMessages.expiredToken, new ExpiredJwtTokenException());
+            logger.error(ErrorMessages.expiredToken);
+            throw new ExpiredJwtTokenException();
         }
         catch (UnsupportedJwtException e)
         {
-            logger.error(ErrorMessages.unsupportedToken, new UnsupportedJwtTokenException());
+            logger.error(ErrorMessages.unsupportedToken);
+            throw new UnsupportedJwtTokenException();
         }
         catch (MalformedJwtException e)
         {
-            logger.error(ErrorMessages.malformedToken, new ExpiredJwtTokenException());
+            logger.error(ErrorMessages.malformedToken);
+            throw new MalformedJwtTokenException();
         }
         catch (SecurityException e)
         {
-            logger.error(ErrorMessages.securityException, new SecurityJwtException());
+            logger.error(ErrorMessages.securityException);
+            throw new SecurityJwtException();
         }
         catch (Exception e)
         {
-            logger.error(ErrorMessages.invalidToken, new InvalidTokenException());
+            logger.error(ErrorMessages.invalidToken);
+            throw new InvalidTokenException();
         }
-        return false;
     }
 
     private SecretKey getSignInKey()

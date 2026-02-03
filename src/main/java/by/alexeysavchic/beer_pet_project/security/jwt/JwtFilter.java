@@ -1,14 +1,15 @@
 package by.alexeysavchic.beer_pet_project.security.jwt;
 
+import by.alexeysavchic.beer_pet_project.exception.WrongTokenType;
 import by.alexeysavchic.beer_pet_project.security.CustomUserDetails;
 import by.alexeysavchic.beer_pet_project.security.CustomUserDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -26,8 +27,15 @@ public class JwtFilter extends OncePerRequestFilter
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
                                     @NonNull HttpServletResponse response,
-                                    @NonNull FilterChain filterChain) throws ServletException, IOException {
+                                    @NonNull FilterChain filterChain) throws ServletException, IOException
+    {
         String token = getTokenFromRequest(request);
+        if (token!=null &&
+                ((!request.getRequestURI().equals("/auth/refresh") && jwtService.getTypeFromToken(token).equals("Refresh"))
+        || (request.getRequestURI().equals("/auth/refresh") && !jwtService.getTypeFromToken(token).equals("Refresh"))))
+        {
+            throw new WrongTokenType();
+        }
         if(token!=null && jwtService.validateJwtToken(token))
         {
             setCustomUserDetailsToSecurityContextHolder(token);
@@ -46,15 +54,10 @@ public class JwtFilter extends OncePerRequestFilter
 
     private String getTokenFromRequest(HttpServletRequest request)
     {
-        if (request.getCookies() != null)
+        String bearerToken = request.getHeader(HttpHeaders.AUTHORIZATION);
+        if (bearerToken !=null && bearerToken.startsWith("Bearer "))
         {
-            for (Cookie cookie : request.getCookies())
-            {
-                if ("baseToken".equals(cookie.getName()) || "refreshToken".equals(cookie.getName()))
-                {
-                        return cookie.getValue();
-                }
-            }
+            return bearerToken.substring(7);
         }
         return null;
     }

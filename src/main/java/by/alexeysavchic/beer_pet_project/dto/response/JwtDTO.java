@@ -3,13 +3,12 @@ package by.alexeysavchic.beer_pet_project.dto.response;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.http.ResponseCookie;
 
 @Getter
 @Setter
 @NoArgsConstructor
-public class CookieDTO
+public class JwtDTO
 {
-    private ResponseCookie baseCookie;
-    private ResponseCookie refreshCookie;
+    private String baseToken;
+    private String refreshToken;
 }

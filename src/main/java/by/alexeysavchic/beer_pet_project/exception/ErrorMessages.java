@@ -2,20 +2,22 @@ package by.alexeysavchic.beer_pet_project.exception;
 
 public final class ErrorMessages
 {
-    public final static String expiredToken= "Token expired";
+    public final static String expiredToken= "duration of action JWT token expired";
 
-    public final static String unsupportedToken= "Unsupported JWT Exception";
+    public final static String unsupportedToken= "The received token does not match the correct format";
 
-    public final static String malformedToken= "Malformed JWT Exception";
+    public final static String malformedToken= "The received data does not match the correct token format";
 
-    public final static String securityException= "Security exception";
+    public final static String securityException= "You have not permit to access this resource";
 
     public final static String invalidToken = "Invalid token";
 
-    public final static String userNotFound = "User not found";
+    public final static String userNotFound = "User with id=%d not found";
 
     public final static String wrongPassword= "Wrong Password";
 
-    public final static String absentRefreshCookie= "Refresh cookie is absent";
+    public final static String absentRefreshToken= "Refresh cookie is absent";
+
+    public final static String wrongTokenType= "Wrong token Type";
 
 }

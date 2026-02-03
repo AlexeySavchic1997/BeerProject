@@ -25,8 +25,9 @@ public class UserServiceImpl implements UserService
     @Override
     public void changeCredentials(@Valid ChangeCredentialsRequest request)
     {
-        User user = userRepository.findUserById(securityContextService.getCurrentUser().getId()).orElseThrow(()->
-                new UserNotFoundException());
+        Long userId=securityContextService.getCurrentUser().getId();
+        User user = userRepository.findUserById(userId).orElseThrow(()->
+                new UserNotFoundException(userId));
 
         user.setUsername(request.getUsername());
         user.setEmail(request.getEmail());
