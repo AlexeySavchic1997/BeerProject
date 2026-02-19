@@ -19,6 +19,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 import java.util.Set;
 
 @Getter
@@ -26,8 +27,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 @Table(name = "users")
-public class User
-{
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -52,5 +52,4 @@ public class User
     @Column(name = "role")
     @Enumerated(EnumType.STRING)
     private Set<Role> roles;
-
 }

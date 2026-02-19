@@ -7,8 +7,7 @@ import java.io.Serializable;
 
 @NoArgsConstructor
 @EqualsAndHashCode
-public class BeerOfTheMonthId implements Serializable
-{
+public class BeerOfTheMonthId implements Serializable {
     private Short month;
     private Short year;
 }

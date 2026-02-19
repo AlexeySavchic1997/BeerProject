@@ -20,8 +20,7 @@ import lombok.Setter;
 @IdClass(BeerOfTheMonthId.class)
 @Entity
 @Table(name = "beer_of_the_month")
-public class BeerOfTheMonth
-{
+public class BeerOfTheMonth {
     @Id
     @Column(name = "month")
     @Min(value = 1)

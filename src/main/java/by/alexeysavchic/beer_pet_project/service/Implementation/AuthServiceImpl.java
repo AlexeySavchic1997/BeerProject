@@ -5,7 +5,6 @@ import by.alexeysavchic.beer_pet_project.dto.request.UserRegisterRequest;
 import by.alexeysavchic.beer_pet_project.dto.response.JwtResponseDTO;
 import by.alexeysavchic.beer_pet_project.entity.User;
 import by.alexeysavchic.beer_pet_project.exception.EmailAlreadyExistsException;
-import by.alexeysavchic.beer_pet_project.exception.ErrorMessages;
 import by.alexeysavchic.beer_pet_project.exception.RefreshTokenIsAbsentException;
 import by.alexeysavchic.beer_pet_project.exception.UsernameAlreadyExistsException;
 import by.alexeysavchic.beer_pet_project.exception.WrongPasswordException;
@@ -16,8 +15,6 @@ import by.alexeysavchic.beer_pet_project.service.Interface.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,8 +23,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
-public class AuthServiceImpl implements AuthService
-{
+public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
 
     private final JwtService jwtService;
@@ -36,20 +32,15 @@ public class AuthServiceImpl implements AuthService
 
     private final PasswordEncoder passwordEncoder;
 
-    private static final Logger logger= LogManager.getLogger(AuthServiceImpl.class);
-
     @Override
-    public JwtResponseDTO signUp(@Valid UserRegisterRequest request)
-    {
+    public JwtResponseDTO signUp(@Valid UserRegisterRequest request) {
         User user = userMapper.userRegisterRequestToUser(request);
 
-        if(userRepository.existsByUsername(request.getUsername()))
-        {
+        if (userRepository.existsByUsername(request.getUsername())) {
             throw new UsernameAlreadyExistsException(request.getUsername());
         }
 
-        if(userRepository.existsByEmail(request.getEmail()))
-        {
+        if (userRepository.existsByEmail(request.getEmail())) {
             throw new EmailAlreadyExistsException(request.getEmail());
         }
 
@@ -63,15 +54,12 @@ public class AuthServiceImpl implements AuthService
     }
 
     @Override
-    public JwtResponseDTO logIn(@Valid LogInRequest request)
-    {
-        User user=userRepository.findUserByEmail(request.getEmail()).orElseThrow(()->
+    public JwtResponseDTO logIn(@Valid LogInRequest request) {
+        User user = userRepository.findUserByEmail(request.getEmail()).orElseThrow(() ->
                 new UsernameNotFoundException("User with email" + request.getEmail() + "not found"));
 
-        if(!passwordEncoder.matches(request.getPassword(), user.getPassword()))
-        {
-            logger.error(ErrorMessages.wrongPassword);
-            throw new WrongPasswordException();
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new WrongPasswordException(request.getEmail());
         }
 
         JwtResponseDTO jwtResponseDTO = new JwtResponseDTO();
@@ -82,18 +70,15 @@ public class AuthServiceImpl implements AuthService
     }
 
     @Override
-    public JwtResponseDTO refresh(HttpServletRequest request)
-    {
+    public JwtResponseDTO refresh(HttpServletRequest request) {
         JwtResponseDTO response = new JwtResponseDTO();
         String bearerToken = request.getHeader(HttpHeaders.AUTHORIZATION);
-        if (bearerToken !=null && bearerToken.startsWith("Bearer "))
-        {
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
             response.setBaseToken(jwtService.generateBaseToken(jwtService.
                     getEmailFromToken(request.getHeader(HttpHeaders.AUTHORIZATION).substring(7))));
             response.setRefreshToken(bearerToken.substring(7));
             return response;
         }
-        logger.error(ErrorMessages.absentRefreshToken);
         throw new RefreshTokenIsAbsentException();
     }
 }

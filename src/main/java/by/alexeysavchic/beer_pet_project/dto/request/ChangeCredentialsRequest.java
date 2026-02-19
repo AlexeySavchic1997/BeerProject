@@ -12,8 +12,7 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ChangeCredentialsRequest
-{
+public class ChangeCredentialsRequest {
     @Size(min = 2, max = 20, message = "username must be between 2 and 20 symbols")
     @NotBlank
     private String username;
@@ -23,6 +22,7 @@ public class ChangeCredentialsRequest
     private String email;
 
     @NotBlank
+    @Size(min = 8, max = 15, message = "password must be between 8 and 15 symbols")
     private String oldPassword;
 
     @NotBlank

@@ -14,8 +14,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING, unmappedTargetPolicy = ReportingPolicy.ERROR)
-public abstract class UserMapper
-{
+public abstract class UserMapper {
     @Autowired
     protected PasswordEncoder passwordEncoder;
 
@@ -24,8 +23,7 @@ public abstract class UserMapper
     @Mapping(target = "password", expression = "java(passwordEncoder.encode(userRegisterRequest.getPassword()))")
     public abstract User userRegisterRequestToUser(UserRegisterRequest userRegisterRequest);
 
-    protected Set<Role> enumToRoles()
-    {
+    protected Set<Role> enumToRoles() {
         Set<Role> set = new HashSet<Role>();
         set.add(Role.ROLE_USER);
         return set;

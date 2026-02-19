@@ -20,15 +20,14 @@ import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
+
 
 @Getter
 @Setter
 @NoArgsConstructor
 @Entity
 @Table(name = "user_subscription")
-public class UserSubscription
-{
+public class UserSubscription {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -48,9 +47,9 @@ public class UserSubscription
 
     @ManyToMany
     @JoinTable(
-    name = "beer_user_subscription",
-    joinColumns = {@JoinColumn(name = "beer_id")},
-    inverseJoinColumns = {@JoinColumn(name = "user_subscription_id")})
+            name = "beer_user_subscription",
+            joinColumns = {@JoinColumn(name = "beer_id")},
+            inverseJoinColumns = {@JoinColumn(name = "user_subscription_id")})
     private List<Beer> beers;
 
     @Column(name = "subscription_info", columnDefinition = "jsonb")

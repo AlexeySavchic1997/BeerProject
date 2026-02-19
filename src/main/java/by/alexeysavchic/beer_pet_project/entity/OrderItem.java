@@ -21,8 +21,7 @@ import java.math.BigDecimal;
 @IdClass(OrderItemId.class)
 @Entity
 @Table(name = "order_item")
-public class OrderItem
-{
+public class OrderItem {
     @Id
     @ManyToOne
     @JoinColumn(name = "order_id")
@@ -40,5 +39,4 @@ public class OrderItem
     @Column(name = "price")
     @Positive
     private BigDecimal price;
-
 }

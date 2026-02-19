@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "com.group.project")
 public class JwtConfig {
     private String secret;
-    private long baseTokenExpiresIn;
-    private long refreshTokenExpiresIn;
+    private Long baseTokenExpiresIn;
+    private Long refreshTokenExpiresIn;
 }
 

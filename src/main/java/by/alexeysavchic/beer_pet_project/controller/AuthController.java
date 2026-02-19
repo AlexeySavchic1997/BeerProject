@@ -17,34 +17,27 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 @RestController
 @RequestMapping("/auth")
-public class AuthController
-{
+public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/signup")
-    public ResponseEntity<JwtResponseDTO> signUp(@RequestBody UserRegisterRequest request)
-    {
-        JwtResponseDTO tokens= authService.signUp(request);
+    public ResponseEntity<JwtResponseDTO> signUp(@RequestBody UserRegisterRequest request) {
+        JwtResponseDTO tokens = authService.signUp(request);
 
         return ResponseEntity.status(HttpStatus.OK).body(tokens);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<JwtResponseDTO> logIn(@RequestBody LogInRequest request)
-    {
-        JwtResponseDTO tokens= authService.logIn(request);
+    public ResponseEntity<JwtResponseDTO> logIn(@RequestBody LogInRequest request) {
+        JwtResponseDTO tokens = authService.logIn(request);
 
         return ResponseEntity.status(HttpStatus.OK).body(tokens);
     }
 
     @GetMapping("/refresh")
-    public ResponseEntity<JwtResponseDTO> refresh(HttpServletRequest request)
-    {
-        JwtResponseDTO tokens= authService.refresh(request);
+    public ResponseEntity<JwtResponseDTO> refresh(HttpServletRequest request) {
+        JwtResponseDTO tokens = authService.refresh(request);
 
         return ResponseEntity.status(HttpStatus.OK).body(tokens);
     }
-
-
-
 }

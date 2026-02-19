@@ -19,44 +19,38 @@ import java.io.IOException;
 
 @Component
 @AllArgsConstructor
-public class JwtFilter extends OncePerRequestFilter
-{
+public class JwtFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
     private final CustomUserDetailsService customUserDetailsService;
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
                                     @NonNull HttpServletResponse response,
-                                    @NonNull FilterChain filterChain) throws ServletException, IOException
-    {
+                                    @NonNull FilterChain filterChain) throws ServletException, IOException {
         String token = getTokenFromRequest(request);
-        if (token!=null &&
+        if (token != null &&
                 ((!request.getRequestURI().equals("/auth/refresh") && jwtService.getTypeFromToken(token).equals("Refresh"))
-        || (request.getRequestURI().equals("/auth/refresh") && !jwtService.getTypeFromToken(token).equals("Refresh"))))
-        {
-            throw new WrongTokenType();
+                        || (request.getRequestURI().equals("/auth/refresh") && !jwtService.getTypeFromToken(token).equals("Refresh")))) {
+            String expectedType = (request.getRequestURI().equals("/auth/refresh") ? "Refresh" : "Base");
+            throw new WrongTokenType(jwtService.getTypeFromToken(token), expectedType);
         }
-        if(token!=null && jwtService.validateJwtToken(token))
-        {
+        if (token != null && jwtService.validateJwtToken(token)) {
             setCustomUserDetailsToSecurityContextHolder(token);
         }
-        filterChain.doFilter(request,response);
+        filterChain.doFilter(request, response);
     }
 
-    private void setCustomUserDetailsToSecurityContextHolder(String token)
-    {
+    private void setCustomUserDetailsToSecurityContextHolder(String token) {
         String email = jwtService.getEmailFromToken(token);
-        CustomUserDetails customUserDetails= customUserDetailsService.loadUserByUsername(email);
+        CustomUserDetails customUserDetails = customUserDetailsService.loadUserByUsername(email);
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(customUserDetails,
                 null, customUserDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
-    private String getTokenFromRequest(HttpServletRequest request)
-    {
+    private String getTokenFromRequest(HttpServletRequest request) {
         String bearerToken = request.getHeader(HttpHeaders.AUTHORIZATION);
-        if (bearerToken !=null && bearerToken.startsWith("Bearer "))
-        {
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
         }
         return null;

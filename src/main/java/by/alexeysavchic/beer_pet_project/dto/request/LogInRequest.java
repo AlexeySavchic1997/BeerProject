@@ -10,12 +10,12 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class LogInRequest
-{
+public class LogInRequest {
     @Email
     @NotBlank
     private String email;
 
     @NotBlank
+    @Size(min = 8, max = 15, message = "password must be between 8 and 15 symbols")
     private String password;
 }

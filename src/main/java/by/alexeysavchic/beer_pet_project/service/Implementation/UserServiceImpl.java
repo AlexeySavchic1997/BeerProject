@@ -16,8 +16,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
-public class UserServiceImpl implements UserService
-{
+public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     private final SecurityContextService securityContextService;
@@ -25,32 +24,26 @@ public class UserServiceImpl implements UserService
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public void changeCredentials(@Valid ChangeCredentialsRequest request)
-    {
-        Long userId=securityContextService.getCurrentUser().getId();
-        User user = userRepository.findUserById(userId).orElseThrow(()->
+    public void changeCredentials(@Valid ChangeCredentialsRequest request) {
+        Long userId = securityContextService.getCurrentUser().getId();
+        User user = userRepository.findUserById(userId).orElseThrow(() ->
                 new UserNotFoundException(userId));
 
-        if(userRepository.existsByUsername(request.getUsername()) && !user.getUsername().equals(request.getUsername()))
-        {
+        if (userRepository.existsByUsername(request.getUsername()) && !user.getUsername().equals(request.getUsername())) {
             throw new UsernameAlreadyExistsException(request.getUsername());
         }
 
-        if(userRepository.existsByEmail(request.getEmail()) && !user.getEmail().equals(request.getEmail()))
-        {
+        if (userRepository.existsByEmail(request.getEmail()) && !user.getEmail().equals(request.getEmail())) {
             throw new EmailAlreadyExistsException(request.getEmail());
         }
 
         user.setUsername(request.getUsername());
         user.setEmail(request.getEmail());
 
-        if (passwordEncoder.matches(request.getOldPassword(), user.getPassword()))
-        {
+        if (passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
             user.setPassword(passwordEncoder.encode(request.getNewPassword()));
-        }
-        else
-        {
-            throw new WrongPasswordException();
+        } else {
+            throw new WrongPasswordException(securityContextService.getCurrentUser().getEmail());
         }
         userRepository.save(user);
     }

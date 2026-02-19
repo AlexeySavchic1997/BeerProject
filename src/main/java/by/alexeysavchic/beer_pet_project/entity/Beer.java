@@ -20,15 +20,13 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Set;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @Entity
 @Table(name = "beer")
-public class Beer
-{
+public class Beer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -51,7 +49,7 @@ public class Beer
     private BigDecimal price;
 
     @ManyToOne
-    @JoinColumn(name="brand_id")
+    @JoinColumn(name = "brand_id")
     private BeerBrand beerBrand;
 
     @OneToMany(mappedBy = "beer", cascade = CascadeType.REMOVE)

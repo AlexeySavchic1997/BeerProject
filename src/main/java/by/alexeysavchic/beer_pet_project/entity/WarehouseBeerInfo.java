@@ -22,8 +22,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(name = "warehouse_beer_info", uniqueConstraints = {@UniqueConstraint(columnNames = {"zone", "beer_id"})})
-public class WarehouseBeerInfo
-{
+public class WarehouseBeerInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")

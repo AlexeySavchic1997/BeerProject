@@ -9,8 +9,7 @@ import java.io.Serializable;
 
 @NoArgsConstructor
 @EqualsAndHashCode
-public class BeerCharacteristicsId implements Serializable
-{
+public class BeerCharacteristicsId implements Serializable {
     private Beer beer;
     private BeerCharacteristic characteristic;
 }
