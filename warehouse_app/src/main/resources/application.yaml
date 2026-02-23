@@ -1,0 +1,8 @@
+by:
+  group:
+    project:
+       xmlPath: warehouse.xml
+       xsdPath: warehouse_validator.xsd
+
+server:
+  port : 9090
