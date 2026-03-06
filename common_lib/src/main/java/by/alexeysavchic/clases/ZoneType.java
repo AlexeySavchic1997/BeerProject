@@ -1,7 +1,6 @@
 package by.alexeysavchic.clases;
 
-public enum ZoneType
-{
+public enum ZoneType {
     SORTING,
     BOOKED,
     UNLOADING;

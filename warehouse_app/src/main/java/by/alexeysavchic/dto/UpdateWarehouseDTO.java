@@ -7,8 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class UpdateWarehouseDTO
-{
+public class UpdateWarehouseDTO {
     private Long id;
 
     private Integer amount;

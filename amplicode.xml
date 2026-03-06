@@ -2,14 +2,9 @@
 <project version="4">
   <component name="AmplicodePersistenceUnitSettings">
     <persistence-units>
-      <persistence-unit moduleName="beer_pet_project (1)" name="Default">
+      <persistence-unit moduleName="store_app" name="Default">
         <packages>
           <package value="by.alexeysavchic.beer_pet_project" />
-        </packages>
-      </persistence-unit>
-      <persistence-unit moduleName="warehouse_app" name="Default">
-        <packages>
-          <package value="by.alexeysavchic" />
         </packages>
       </persistence-unit>
     </persistence-units>
