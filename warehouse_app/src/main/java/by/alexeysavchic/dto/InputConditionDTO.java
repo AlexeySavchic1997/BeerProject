@@ -8,13 +8,12 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class XmlDto
-{
+public class InputConditionDTO {
     private Long id;
 
     private ZoneType zoneType;
 
-    private Long SKU;
+    private String sku;
 
     private Integer amount;
 }
