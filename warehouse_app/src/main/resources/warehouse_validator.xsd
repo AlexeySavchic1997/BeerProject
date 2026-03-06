@@ -10,7 +10,7 @@
 
                             <xs:element name="id" type="xs:positiveInteger"/>
 
-                            <xs:element name="SKU" type="xs:positiveInteger"/>
+                            <xs:element name="sku" type="xs:string"/>
 
                             <xs:element name="zoneType">
                                 <xs:simpleType>
@@ -23,6 +23,8 @@
                             </xs:element>
 
                             <xs:element name="amount" type="xs:nonNegativeInteger"/>
+
+                            <xs:element name="lastModifiedDate" type="xs:dateTime"/>
 
                         </xs:sequence>
                     </xs:complexType>
