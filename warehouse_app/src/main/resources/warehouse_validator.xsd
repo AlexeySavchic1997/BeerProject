@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:element name="items">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="item" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:sequence>
+
+                            <xs:element name="id" type="xs:positiveInteger"/>
+
+                            <xs:element name="sku" type="xs:string"/>
+
+                            <xs:element name="zoneType">
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:string">
+                                        <xs:enumeration value="BOOKED"/>
+                                        <xs:enumeration value="SORTING"/>
+                                        <xs:enumeration value="UNLOADING"/>
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:element>
+
+                            <xs:element name="amount" type="xs:nonNegativeInteger"/>
+
+                            <xs:element name="lastModifiedDate" type="xs:dateTime"/>
+
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>
