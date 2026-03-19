@@ -14,6 +14,8 @@ by:
         secret: 8b8bc66f6b3525d94e39f4927e518f75c7769409388c4e62868fd6bc3e781220f141edc1
         baseTokenExpiresIn: 900
         refreshTokenExpiresIn: 86400
+        warehouseHost: "localhost"
+        warehousePort: 9090
 
 jpa:
     hibernate:

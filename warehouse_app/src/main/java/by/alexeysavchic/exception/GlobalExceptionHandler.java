@@ -10,7 +10,7 @@ import org.apache.logging.log4j.Logger;
 public class GlobalExceptionHandler {
     private static final Logger logger = LogManager.getLogger(GlobalExceptionHandler.class);
 
-    @GrpcExceptionHandler({XmlReadingException.class, InvalidXmlFileException.class, MalformedXmlFileException.class})
+    @GrpcExceptionHandler({XmlReadingException.class})
     public Status readingExceptions(RuntimeException ex) {
         logger.error(ex.getMessage(), ex);
         return Status.INVALID_ARGUMENT.withDescription(ex.getMessage()).withCause(ex);
@@ -22,15 +22,9 @@ public class GlobalExceptionHandler {
         return Status.INVALID_ARGUMENT.withDescription(ex.getMessage()).withCause(ex);
     }
 
-    @GrpcExceptionHandler({CannotRewriteXmlFileException.class, FileDidNotFoundException.class})
-    public Status fileAccessExceptions(RuntimeException ex) {
-        logger.error(ex.getMessage(), ex);
-        return Status.DATA_LOSS.withDescription(ex.getMessage()).withCause(ex);
-    }
-
-    @GrpcExceptionHandler({ChangingFileDuringExecutingProgramException.class})
-    public Status executingExceptions(RuntimeException ex) {
-        logger.error(ex.getMessage(), ex);
-        return Status.INTERNAL.withDescription(ex.getMessage()).withCause(ex);
+    @GrpcExceptionHandler({NotValidXmlItemException.class})
+    public Status validationExceptions(RuntimeException ex) {
+        logger.error(ex.getMessage());
+        return Status.INVALID_ARGUMENT.withDescription(ex.getMessage()).withCause(ex);
     }
 }
