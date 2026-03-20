@@ -2,7 +2,7 @@ package by.alexeysavchic.service.implementation;
 
 import by.alexeysavchic.mapper.BeerGRPCMapper;
 import by.alexeysavchic.service.interaface.XMLParserService;
-import com.google.protobuf.Empty;
+import com.google.rpc.Status;
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
 import net.devh.boot.grpc.server.service.GrpcService;
@@ -25,11 +25,26 @@ public class GrpcParserImpl extends WarehouseApiGrpc.WarehouseApiImplBase {
         responseObserver.onCompleted();
     }
 
-    //    as I read Empty is a body of response. We'll get GRPC status even with StreamObserver<Empty>
     @Override
-    public void updateWarehouseInfo(UpdateBeerRequest request, StreamObserver<Empty> responseObserver) {
-        xmlParserService.setWarehouseInfo(beerMapper.GrpcRequestToXml(request));
-        responseObserver.onNext(Empty.getDefaultInstance());
+    public void updateWarehouseInfo(UpdateBeerRequest request, StreamObserver<Status> responseObserver)
+    {
+        try {
+            xmlParserService.setWarehouseInfo(beerMapper.GrpcRequestToXml(request));
+        }
+        catch (RuntimeException e)
+        {
+            Status status = Status. newBuilder().
+                    setMessage(e.getMessage()).
+                    setCode(io.grpc.Status.Code.INTERNAL.value()).
+                    build();
+            responseObserver.onNext(status);
+            responseObserver.onCompleted();
+        }
+
+        Status status = Status. newBuilder().
+                setCode(io.grpc.Status.Code.OK.value()).
+                build();
+        responseObserver.onNext(status);
         responseObserver.onCompleted();
     }
 }

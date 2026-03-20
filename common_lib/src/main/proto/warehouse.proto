@@ -1,6 +1,7 @@
 syntax = "proto3";
 import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
+import "google/rpc/status.proto";
 option java_multiple_files = true;
 
 package warehouse_api;
@@ -8,13 +9,14 @@ package warehouse_api;
 service WarehouseApi {
   rpc GetWarehouseInfo (GetWarehouseInfoRequest) returns (BeerInfoResponse);
 
-  rpc UpdateWarehouseInfo (UpdateBeerRequest) returns (google.protobuf.Empty);
+  rpc UpdateWarehouseInfo (UpdateBeerRequest) returns (google.rpc.Status);
 }
 
 enum Zone {
-  SORTING = 0;
-  BOOKED = 1;
-  UNLOADING = 2;
+  ZONE_SORTING = 0;
+  ZONE_BOOKED = 1;
+  ZONE_UNLOADING = 2;
+  ZONE_UNSPECIFIED=3;
 }
 
 message  GetWarehouseInfoRequest {
@@ -25,7 +27,7 @@ message  GetWarehouseInfoRequest {
   google.protobuf.Timestamp time=5;
 }
 
-message WarehouseInfoBeerDTOResponse {
+message WarehouseBeerInfo {
   int64 id = 1 ;
   string sku = 2;
   Zone zoneType = 3;
@@ -35,12 +37,13 @@ message WarehouseInfoBeerDTOResponse {
 
 message BeerInfoResponse
 {
-  repeated WarehouseInfoBeerDTOResponse beer = 1;
+  repeated WarehouseBeerInfo beer = 1;
 }
 
 message UpdateBeerRequest
 {
   int64 id = 1;
   int32 amount = 2;
+  Zone zone=3;
 }
 

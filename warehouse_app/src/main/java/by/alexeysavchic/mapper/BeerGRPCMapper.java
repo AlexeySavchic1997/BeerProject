@@ -13,7 +13,7 @@ import org.mapstruct.ValueMapping;
 import warehouse_api.BeerInfoResponse;
 import warehouse_api.GetWarehouseInfoRequest;
 import warehouse_api.UpdateBeerRequest;
-import warehouse_api.WarehouseInfoBeerDTOResponse;
+import warehouse_api.WarehouseBeerInfo;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -33,10 +33,10 @@ public interface BeerGRPCMapper {
     }
 
     default BeerInfoResponse XmlDtoToGrpcDto(List<WarehouseXmlInfoDTO> listDTOs) {
-        return BeerInfoResponse.newBuilder().addAllBeer(listDtoToListWarehouseInfoBeerDTOResponse(listDTOs)).build();
+        return BeerInfoResponse.newBuilder().addAllBeer(listDtoToListWarehouseBeerInfo(listDTOs)).build();
     }
 
-    List<WarehouseInfoBeerDTOResponse> listDtoToListWarehouseInfoBeerDTOResponse(List<WarehouseXmlInfoDTO> listDTOs);
+    List<WarehouseBeerInfo> listDtoToListWarehouseBeerInfo(List<WarehouseXmlInfoDTO> listDTOs);
 
     @Mapping(target = "mergeFrom", ignore = true)
     @Mapping(target = "clearField", ignore = true)
@@ -48,7 +48,7 @@ public interface BeerGRPCMapper {
     @Mapping(target = "zoneTypeValue", ignore = true)
     @Mapping(target = "mergeTime", ignore = true)
     @Mapping(target = "time", expression = "java(localDateTimeToTimestamp(dto.getLastModifiedDate()))")
-    WarehouseInfoBeerDTOResponse WarehouseInfoDTOToWarehouseInfoBeerDTOResponse(WarehouseXmlInfoDTO dto);
+    WarehouseBeerInfo WarehouseInfoDTOToWarehouseInfoBeerDTOResponse(WarehouseXmlInfoDTO dto);
 
     default Timestamp localDateTimeToTimestamp(LocalDateTime time) {
         return Timestamp.newBuilder().setSeconds(time.toInstant(ZoneOffset.UTC).getEpochSecond()).build();

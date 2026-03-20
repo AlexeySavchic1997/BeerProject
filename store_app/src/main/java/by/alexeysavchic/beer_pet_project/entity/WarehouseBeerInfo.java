@@ -1,7 +1,7 @@
 package by.alexeysavchic.beer_pet_project.entity;
 
 
-import by.alexeysavchic.clases.ZoneType;
+import by.alexeysavchic.beer_pet_project.entity.enums.ZoneType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
