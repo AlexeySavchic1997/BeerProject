@@ -26,14 +26,11 @@ public class GrpcParserImpl extends WarehouseApiGrpc.WarehouseApiImplBase {
     }
 
     @Override
-    public void updateWarehouseInfo(UpdateBeerRequest request, StreamObserver<Status> responseObserver)
-    {
+    public void updateWarehouseInfo(UpdateBeerRequest request, StreamObserver<Status> responseObserver) {
         try {
             xmlParserService.setWarehouseInfo(beerMapper.GrpcRequestToXml(request));
-        }
-        catch (RuntimeException e)
-        {
-            Status status = Status. newBuilder().
+        } catch (RuntimeException e) {
+            Status status = Status.newBuilder().
                     setMessage(e.getMessage()).
                     setCode(io.grpc.Status.Code.INTERNAL.value()).
                     build();
@@ -41,7 +38,7 @@ public class GrpcParserImpl extends WarehouseApiGrpc.WarehouseApiImplBase {
             responseObserver.onCompleted();
         }
 
-        Status status = Status. newBuilder().
+        Status status = Status.newBuilder().
                 setCode(io.grpc.Status.Code.OK.value()).
                 build();
         responseObserver.onNext(status);
