@@ -1,9 +1,9 @@
 by:
   group:
     project:
-       xmlPath: src.main.resources.warehouse.xml
-       intermediateXml: src.main.resources.intermediateXml.xml
-       xsdPath: src.main.resources.warehouse_validator.xsd
+      xmlPath: src.main.resources.warehouse.xml
+      intermediateXml: src.main.resources.intermediateXml.xml
+      xsdPath: src.main.resources.warehouse_validator.xsd
 
 server:
-  port : 9090
+  port: 9090

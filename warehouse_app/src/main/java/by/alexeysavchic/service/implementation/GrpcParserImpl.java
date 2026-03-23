@@ -31,12 +31,12 @@ public class GrpcParserImpl extends WarehouseApiGrpc.WarehouseApiImplBase {
         try {
             xmlParserService.setWarehouseInfo(beerMapper.GrpcRequestToXml(request));
         } catch (RuntimeException e) {
-            UpdateResponse updateResponse=UpdateResponse.newBuilder().setSuccess(false).
+            UpdateResponse updateResponse = UpdateResponse.newBuilder().setSuccess(false).
                     setMess(e.getMessage()).build();
             responseObserver.onNext(updateResponse);
             responseObserver.onCompleted();
         }
-        UpdateResponse updateResponse=UpdateResponse.newBuilder().setSuccess(true).
+        UpdateResponse updateResponse = UpdateResponse.newBuilder().setSuccess(true).
                 setMess("success").build();
         responseObserver.onNext(updateResponse);
         responseObserver.onCompleted();
