@@ -1,5 +1,7 @@
 package by.alexeysavchic.dto;
 
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Getter;
@@ -11,18 +13,23 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
-public class InputConditionDTO {
-
+@JacksonXmlRootElement(localName = "item")
+public class WarehouseXmlInfoDTO {
+    @JacksonXmlProperty(localName = "id")
     @PositiveOrZero(message = "Id can't be negative")
     private Long id;
 
+    @JacksonXmlProperty(localName = "zoneType")
     private ZoneType zoneType;
 
+    @JacksonXmlProperty(localName = "sku")
     private String sku;
 
+    @JacksonXmlProperty(localName = "amount")
     @PositiveOrZero(message = "Amount of items must be zero or positive")
     private Integer amount;
 
+    @JacksonXmlProperty(localName = "lastModifiedDate")
     @PastOrPresent(message = "Date of modifications can't be in future")
     private LocalDateTime lastModifiedDate;
 }
