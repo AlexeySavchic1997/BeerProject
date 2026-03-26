@@ -18,15 +18,8 @@ public class WarehouseController {
     private XMLParserService parserService;
 
     @PostMapping("/update")
-    public ResponseEntity<String> updateWarehouse(@RequestBody @Valid UpdateWarehouseDTO request,
-                                                  @RequestHeader(HttpHeaders.AUTHORIZATION) String identifier) {
-        if (identifier.equals("worker")) {
-            parserService.setWarehouseInfo(request);
-            return ResponseEntity.status(HttpStatus.OK).build();
-        } else {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
+    public ResponseEntity<String> updateWarehouse(@RequestBody UpdateWarehouseDTO request) {
+        parserService.setWarehouseInfo(request);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
-
-
 }

@@ -2,6 +2,7 @@ package by.alexeysavchic.dto;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Getter;
@@ -23,10 +24,11 @@ public class WarehouseXmlInfoDTO {
     private ZoneType zoneType;
 
     @JacksonXmlProperty(localName = "sku")
+    @NotBlank
     private String sku;
 
     @JacksonXmlProperty(localName = "amount")
-    @PositiveOrZero(message = "Amount of items must be zero or positive")
+    @PositiveOrZero(message = "Amount of items can't be negative")
     private Integer amount;
 
     @JacksonXmlProperty(localName = "lastModifiedDate")

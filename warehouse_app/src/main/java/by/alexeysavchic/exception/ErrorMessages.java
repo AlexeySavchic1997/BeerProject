@@ -6,4 +6,6 @@ public class ErrorMessages {
     public final static String xmlWritingException = "warehouse service exception: unable to write %s file";
 
     public final static String notValidXmlItem = "warehouse service exception: %s";
+
+    public final static String notValidRequest = "warehouse service exception: request is not valid access forbidden";
 }

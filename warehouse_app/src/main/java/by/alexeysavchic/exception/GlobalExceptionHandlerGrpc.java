@@ -7,8 +7,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 @GrpcAdvice
-public class GlobalExceptionHandler {
-    private static final Logger logger = LogManager.getLogger(GlobalExceptionHandler.class);
+public class GlobalExceptionHandlerGrpc {
+    private static final Logger logger = LogManager.getLogger(GlobalExceptionHandlerGrpc.class);
 
     @GrpcExceptionHandler({XmlReadingException.class})
     public Status readingExceptions(RuntimeException ex) {

@@ -20,7 +20,7 @@ public class InputConditionDTO {
 
     private String sku;
 
-    @PositiveOrZero(message = "Amount of items must be zero or positive")
+    @PositiveOrZero(message = "Amount of items can't be negative")
     private Integer amount;
 
     @PastOrPresent(message = "Date of modifications can't be in future")
