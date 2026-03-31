@@ -1,7 +1,7 @@
 package by.alexeysavchic.exception;
 
 public class XmlReadingException extends RuntimeException {
-    public XmlReadingException(String file) {
-        super(String.format(ErrorMessages.xmlReadingException, file));
+    public XmlReadingException(String file, Throwable cause) {
+        super(String.format(ErrorMessages.xmlReadingException, file), cause);
     }
 }

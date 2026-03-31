@@ -1,5 +1,7 @@
 package by.alexeysavchic.dto;
 
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,5 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @JacksonXmlRootElement(localName = "items")
 public class WarehouseInfoXmlDTOWrapper {
+    @JacksonXmlElementWrapper(useWrapping = false)
+    @JacksonXmlProperty(localName = "item")
     List<WarehouseXmlInfoDTO> warehouseXmlInfoDTOS;
 }

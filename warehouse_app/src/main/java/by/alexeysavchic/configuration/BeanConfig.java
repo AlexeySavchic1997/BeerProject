@@ -1,6 +1,8 @@
 package by.alexeysavchic.configuration;
 
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
@@ -13,7 +15,10 @@ public class BeanConfig {
 
     @Bean
     public XmlMapper xmlMapper() {
-        return new XmlMapper();
+        XmlMapper xmlMapper = new XmlMapper();
+        xmlMapper.registerModule(new JavaTimeModule());
+        xmlMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        return xmlMapper;
     }
 
     @Bean

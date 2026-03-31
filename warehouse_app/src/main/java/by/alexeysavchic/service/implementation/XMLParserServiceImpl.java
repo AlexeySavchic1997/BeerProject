@@ -67,7 +67,7 @@ public class XMLParserServiceImpl implements XMLParserService {
             }
             return warehouseXmlInfoDTOS;
         } catch (IOException e) {
-            throw new XmlReadingException(xmlPath.toString());
+            throw new XmlReadingException(xmlPath.toString(), e);
         } finally {
             lock.readLock().unlock();
         }
@@ -80,7 +80,7 @@ public class XMLParserServiceImpl implements XMLParserService {
             List<WarehouseXmlInfoDTO> warehouseXmlInfoDTOS = warehouseInfo.getWarehouseXmlInfoDTOS();
             return warehouseXmlInfoDTOS;
         } catch (IOException e) {
-            throw new XmlReadingException(xmlPath.toString());
+            throw new XmlReadingException(xmlPath.toString(), e);
         }
     }
 
@@ -96,9 +96,11 @@ public class XMLParserServiceImpl implements XMLParserService {
                     break;
                 }
             }
-            mapper.writeValue(xmlPath, warehouseList);
+            WarehouseInfoXmlDTOWrapper wrapper = new WarehouseInfoXmlDTOWrapper();
+            wrapper.setWarehouseXmlInfoDTOS(warehouseList);
+            mapper.writeValue(xmlPath, wrapper);
         } catch (IOException e) {
-            throw new XmlWritingException(xmlPath.toString());
+            throw new XmlWritingException(xmlPath.toString(), e);
         } finally {
             lock.writeLock().unlock();
         }

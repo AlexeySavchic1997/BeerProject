@@ -18,8 +18,7 @@ public class WarehouseController {
     private XMLParserService parserService;
 
     @PostMapping("/update")
-    public ResponseEntity<String> updateWarehouse(@RequestBody UpdateWarehouseDTO request) {
+    public void updateWarehouseInfo(@RequestBody UpdateWarehouseDTO request) {
         parserService.setWarehouseInfo(request);
-        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

@@ -21,6 +21,7 @@ public class WarehouseXmlInfoDTO {
     private Long id;
 
     @JacksonXmlProperty(localName = "zoneType")
+    @NotBlank
     private ZoneType zoneType;
 
     @JacksonXmlProperty(localName = "sku")

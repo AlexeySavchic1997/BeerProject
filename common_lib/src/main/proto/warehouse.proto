@@ -48,7 +48,7 @@ message UpdateBeerRequest
 
 message UpdateResponse
 {
-  bool success=1;
-  string mess=2;
+  bool success = 1;
+  string mess = 2;
 }
 
