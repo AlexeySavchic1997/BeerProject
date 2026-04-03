@@ -32,6 +32,11 @@ public class Beer {
     @Column(name = "id")
     private Long id;
 
+    @Column(name = "sku")
+    @Size(max = 30, message = "unvalid sku")
+    @NotBlank
+    private String sku;
+
     @Column(name = "name")
     @Size(min = 2, max = 20, message = "beer name must be between 2 and 20 symbols")
     @NotBlank
@@ -52,7 +57,7 @@ public class Beer {
     @JoinColumn(name = "brand_id")
     private BeerBrand beerBrand;
 
-    @OneToMany(mappedBy = "beer", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "beer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BeerCharacteristics> characteristics;
 
     @ManyToMany(mappedBy = "beers")

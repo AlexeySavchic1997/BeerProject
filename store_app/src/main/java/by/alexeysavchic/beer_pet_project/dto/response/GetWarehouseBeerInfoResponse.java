@@ -1,6 +1,7 @@
-package by.alexeysavchic.dto;
+package by.alexeysavchic.beer_pet_project.dto.response;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,12 +11,17 @@ import warehouse_api.Zone;
 @Getter
 @Setter
 @NoArgsConstructor
-public class UpdateWarehouseDTO {
-    @PositiveOrZero
-    private Long id;
+public class GetWarehouseBeerInfoResponse
+{
+    @Positive
+    Long id;
+
+    @NotBlank
+    String sku;
 
     @PositiveOrZero
-    private Integer amount;
+    Integer amount;
 
-    private Zone zone;
+    @NotBlank
+    Zone zoneType;
 }

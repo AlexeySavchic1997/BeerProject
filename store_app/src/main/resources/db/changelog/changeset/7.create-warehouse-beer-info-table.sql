@@ -4,8 +4,9 @@ create type zone_type AS ENUM ('SORTING','BOOKED', 'UNLOADING');
 create table warehouse_beer_info
 (
 id bigserial primary key,
+sku varchar(30) not null,
 beer_id bigint references beer (id),
 zone zone_type not null,
 amount integer check(amount>=0) not null,
-unique (beer_id, zone)
+unique (beer_id, sku)
 );

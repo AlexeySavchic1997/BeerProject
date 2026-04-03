@@ -54,5 +54,6 @@ public interface BeerGRPCMapper {
         return Timestamp.newBuilder().setSeconds(time.toInstant(ZoneOffset.UTC).getEpochSecond()).build();
     }
 
+    @ValueMapping(source = "UNRECOGNIZED", target = MappingConstants.NULL)
     UpdateWarehouseDTO GrpcRequestToXml(UpdateBeerRequest updateBeerRequest);
 }

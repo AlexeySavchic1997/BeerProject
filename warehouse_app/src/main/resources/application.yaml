@@ -3,5 +3,10 @@ by:
     project:
       xmlPath: C:\Users\sva16\IdeaProjects\beer_pet_project\warehouse_app\src\main\resources\warehouse.xml
 
+grpc:
+  server:
+    port: 9090
+
 server:
-  port: 9090
+  port: 8081
+

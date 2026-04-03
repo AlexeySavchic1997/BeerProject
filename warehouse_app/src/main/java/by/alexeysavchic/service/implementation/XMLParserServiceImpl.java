@@ -37,9 +37,7 @@ public class XMLParserServiceImpl implements XMLParserService {
 
     private File xmlPath;
 
-    private ValidatorFactory validatorFactory;
-
-    private Validator validator;
+    private final Validator validator;
 
     private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
 

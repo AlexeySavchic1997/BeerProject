@@ -19,11 +19,11 @@ enum Zone {
 }
 
 message  GetWarehouseInfoRequest {
-  int64 id = 1 ;
-  string sku = 2;
-  Zone zoneType = 3;
-  int32 amount = 4;
-  google.protobuf.Timestamp time = 5;
+  optional int64 id = 1 ;
+  optional string sku = 2;
+  optional Zone zoneType = 3;
+  optional int32 amount = 4;
+  optional google.protobuf.Timestamp time = 5;
 }
 
 message WarehouseBeerInfo {

@@ -30,7 +30,7 @@
 		<log4j-api.version>2.25.3</log4j-api.version>
 		<log4j-core.version>2.25.3</log4j-core.version>
 		<jackson-dataformat-xml.version>2.21.1</jackson-dataformat-xml.version>
-		<grpc-spring-boot-starter.version>2.14.0.RELEASE</grpc-spring-boot-starter.version>
+		<grpc-spring-boot-starter.version>3.1.0.RELEASE</grpc-spring-boot-starter.version>
 		<grpc.version>1.77.0</grpc.version>
 		<proto-google-common-protos.version>2.28.0</proto-google-common-protos.version>
 		<jackson-datatype-jsr310.version>2.21.2</jackson-datatype-jsr310.version>
@@ -89,6 +89,11 @@
 			<dependency>
 				<groupId>net.devh</groupId>
 				<artifactId>grpc-spring-boot-starter</artifactId>
+				<version>${grpc-spring-boot-starter.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>net.devh</groupId>
+				<artifactId>grpc-client-spring-boot-starter</artifactId>
 				<version>${grpc-spring-boot-starter.version}</version>
 			</dependency>
 			<dependency>

@@ -3,6 +3,7 @@
 create table beer
 (
 id bigserial primary key,
+sku varchar(30) not null unique,
 name varchar(20) not null,
 description text,
 volume decimal(4,3)  check (volume>0) not null,

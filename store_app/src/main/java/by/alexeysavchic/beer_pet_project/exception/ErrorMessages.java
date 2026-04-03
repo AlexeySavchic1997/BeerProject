@@ -22,4 +22,8 @@ public final class ErrorMessages {
     public final static String usernameAlreadyExists = "User with username %s already exists";
 
     public final static String emailAlreadyExists = "User with email %s already exists";
+
+    public final static String unknownBeerBrandException = "Unknown beer brand: %s before adding beer you must add beer brand";
+
+    public final static String cannotFindBeer = "Cannot find beer with sku: %s";
 }

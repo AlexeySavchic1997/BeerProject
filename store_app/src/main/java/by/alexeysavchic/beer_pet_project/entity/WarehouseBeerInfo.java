@@ -13,7 +13,9 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -22,12 +24,17 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "warehouse_beer_info", uniqueConstraints = {@UniqueConstraint(columnNames = {"zone", "beer_id"})})
+@Table(name = "warehouse_beer_info", uniqueConstraints = {@UniqueConstraint(columnNames = {"sku", "beer_id"})})
 public class WarehouseBeerInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
+
+    @Column(name = "sku")
+    @Size(max = 30, message = "unvalid sku")
+    @NotBlank
+    private String sku;
 
     @Column(name = "zone")
     @Enumerated(EnumType.STRING)
@@ -40,4 +47,6 @@ public class WarehouseBeerInfo {
     @Column(name = "amount")
     @Positive
     private Integer amount;
+
+
 }
