@@ -6,8 +6,7 @@ import by.alexeysavchic.beer_pet_project.dto.response.GetWarehouseBeerInfoRespon
 
 import java.util.List;
 
-public interface WarehouseService
-{
+public interface WarehouseService {
     public void getUpdatedWarehouseInfo();
 
     public List<GetWarehouseBeerInfoResponse> getWarehouseInfo(GetWarehouseBeerInfoRequest request);

@@ -14,7 +14,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler({ExpiredJwtTokenException.class, InvalidTokenException.class, MalformedJwtTokenException.class,
             SecurityJwtException.class, UnsupportedJwtTokenException.class, WrongPasswordException.class,
-            RefreshTokenIsAbsentException.class, WrongTokenType.class, UsernameAlreadyExistsException.class,
+            RefreshTokenIsAbsentException.class, WrongTokenTypeException.class, UsernameAlreadyExistsException.class,
             EmailAlreadyExistsException.class, UnknownBeerBrandException.class})
     public ResponseEntity<String> authentificationExceptions(
             RuntimeException ex) {
@@ -22,18 +22,10 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
 
-    @ExceptionHandler({UsernameNotFoundException.class, UserNotFoundException.class, CannotFindBeerExcepton.class})
+    @ExceptionHandler({UsernameNotFoundException.class, UserNotFoundException.class, BeerNotFoundException.class})
     public ResponseEntity<String> notFoundExceptions(
             RuntimeException ex) {
         logger.error(ex.getMessage(), ex.getCause());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
-
-    @ExceptionHandler({CannotGetWarehouseBeerResponse.class, CannotUpdateWarehouseException.class})
-    public ResponseEntity<String> connectionException(RuntimeException ex)
-    {
-        logger.error(ex.getMessage(), ex.getCause());
-        return ResponseEntity.status(HttpStatus.BAD_GATEWAY).build();
-    }
-
 }

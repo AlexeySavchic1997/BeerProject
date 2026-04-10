@@ -1,6 +1,6 @@
 package by.alexeysavchic.beer_pet_project.security.jwt;
 
-import by.alexeysavchic.beer_pet_project.exception.WrongTokenType;
+import by.alexeysavchic.beer_pet_project.exception.WrongTokenTypeException;
 import by.alexeysavchic.beer_pet_project.security.CustomUserDetails;
 import by.alexeysavchic.beer_pet_project.security.CustomUserDetailsService;
 import jakarta.servlet.FilterChain;
@@ -32,7 +32,7 @@ public class JwtFilter extends OncePerRequestFilter {
                 ((!request.getRequestURI().equals("/auth/refresh") && jwtService.getTypeFromToken(token).equals("Refresh"))
                         || (request.getRequestURI().equals("/auth/refresh") && !jwtService.getTypeFromToken(token).equals("Refresh")))) {
             String expectedType = (request.getRequestURI().equals("/auth/refresh") ? "Refresh" : "Base");
-            throw new WrongTokenType(jwtService.getTypeFromToken(token), expectedType);
+            throw new WrongTokenTypeException(jwtService.getTypeFromToken(token), expectedType);
         }
         if (token != null && jwtService.validateJwtToken(token)) {
             setCustomUserDetailsToSecurityContextHolder(token);

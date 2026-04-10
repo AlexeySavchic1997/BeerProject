@@ -1,12 +1,5 @@
 package by.alexeysavchic.beer_pet_project.dto.request;
 
-import by.alexeysavchic.beer_pet_project.entity.BeerBrand;
-import by.alexeysavchic.beer_pet_project.entity.BeerCharacteristics;
-import by.alexeysavchic.beer_pet_project.entity.UserSubscription;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-
-import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
@@ -20,9 +13,8 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class AddNewBeer
-{
-    @Size(max = 30, message = "unvalid sku")
+public class AddBeerInDBRequest {
+    @Size(max = 30, message = "invalid sku")
     @NotBlank
     private String sku;
 
@@ -40,5 +32,5 @@ public class AddNewBeer
 
     private String beerBrand;
 
-    private List<AddNewBeerCharacteristics> characteristics;
+    private List<AddBeerCharacteristicsInDBRequest> characteristics;
 }

@@ -25,5 +25,7 @@ public final class ErrorMessages {
 
     public final static String unknownBeerBrandException = "Unknown beer brand: %s before adding beer you must add beer brand";
 
-    public final static String cannotFindBeer = "Cannot find beer with sku: %s";
+    public final static String beerNotFound = "Cannot find beer with received characteristics";
+
+    public final static String beerBrandNotFound = "Cannot find beer brand with received characteristics";
 }

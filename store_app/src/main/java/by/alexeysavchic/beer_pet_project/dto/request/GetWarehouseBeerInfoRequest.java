@@ -12,8 +12,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
-public class GetWarehouseBeerInfoRequest
-{
+public class GetWarehouseBeerInfoRequest {
     @PositiveOrZero(message = "Id can't be negative")
     private Long id;
 

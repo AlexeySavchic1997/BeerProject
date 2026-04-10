@@ -9,13 +9,12 @@ import warehouse_api.Zone;
 @Getter
 @Setter
 @NoArgsConstructor
-public class UpdateWarehouseInfoDTO
-{
+public class UpdateWarehouseInfoDTO {
     @PositiveOrZero
     private Long id;
 
     @PositiveOrZero
     private Integer amount;
 
-    Zone zone;
+    private Zone zone;
 }

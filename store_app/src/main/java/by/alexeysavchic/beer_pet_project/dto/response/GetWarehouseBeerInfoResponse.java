@@ -11,17 +11,16 @@ import warehouse_api.Zone;
 @Getter
 @Setter
 @NoArgsConstructor
-public class GetWarehouseBeerInfoResponse
-{
+public class GetWarehouseBeerInfoResponse {
     @Positive
-    Long id;
+    private Long id;
 
     @NotBlank
-    String sku;
+    private String sku;
 
     @PositiveOrZero
-    Integer amount;
+    private Integer amount;
 
     @NotBlank
-    Zone zoneType;
+    private Zone zoneType;
 }

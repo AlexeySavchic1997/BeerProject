@@ -3,20 +3,18 @@ package by.alexeysavchic.beer_pet_project.service.Implementation;
 import by.alexeysavchic.beer_pet_project.dto.request.GetWarehouseBeerInfoRequest;
 import by.alexeysavchic.beer_pet_project.dto.request.UpdateWarehouseInfoDTO;
 import by.alexeysavchic.beer_pet_project.dto.response.GetWarehouseBeerInfoResponse;
-import by.alexeysavchic.beer_pet_project.entity.Beer;
 import by.alexeysavchic.beer_pet_project.entity.WarehouseBeerInfo;
 import by.alexeysavchic.beer_pet_project.mapper.WarehouseMapper;
 import by.alexeysavchic.beer_pet_project.repository.BeerRepository;
 import by.alexeysavchic.beer_pet_project.repository.WarehouseRepository;
 import by.alexeysavchic.beer_pet_project.service.Interface.ClientService;
 import by.alexeysavchic.beer_pet_project.service.Interface.WarehouseService;
+import jakarta.validation.Valid;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -26,9 +24,7 @@ import java.util.List;
 @Setter
 @RequiredArgsConstructor
 @Service
-@EnableScheduling
-public class WarehouseServiceImpl implements WarehouseService
-{
+public class WarehouseServiceImpl implements WarehouseService {
     private final ClientService clientService;
 
     private final WarehouseRepository warehouseRepository;
@@ -37,15 +33,14 @@ public class WarehouseServiceImpl implements WarehouseService
 
     private final WarehouseMapper mapper;
 
-    private static final Logger logger = LogManager.getLogger(WarehouseServiceImpl.class);
+    private final Logger logger = LogManager.getLogger(WarehouseServiceImpl.class);
 
     private LocalDateTime timeMark;
 
     @Override
-    @Scheduled(fixedDelay = 300000)
     public void getUpdatedWarehouseInfo() {
         if (timeMark == null) {
-            timeMark = LocalDateTime.now();
+            timeMark = LocalDateTime.now().minusMonths(1);
         }
         GetWarehouseBeerInfoRequest request = new GetWarehouseBeerInfoRequest();
         request.setLastModifiedDate(timeMark);
@@ -67,15 +62,14 @@ public class WarehouseServiceImpl implements WarehouseService
     }
 
     @Override
-    public List<GetWarehouseBeerInfoResponse> getWarehouseInfo(GetWarehouseBeerInfoRequest request) {
+    public List<GetWarehouseBeerInfoResponse> getWarehouseInfo(@Valid GetWarehouseBeerInfoRequest request) {
         return clientService.getWarehouseBeerInfo(request);
     }
 
     @Override
-    public void updateWarehouseInfo(UpdateWarehouseInfoDTO updateDTO)
-    {
+    public void updateWarehouseInfo(@Valid UpdateWarehouseInfoDTO updateDTO) {
         clientService.updateWarehouseInfo(updateDTO);
-        timeMark=LocalDateTime.now();
+        timeMark = LocalDateTime.now();
     }
 
 }

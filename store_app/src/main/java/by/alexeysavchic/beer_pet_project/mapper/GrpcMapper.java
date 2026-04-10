@@ -11,7 +11,6 @@ import org.mapstruct.NullValueCheckStrategy;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.ValueMapping;
-import warehouse_api.BeerInfoResponse;
 import warehouse_api.GetWarehouseInfoRequest;
 import warehouse_api.UpdateBeerRequest;
 import warehouse_api.WarehouseBeerInfo;
@@ -48,7 +47,6 @@ public interface GrpcMapper {
     List<GetWarehouseBeerInfoResponse> listWarehouseBeerInfoToListGetWarehouseBeerInfoResponse(List<WarehouseBeerInfo> beerInfoList);
 
 
-
     GetWarehouseBeerInfoResponse WarehouseInfoDTOToWarehouseInfoBeerDTOResponse(WarehouseBeerInfo dto);
 
 
@@ -64,7 +62,7 @@ public interface GrpcMapper {
     @Mapping(target = "mergeUnknownFields", ignore = true)
     @Mapping(target = "allFields", ignore = true)
     @ValueMapping(source = "UNRECOGNIZED", target = MappingConstants.NULL)
-    UpdateBeerRequest UpdateWarehouseInfoDTOToUpdateBeerRequest (UpdateWarehouseInfoDTO warehouseInfoDTO);
+    UpdateBeerRequest UpdateWarehouseInfoDTOToUpdateBeerRequest(UpdateWarehouseInfoDTO warehouseInfoDTO);
 
 
 }
