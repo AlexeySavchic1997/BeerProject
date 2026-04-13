@@ -26,8 +26,8 @@ public class SecurityConfig {
         http.csrf(csrf -> csrf.disable()).
                 httpBasic(httpBasic -> httpBasic.disable()).
                 authorizeHttpRequests(auth -> auth.
-                        requestMatchers("/auth/**", "/beer/**", "/beer_brand/**").permitAll().
-                        requestMatchers("/warehouse/**").hasRole("admin").
+                        requestMatchers("/api/v1/auth/**", "/api/v1/beer/**", "/api/v1/beer/brand/**").permitAll().
+                        requestMatchers("/api/v1/warehouse/**").hasRole("admin").
                         anyRequest().authenticated()).
                 sessionManagement(sess -> sess.
                         sessionCreationPolicy(SessionCreationPolicy.STATELESS)).

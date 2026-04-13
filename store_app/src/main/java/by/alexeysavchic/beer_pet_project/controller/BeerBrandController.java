@@ -1,6 +1,6 @@
 package by.alexeysavchic.beer_pet_project.controller;
 
-import by.alexeysavchic.beer_pet_project.dto.request.AddBeerBrandInDBRequest;
+import by.alexeysavchic.beer_pet_project.dto.request.AddBeerBrandRequest;
 import by.alexeysavchic.beer_pet_project.dto.response.BeerBrandResponse;
 import by.alexeysavchic.beer_pet_project.service.Interface.BeerBrandService;
 import lombok.RequiredArgsConstructor;
@@ -21,14 +21,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-@RequestMapping("/beer_brand")
+@RequestMapping("/api/v1/beer/brand")
 @RequiredArgsConstructor
 public class BeerBrandController {
     private final BeerBrandService beerBrandService;
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
-    public ResponseEntity<String> addNewBeerBrand(@RequestBody AddBeerBrandInDBRequest newBeerBrand) {
+    public ResponseEntity<String> addNewBeerBrand(@RequestBody AddBeerBrandRequest newBeerBrand) {
         beerBrandService.addBeerBrand(newBeerBrand);
         return ResponseEntity.status(HttpStatus.OK).build();
     }

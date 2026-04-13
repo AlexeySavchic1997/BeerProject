@@ -17,6 +17,10 @@ by:
       warehouseHost: "localhost"
       warehousePort: 9090
 
+grpc:
+  server:
+    port: -1
+
 jpa:
   hibernate:
     ddl-auto: validate

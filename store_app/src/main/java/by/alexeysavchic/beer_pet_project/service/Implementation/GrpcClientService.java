@@ -14,6 +14,9 @@ import jakarta.annotation.PostConstruct;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import net.devh.boot.grpc.client.inject.GrpcClient;
+import net.devh.boot.grpc.client.inject.GrpcClientBean;
+import net.devh.boot.grpc.server.service.GrpcService;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Service;
 import warehouse_api.BeerInfoResponse;
@@ -26,7 +29,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Setter
 @Getter
-@Service
+@GrpcService
 public class GrpcClientService implements ClientService {
     private WarehouseApiGrpc.WarehouseApiBlockingStub blockingStub;
 

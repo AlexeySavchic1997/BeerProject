@@ -1,6 +1,6 @@
 package by.alexeysavchic.beer_pet_project.service.Implementation;
 
-import by.alexeysavchic.beer_pet_project.dto.request.AddBeerInDBRequest;
+import by.alexeysavchic.beer_pet_project.dto.request.AddBeerRequest;
 import by.alexeysavchic.beer_pet_project.dto.request.BeerCharacteristicsRequest;
 import by.alexeysavchic.beer_pet_project.dto.request.GetBeerRequest;
 import by.alexeysavchic.beer_pet_project.dto.response.BeerResponse;
@@ -35,10 +35,10 @@ public class BeerServiceImpl implements BeerService {
 
 
     @Override
-    public void addNewBeer(AddBeerInDBRequest newBeer) {
-        Beer beer = mapper.AddNewBeerToBeer(newBeer);
-        BeerBrand beerBrand = beerBrandRepository.findByBrandName(newBeer.getName()).
+    public void addNewBeer(AddBeerRequest newBeer) {
+        BeerBrand beerBrand = beerBrandRepository.findByBrandName(newBeer.getBeerBrand()).
                 orElseThrow(() -> new UnknownBeerBrandException(newBeer.getBeerBrand()));
+        Beer beer = mapper.AddNewBeerToBeer(newBeer);
         beer.setBeerBrand(beerBrand);
         beerRepository.save(beer);
     }

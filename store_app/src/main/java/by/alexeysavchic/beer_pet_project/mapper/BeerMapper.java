@@ -1,8 +1,8 @@
 package by.alexeysavchic.beer_pet_project.mapper;
 
-import by.alexeysavchic.beer_pet_project.dto.request.AddBeerBrandInDBRequest;
-import by.alexeysavchic.beer_pet_project.dto.request.AddBeerCharacteristicsInDBRequest;
-import by.alexeysavchic.beer_pet_project.dto.request.AddBeerInDBRequest;
+import by.alexeysavchic.beer_pet_project.dto.request.AddBeerBrandRequest;
+import by.alexeysavchic.beer_pet_project.dto.request.AddBeerCharacteristicRequest;
+import by.alexeysavchic.beer_pet_project.dto.request.AddBeerRequest;
 import by.alexeysavchic.beer_pet_project.dto.response.BeerBrandResponse;
 import by.alexeysavchic.beer_pet_project.dto.response.BeerResponse;
 import by.alexeysavchic.beer_pet_project.dto.response.CharacteristicsResponse;
@@ -24,17 +24,17 @@ public interface BeerMapper {
     CharacteristicsResponse beerCharacteristicsToCharacteristicsResponse(BeerCharacteristics characteristics);
 
     @Mapping(target = "id", ignore = true)
-    BeerBrand addBeerBrandInDBRequest(AddBeerBrandInDBRequest request);
+    BeerBrand addBeerBrandInDBRequest(AddBeerBrandRequest request);
 
     BeerBrandResponse beerBrandToBeerBrandResponse(BeerBrand beerBrand);
 
     @Mapping(target = "beerBrand", ignore = true)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "userSubscriptions", ignore = true)
-    Beer AddNewBeerToBeer(AddBeerInDBRequest newBeer);
+    Beer AddNewBeerToBeer(AddBeerRequest newBeer);
 
     @Mapping(target = "beer", ignore = true)
-    BeerCharacteristics addNewBeerCharacteristicsToBeerCharacteristics(AddBeerCharacteristicsInDBRequest characteristics);
+    BeerCharacteristics addNewBeerCharacteristicsToBeerCharacteristics(AddBeerCharacteristicRequest characteristics);
 
     @AfterMapping
     default void addBeerToBeerCharacteristics(@MappingTarget Beer beer) {

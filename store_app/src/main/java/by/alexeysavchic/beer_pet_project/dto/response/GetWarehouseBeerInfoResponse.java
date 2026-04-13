@@ -12,15 +12,11 @@ import warehouse_api.Zone;
 @Setter
 @NoArgsConstructor
 public class GetWarehouseBeerInfoResponse {
-    @Positive
     private Long id;
 
-    @NotBlank
     private String sku;
 
-    @PositiveOrZero
     private Integer amount;
 
-    @NotBlank
     private Zone zoneType;
 }

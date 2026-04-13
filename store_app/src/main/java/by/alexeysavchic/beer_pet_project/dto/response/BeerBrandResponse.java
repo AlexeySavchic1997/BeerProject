@@ -11,6 +11,5 @@ import lombok.Setter;
 public class BeerBrandResponse {
     private String description;
 
-    @NotBlank
     private String brandName;
 }

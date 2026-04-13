@@ -1,6 +1,6 @@
 package by.alexeysavchic.beer_pet_project.service.Implementation;
 
-import by.alexeysavchic.beer_pet_project.dto.request.AddBeerBrandInDBRequest;
+import by.alexeysavchic.beer_pet_project.dto.request.AddBeerBrandRequest;
 import by.alexeysavchic.beer_pet_project.dto.response.BeerBrandResponse;
 import by.alexeysavchic.beer_pet_project.entity.BeerBrand;
 import by.alexeysavchic.beer_pet_project.exception.BeerBrandNotFoundException;
@@ -32,7 +32,7 @@ public class BeerBrandServiceImpl implements BeerBrandService {
 
 
     @Override
-    public void addBeerBrand(@Valid AddBeerBrandInDBRequest request) {
+    public void addBeerBrand(@Valid AddBeerBrandRequest request) {
         if (beerBrandRepository.existsByBrandName(request.getBrandName())) {
             beerBrandRepository.save(beerMapper.addBeerBrandInDBRequest(request));
         } else {
@@ -55,7 +55,7 @@ public class BeerBrandServiceImpl implements BeerBrandService {
         if (brandPage != null) {
             return brandPage.map(beerBrand -> beerMapper.beerBrandToBeerBrandResponse(beerBrand));
         } else {
-            throw new BeerBrandNotFoundException();
+            return Page.empty();
         }
     }
 }

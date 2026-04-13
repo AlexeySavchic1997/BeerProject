@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @NoArgsConstructor
-public class AddBeerCharacteristicsInDBRequest {
+public class AddBeerCharacteristicRequest {
     private BeerCharacteristic characteristic;
 
     @Positive
