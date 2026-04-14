@@ -52,10 +52,8 @@ public class BeerBrandServiceImpl implements BeerBrandService {
 
         Specification<BeerBrand> nameSpecification = Specification.where(specifications.getNameSpecification(brandName));
         Page<BeerBrand> brandPage = beerBrandRepository.findAll(nameSpecification, pageable);
-        if (brandPage != null) {
-            return brandPage.map(beerBrand -> beerMapper.beerBrandToBeerBrandResponse(beerBrand));
-        } else {
-            return Page.empty();
-        }
+
+        return brandPage.map(beerBrand -> beerMapper.beerBrandToBeerBrandResponse(beerBrand));
+
     }
 }

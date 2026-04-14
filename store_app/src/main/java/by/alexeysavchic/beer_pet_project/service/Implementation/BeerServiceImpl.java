@@ -61,10 +61,8 @@ public class BeerServiceImpl implements BeerService {
                     characteristic.getLowerValue(), characteristic.getUpperValue()));
         }
         Page<Beer> beerPage = beerRepository.findAll(specification, pageable);
-        if (beerPage != null) {
-            return beerPage.map(beer -> mapper.beerToBeerResponse(beer));
-        } else {
-            throw new BeerNotFoundException();
-        }
+
+        return beerPage.map(beer -> mapper.beerToBeerResponse(beer));
+
     }
 }

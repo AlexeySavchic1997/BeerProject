@@ -3,7 +3,7 @@ package by.alexeysavchic.beer_pet_project.service.Implementation;
 import by.alexeysavchic.beer_pet_project.dto.request.GetWarehouseBeerInfoRequest;
 import by.alexeysavchic.beer_pet_project.dto.request.UpdateWarehouseInfoDTO;
 import by.alexeysavchic.beer_pet_project.dto.response.GetWarehouseBeerInfoResponse;
-import by.alexeysavchic.beer_pet_project.exception.WarehouseServerResponseException;
+import by.alexeysavchic.beer_pet_project.exception.WarehouseServerException;
 import by.alexeysavchic.beer_pet_project.exception.WarehouseUpdateServerException;
 import by.alexeysavchic.beer_pet_project.mapper.GrpcMapper;
 import by.alexeysavchic.beer_pet_project.service.Interface.ClientService;
@@ -14,11 +14,8 @@ import jakarta.annotation.PostConstruct;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import net.devh.boot.grpc.client.inject.GrpcClient;
-import net.devh.boot.grpc.client.inject.GrpcClientBean;
 import net.devh.boot.grpc.server.service.GrpcService;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Service;
 import warehouse_api.BeerInfoResponse;
 import warehouse_api.UpdateResponse;
 import warehouse_api.WarehouseApiGrpc;
@@ -54,7 +51,7 @@ public class GrpcClientService implements ClientService {
                     getWarehouseInfo(mapper.getWarehouseBeerInfoRequestToGetWarehouseInfoRequest(request));
             return mapper.listWarehouseBeerInfoToListGetWarehouseBeerInfoResponse(warehouseInfo.getBeerList());
         } catch (StatusRuntimeException e) {
-            throw new WarehouseServerResponseException(e.getMessage(), e.getCause());
+            throw new WarehouseServerException(e.getMessage(), e.getCause());
         }
     }
 
@@ -63,7 +60,7 @@ public class GrpcClientService implements ClientService {
         UpdateResponse updateResponse = blockingStub.updateWarehouseInfo(mapper.UpdateWarehouseInfoDTOToUpdateBeerRequest(updateWarehouseInfoDTO));
 
         if (!updateResponse.getSuccess()) {
-            throw new WarehouseUpdateServerException(updateResponse.getMess());
+            throw new WarehouseUpdateServerException(updateResponse.getMessage());
         }
 
     }

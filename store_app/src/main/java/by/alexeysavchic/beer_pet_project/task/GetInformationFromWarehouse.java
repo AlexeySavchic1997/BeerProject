@@ -10,12 +10,12 @@ import org.springframework.stereotype.Component;
 @Component
 @EnableScheduling
 @RequiredArgsConstructor
-public class Scheduler {
+public class GetInformationFromWarehouse {
     private final WarehouseService warehouseService;
 
     @Scheduled(fixedDelay = 300000)
-    @SchedulerLock(name = "MyScheduledTaskLock", lockAtMostFor = "5m", lockAtLeastFor = "5m")
-    protected void GetInformationFromWarehouseTask() {
+    @SchedulerLock(name = "GetInformationFromWarehouse", lockAtMostFor = "5m", lockAtLeastFor = "5m")
+    protected void GetInformation() {
         warehouseService.getUpdatedWarehouseInfo();
     }
 }
