@@ -1,6 +1,6 @@
 --liquibase formatted sql
 --changeset Alexey Savchic:warehouse-beer-info-table
-create type zone_type AS ENUM ('SORTING','BOOKED', 'UNLOADING');
+create type zone_type AS ENUM ('ZONE_SORTING','ZONE_BOOKED', 'ZONE_UNLOADING', 'ZONE_UNSPECIFIED');
 create table warehouse_beer_info
 (
 id bigserial primary key,

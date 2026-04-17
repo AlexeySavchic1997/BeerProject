@@ -8,6 +8,7 @@ import net.devh.boot.grpc.server.service.GrpcService;
 import warehouse_api.BeerInfoResponse;
 import warehouse_api.GetWarehouseInfoRequest;
 import warehouse_api.UpdateBeerRequest;
+import warehouse_api.UpdatePacket;
 import warehouse_api.UpdateResponse;
 import warehouse_api.WarehouseApiGrpc;
 
@@ -27,14 +28,15 @@ public class GrpcParserImpl extends WarehouseApiGrpc.WarehouseApiImplBase {
     }
 
     @Override
-    public void updateWarehouseInfo(UpdateBeerRequest request, StreamObserver<UpdateResponse> responseObserver) {
+    public void updateWarehouseInfo(UpdatePacket packet, StreamObserver<UpdateResponse> responseObserver) {
         try {
-            xmlParserService.setWarehouseInfo(beerMapper.GrpcRequestToXml(request));
+            xmlParserService.setWarehouseInfo(beerMapper.updatePacketToListUpdateWarehouseDTO(packet.getRequestList()));
         } catch (RuntimeException e) {
             UpdateResponse updateResponse = UpdateResponse.newBuilder().setSuccess(false).
                     setMessage(e.getMessage()).build();
             responseObserver.onNext(updateResponse);
             responseObserver.onCompleted();
+            return;
         }
         UpdateResponse updateResponse = UpdateResponse.newBuilder().setSuccess(true).
                 setMessage("success").build();

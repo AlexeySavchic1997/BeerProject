@@ -11,6 +11,9 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 public class BeerResponse {
+
+    private Long id;
+
     private String name;
 
     private String description;
@@ -22,4 +25,6 @@ public class BeerResponse {
     private String beerBrand;
 
     private List<CharacteristicsResponse> characteristics;
+
+    private Integer amount;
 }

@@ -7,6 +7,20 @@ spring:
     url: jdbc:postgresql://localhost:5432/Beer_Database
     username: postgres
     password: Dataparole
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: beer_store@gmail.com
+    password: xxxx xxxx xxxx xxxx
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
 
 by:
   group:

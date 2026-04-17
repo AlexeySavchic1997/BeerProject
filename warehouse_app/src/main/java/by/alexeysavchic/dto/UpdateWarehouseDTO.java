@@ -1,11 +1,13 @@
 package by.alexeysavchic.dto;
 
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import warehouse_api.Zone;
+
+
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -17,5 +19,8 @@ public class UpdateWarehouseDTO {
     @PositiveOrZero
     private Integer amount;
 
-    private Zone zone;
+    boolean adding;
+
+    @PastOrPresent
+    private LocalDateTime timeMark;
 }

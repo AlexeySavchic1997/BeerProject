@@ -17,6 +17,8 @@ import lombok.Setter;
 import net.devh.boot.grpc.server.service.GrpcService;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import warehouse_api.BeerInfoResponse;
+import warehouse_api.UpdateBeerRequest;
+import warehouse_api.UpdatePacket;
 import warehouse_api.UpdateResponse;
 import warehouse_api.WarehouseApiGrpc;
 
@@ -56,9 +58,16 @@ public class GrpcClientService implements ClientService {
     }
 
     @Override
-    public void updateWarehouseInfo(UpdateWarehouseInfoDTO updateWarehouseInfoDTO) {
-        UpdateResponse updateResponse = blockingStub.updateWarehouseInfo(mapper.UpdateWarehouseInfoDTOToUpdateBeerRequest(updateWarehouseInfoDTO));
+    public void updateWarehouseInfo(List<UpdateWarehouseInfoDTO> updates) {
 
+        List<UpdateBeerRequest> updateList=mapper.listUpdateWarehouseInfoDTOToListUpdateBeerRequest(updates);
+
+        UpdatePacket packet= UpdatePacket.newBuilder().addAllRequest(updateList).build();
+        UpdateResponse updateResponse = blockingStub.updateWarehouseInfo(packet);
+
+        if (!updateResponse.getSuccess() && updateResponse.getMessage().equals("There is no required amount items in warehouse")) {
+            throw new WarehouseUpdateServerException(updateResponse.getMessage());
+        }
         if (!updateResponse.getSuccess()) {
             throw new WarehouseUpdateServerException(updateResponse.getMessage());
         }

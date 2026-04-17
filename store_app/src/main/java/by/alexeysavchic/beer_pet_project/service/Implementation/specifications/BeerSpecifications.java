@@ -3,12 +3,15 @@ package by.alexeysavchic.beer_pet_project.service.Implementation.specifications;
 import by.alexeysavchic.beer_pet_project.entity.Beer;
 import by.alexeysavchic.beer_pet_project.entity.BeerBrand;
 import by.alexeysavchic.beer_pet_project.entity.BeerCharacteristics;
+import by.alexeysavchic.beer_pet_project.entity.WarehouseBeerInfo;
 import by.alexeysavchic.beer_pet_project.entity.enums.BeerCharacteristic;
+import by.alexeysavchic.beer_pet_project.entity.enums.ZoneType;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
+import warehouse_api.Zone;
 
 import java.math.BigDecimal;
 
@@ -83,9 +86,9 @@ public class BeerSpecifications {
             if (brandName == null) {
                 return criteriaBuilder.conjunction();
             }
-            Join<BeerBrand, Beer> brand = root.join("beerBrand");
+            Join<Beer, BeerBrand> brand = root.join("beer_brand");
             query.distinct(true);
-            return criteriaBuilder.like(brand.get("brand_name"),
+            return criteriaBuilder.like(brand.get("brandName"),
                     "%" + brandName + "%");
         };
     }
@@ -93,7 +96,7 @@ public class BeerSpecifications {
     public Specification<Beer> getCharacteristicSpecification(BeerCharacteristic type, BigDecimal lowerValue, BigDecimal upperValue) {
         return (root, query, criteriaBuilder) ->
         {
-            Join<BeerCharacteristics, Beer> characteristics = root.join("beer_characteristic");
+            Join<Beer, BeerCharacteristics> characteristics = root.join("beer_characteristic");
             Predicate typePredicate = criteriaBuilder.equal(characteristics.get("characteristic"), type);
             query.distinct(true);
             Predicate valuePredicate;
@@ -107,6 +110,18 @@ public class BeerSpecifications {
                 valuePredicate = criteriaBuilder.between(characteristics.get("value"), lowerValue, upperValue);
             }
             return criteriaBuilder.and(typePredicate, valuePredicate);
+        };
+    }
+
+    public Specification<Beer> getAccessibleBeer() {
+        return (root, query, criteriaBuilder) ->
+        {
+            Join<Beer, WarehouseBeerInfo> warehouseBeerInfo = root.join("warehouse_beer_info");
+            Predicate zonePredicate = criteriaBuilder.equal(warehouseBeerInfo.get("zoneType"),
+                    ZoneType.ZONE_UNLOADING);
+            Predicate amountPredicate = criteriaBuilder.greaterThan(warehouseBeerInfo.get("amount"),
+                    0);
+            return criteriaBuilder.and(zonePredicate, amountPredicate);
         };
     }
 }

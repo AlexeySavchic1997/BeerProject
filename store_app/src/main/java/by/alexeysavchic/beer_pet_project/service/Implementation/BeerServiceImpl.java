@@ -27,8 +27,6 @@ public class BeerServiceImpl implements BeerService {
 
     private final BeerRepository beerRepository;
 
-    private final BeerCharacteristicsRepository beerCharacteristicsRepository;
-
     private final BeerBrandRepository beerBrandRepository;
 
     private final BeerSpecifications specifications;
@@ -57,9 +55,11 @@ public class BeerServiceImpl implements BeerService {
                 specifications.getPriceSpecification(request.getLowerPrice(), request.getUpperPrice()),
                 specifications.getBrandNameSpecification(request.getBeerBrandName()));
         for (BeerCharacteristicsRequest characteristic : request.getCharacteristics()) {
-            specification.and(specifications.getCharacteristicSpecification(characteristic.getCharacteristic(),
+            specification=specification.and(specifications.getCharacteristicSpecification(characteristic.getCharacteristic(),
                     characteristic.getLowerValue(), characteristic.getUpperValue()));
         }
+        specification=specification.and(specifications.getAccessibleBeer());
+
         Page<Beer> beerPage = beerRepository.findAll(specification, pageable);
 
         return beerPage.map(beer -> mapper.beerToBeerResponse(beer));

@@ -9,5 +9,5 @@ import java.util.List;
 public interface ClientService {
     public List<GetWarehouseBeerInfoResponse> getWarehouseBeerInfo(GetWarehouseBeerInfoRequest request);
 
-    public void updateWarehouseInfo(UpdateWarehouseInfoDTO updateWarehouseInfoDTO);
+    public void updateWarehouseInfo(List<UpdateWarehouseInfoDTO> updates);
 }

@@ -27,4 +27,10 @@ public class GlobalExceptionHandlerGrpc {
         logger.error(ex.getMessage());
         return Status.INVALID_ARGUMENT.withDescription(ex.getMessage()).withCause(ex);
     }
+
+    @GrpcExceptionHandler({NotEnoughItemsException.class})
+    public Status requestExceptions(RuntimeException ex) {
+        logger.error(ex.getMessage());
+        return Status.CANCELLED.withDescription(ex.getMessage()).withCause(ex);
+    }
 }

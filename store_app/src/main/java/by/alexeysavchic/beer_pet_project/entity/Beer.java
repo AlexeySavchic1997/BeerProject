@@ -17,6 +17,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.BatchSize;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -59,6 +60,10 @@ public class Beer {
 
     @OneToMany(mappedBy = "beer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BeerCharacteristics> characteristics;
+
+    @OneToMany(mappedBy = "beer")
+    @BatchSize(size = 20)
+    private List<WarehouseBeerInfo> warehouseBeerInfos;
 
     @ManyToMany(mappedBy = "beers")
     private List<UserSubscription> userSubscriptions;

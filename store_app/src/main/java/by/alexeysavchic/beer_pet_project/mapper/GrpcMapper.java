@@ -13,7 +13,7 @@ import org.mapstruct.ReportingPolicy;
 import org.mapstruct.ValueMapping;
 import warehouse_api.GetWarehouseInfoRequest;
 import warehouse_api.UpdateBeerRequest;
-import warehouse_api.WarehouseBeerInfo;
+import warehouse_api.WarehouseBeerInfoItem;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -44,23 +44,27 @@ public interface GrpcMapper {
 
     @ValueMapping(source = "UNRECOGNIZED", target = MappingConstants.NULL)
     @Mapping(target = "lastModifiedDate", expression = "java(localDateTimeToTimestamp(dto.getLastModifiedDate()))")
-    List<GetWarehouseBeerInfoResponse> listWarehouseBeerInfoToListGetWarehouseBeerInfoResponse(List<WarehouseBeerInfo> beerInfoList);
+    List<GetWarehouseBeerInfoResponse> listWarehouseBeerInfoToListGetWarehouseBeerInfoResponse(List<WarehouseBeerInfoItem> beerInfoList);
 
 
-    GetWarehouseBeerInfoResponse WarehouseInfoDTOToWarehouseInfoBeerDTOResponse(WarehouseBeerInfo dto);
+    GetWarehouseBeerInfoResponse WarehouseInfoDTOToWarehouseInfoBeerDTOResponse(WarehouseBeerInfoItem dto);
 
 
     default LocalDateTime timestampToLocalDateTime(Timestamp timestamp) {
         return LocalDateTime.ofInstant(Instant.ofEpochSecond(timestamp.getSeconds()), ZoneOffset.UTC);
     }
 
+    List<UpdateBeerRequest> listUpdateWarehouseInfoDTOToListUpdateBeerRequest (List<UpdateWarehouseInfoDTO> warehouseInfoDTO);
+
     @Mapping(target = "mergeFrom", ignore = true)
     @Mapping(target = "clearField", ignore = true)
     @Mapping(target = "clearOneof", ignore = true)
-    @Mapping(target = "zoneValue", ignore = true)
     @Mapping(target = "unknownFields", ignore = true)
     @Mapping(target = "mergeUnknownFields", ignore = true)
     @Mapping(target = "allFields", ignore = true)
+    @Mapping(target = "mergeTimeMark", ignore = true)
+    @Mapping(target = "adding", ignore = true)
+    @Mapping(target = "timeMark", ignore = true)
     @ValueMapping(source = "UNRECOGNIZED", target = MappingConstants.NULL)
     UpdateBeerRequest UpdateWarehouseInfoDTOToUpdateBeerRequest(UpdateWarehouseInfoDTO warehouseInfoDTO);
 

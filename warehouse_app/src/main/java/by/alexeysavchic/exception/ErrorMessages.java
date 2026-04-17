@@ -7,5 +7,7 @@ public class ErrorMessages {
 
     public final static String notValidXmlItem = "warehouse service exception: %s";
 
-    public final static String notValidRequest = "warehouse service exception: request is not valid access forbidden";
+    public final static String updateXmlException = "Amount of item was changed";
+
+    public final static String notEnoughItems = "There is no required amount items in warehouse";
 }
