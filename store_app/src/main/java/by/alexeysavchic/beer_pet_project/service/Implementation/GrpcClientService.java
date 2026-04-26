@@ -3,6 +3,7 @@ package by.alexeysavchic.beer_pet_project.service.Implementation;
 import by.alexeysavchic.beer_pet_project.dto.request.GetWarehouseBeerInfoRequest;
 import by.alexeysavchic.beer_pet_project.dto.request.UpdateWarehouseInfoDTO;
 import by.alexeysavchic.beer_pet_project.dto.response.GetWarehouseBeerInfoResponse;
+import by.alexeysavchic.beer_pet_project.exception.UpdatingWarehouseXmlError;
 import by.alexeysavchic.beer_pet_project.exception.WarehouseServerException;
 import by.alexeysavchic.beer_pet_project.exception.WarehouseUpdateServerException;
 import by.alexeysavchic.beer_pet_project.mapper.GrpcMapper;
@@ -66,7 +67,7 @@ public class GrpcClientService implements ClientService {
         UpdateResponse updateResponse = blockingStub.updateWarehouseInfo(packet);
 
         if (!updateResponse.getSuccess() && updateResponse.getMessage().equals("There is no required amount items in warehouse")) {
-            throw new WarehouseUpdateServerException(updateResponse.getMessage());
+            throw new UpdatingWarehouseXmlError();
         }
         if (!updateResponse.getSuccess()) {
             throw new WarehouseUpdateServerException(updateResponse.getMessage());

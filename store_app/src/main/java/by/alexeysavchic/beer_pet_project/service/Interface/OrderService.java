@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 public interface OrderService
 {
-    public Long createOrder(CartOrderRequest request, LocalDateTime timeMark);
+    public Order createOrder(CartOrderRequest request, LocalDateTime timeMark);
 
     public void cancelOrder(CartOrderRequest request, Long orderId);
 }

@@ -8,12 +8,10 @@ import by.alexeysavchic.beer_pet_project.entity.WarehouseBeerInfo;
 import by.alexeysavchic.beer_pet_project.entity.enums.ZoneType;
 import by.alexeysavchic.beer_pet_project.exception.BeerIsAbsentInWarehouseException;
 import by.alexeysavchic.beer_pet_project.exception.BeersNotFoundException;
-import by.alexeysavchic.beer_pet_project.exception.TransactionDidNotPassException;
 import by.alexeysavchic.beer_pet_project.repository.OrderRepository;
 import by.alexeysavchic.beer_pet_project.repository.WarehouseRepository;
 import by.alexeysavchic.beer_pet_project.security.SecurityContextService;
 import by.alexeysavchic.beer_pet_project.service.Interface.OrderService;
-import jakarta.persistence.Table;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -37,7 +35,7 @@ public class OrderServiceImpl implements OrderService
 
     @Transactional
     @Override
-    public Long createOrder(CartOrderRequest request, LocalDateTime timeMark)
+    public Order createOrder(CartOrderRequest request, LocalDateTime timeMark)
     {
        Map<Long, Integer> cart=request.getCart();
        List<Long> keyList=new ArrayList<>(cart.keySet());
@@ -95,7 +93,7 @@ public class OrderServiceImpl implements OrderService
        order.setOrderDate(timeMark);
        orderRepository.save(order);
        warehouseRepository.saveAll(warehouseList);
-       return order.getId();
+       return order;
     }
 
     @Transactional
