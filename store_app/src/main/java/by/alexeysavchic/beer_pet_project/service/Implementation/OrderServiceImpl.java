@@ -4,6 +4,7 @@ import by.alexeysavchic.beer_pet_project.dto.request.CartOrderRequest;
 import by.alexeysavchic.beer_pet_project.entity.Beer;
 import by.alexeysavchic.beer_pet_project.entity.Order;
 import by.alexeysavchic.beer_pet_project.entity.OrderItem;
+import by.alexeysavchic.beer_pet_project.entity.User;
 import by.alexeysavchic.beer_pet_project.entity.WarehouseBeerInfo;
 import by.alexeysavchic.beer_pet_project.entity.enums.ZoneType;
 import by.alexeysavchic.beer_pet_project.exception.BeerIsAbsentInWarehouseException;
@@ -31,11 +32,9 @@ public class OrderServiceImpl implements OrderService
 
     private final WarehouseRepository warehouseRepository;
 
-    private final SecurityContextService securityContextService;
-
     @Transactional
     @Override
-    public Order createOrder(CartOrderRequest request, LocalDateTime timeMark)
+    public Order createOrder(CartOrderRequest request, LocalDateTime timeMark, User user)
     {
        Map<Long, Integer> cart=request.getCart();
        List<Long> keyList=new ArrayList<>(cart.keySet());
@@ -89,7 +88,7 @@ public class OrderServiceImpl implements OrderService
            unloadingBeer.setAmount(unloadingBeer.getAmount() + quantity);
        }
        order.setSummaryPrice(summaryPrice);
-       order.setUser(securityContextService.getCurrentUser());
+       order.setUser(user);
        order.setOrderDate(timeMark);
        orderRepository.save(order);
        warehouseRepository.saveAll(warehouseList);

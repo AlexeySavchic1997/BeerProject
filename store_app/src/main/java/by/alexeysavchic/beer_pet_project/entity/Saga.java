@@ -2,6 +2,7 @@ package by.alexeysavchic.beer_pet_project.entity;
 
 import by.alexeysavchic.beer_pet_project.entity.enums.SagaStage;
 import by.alexeysavchic.beer_pet_project.entity.enums.SagaStatus;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -35,7 +36,7 @@ public class Saga {
 
     @Column(name = "payload")
     @JdbcTypeCode(value = SqlTypes.JSON)
-    JsonNode payload;
+    ObjectNode payload;
 
     @Column(name = "created_at")
     @PastOrPresent
