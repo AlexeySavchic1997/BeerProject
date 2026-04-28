@@ -1,20 +1,23 @@
 package by.alexeysavchic.beer_pet_project.service.Implementation;
 
 import by.alexeysavchic.beer_pet_project.dto.request.CartOrderRequest;
+import by.alexeysavchic.beer_pet_project.dto.request.OrderItemRequest;
 import by.alexeysavchic.beer_pet_project.entity.Beer;
 import by.alexeysavchic.beer_pet_project.entity.Order;
 import by.alexeysavchic.beer_pet_project.entity.OrderItem;
 import by.alexeysavchic.beer_pet_project.entity.User;
-import by.alexeysavchic.beer_pet_project.entity.WarehouseBeerInfo;
-import by.alexeysavchic.beer_pet_project.entity.enums.ZoneType;
-import by.alexeysavchic.beer_pet_project.exception.BeerIsAbsentInWarehouseException;
-import by.alexeysavchic.beer_pet_project.exception.BeersNotFoundException;
+import by.alexeysavchic.beer_pet_project.entity.enums.OrderStatus;
+import by.alexeysavchic.beer_pet_project.exception.GlobalExceptionHandler;
+import by.alexeysavchic.beer_pet_project.exception.UpdatingWarehouseXmlError;
+import by.alexeysavchic.beer_pet_project.repository.BeerRepository;
 import by.alexeysavchic.beer_pet_project.repository.OrderRepository;
-import by.alexeysavchic.beer_pet_project.repository.WarehouseRepository;
 import by.alexeysavchic.beer_pet_project.security.SecurityContextService;
+import by.alexeysavchic.beer_pet_project.service.Interface.EmailService;
 import by.alexeysavchic.beer_pet_project.service.Interface.OrderService;
-import jakarta.transaction.Transactional;
+import by.alexeysavchic.beer_pet_project.service.Interface.WarehouseService;
 import lombok.RequiredArgsConstructor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -30,105 +33,65 @@ public class OrderServiceImpl implements OrderService
 {
     private final OrderRepository orderRepository;
 
-    private final WarehouseRepository warehouseRepository;
+    private final BeerRepository beerRepository;
 
-    @Transactional
+    private final WarehouseService warehouseService;
+
+    private final SecurityContextService securityContextService;
+
+    private final EmailService emailService;
+
+    private static final Logger logger = LogManager.getLogger(GlobalExceptionHandler.class);
+
     @Override
-    public Order createOrder(CartOrderRequest request, LocalDateTime timeMark, User user)
+    public void createOrder(CartOrderRequest request)
     {
-       Map<Long, Integer> cart=request.getCart();
-       List<Long> keyList=new ArrayList<>(cart.keySet());
-       List<WarehouseBeerInfo> warehouseList=warehouseRepository.findAllByBeerIdInSortingAndUnloadingZone(keyList);
-       if (keyList.size()!=warehouseList.size())
+        LocalDateTime timeMark = LocalDateTime.now();
+        User user=securityContextService.getCurrentUser();
+       List<OrderItemRequest> cart=request.getCart();
+       List<Long> keyList=new ArrayList<>();
+       for(OrderItemRequest item:cart)
        {
-           List<Long> foundBeers=warehouseList.stream().map(info -> info.getBeer().getId()).toList();
-           keyList.removeAll(foundBeers);
-           throw new BeersNotFoundException(keyList);
+           keyList.add(item.getId());
        }
-        Map<Long, WarehouseBeerInfo> sorting = new HashMap<>();
-        Map<Long, WarehouseBeerInfo> unloading = new HashMap<>();
-        for (WarehouseBeerInfo info : warehouseList) {
-            if (info.getZoneType()==(ZoneType.ZONE_SORTING)) {
-                sorting.put(info.getBeer().getId(), info);
-            } else {
-                unloading.put(info.getBeer().getId(), info);
-            }
-        }
-       List<Long> beersWithNotEnoughAmount=new ArrayList<>();
-        for (Long id:keyList)
-        {
-            if (sorting.get(id).getAmount()<cart.get(id))
-            {
-                beersWithNotEnoughAmount.add(id);
-            }
-        }
-        if (!beersWithNotEnoughAmount.isEmpty())
-        {
-            throw new BeerIsAbsentInWarehouseException(beersWithNotEnoughAmount);
-        }
+       List<Beer> beerList=beerRepository.findAllById(keyList);
+       Map<Long, Beer> beerMap = new HashMap<>();
+       for (Beer beer:beerList)
+       {
+           beerMap.put(beer.getId(),beer);
+       }
 
        Order order = new Order();
+       order.setStatus(OrderStatus.PROCESSING);
        BigDecimal summaryPrice=BigDecimal.ZERO;
-       for (Map.Entry<Long, Integer> entry:cart.entrySet())
+       for (OrderItemRequest item:cart)
        {
-           Long id=entry.getKey();
-           WarehouseBeerInfo sortingBeer = sorting.get(id);
-           WarehouseBeerInfo unloadingBeer = unloading.get(id);
-           Beer beer=sortingBeer.getBeer();
-           Integer quantity=entry.getValue();
+           Beer beer = beerMap.get(item.getId());
+           Integer quantity=item.getAmount();
            BigDecimal price=beer.getPrice().multiply(new BigDecimal(quantity));
-           OrderItem item=new OrderItem();
-           item.setQuantity(quantity);
-           item.setBeer(beer);
-           item.setPrice(price);
-           item.setOrder(order);
+           OrderItem orderItem=new OrderItem();
+           orderItem.setQuantity(quantity);
+           orderItem.setBeer(beer);
+           orderItem.setPrice(price);
+           orderItem.setOrder(order);
            summaryPrice=summaryPrice.add(price);
-           order.getOrderItems().add(item);
-           sortingBeer.setAmount(sortingBeer.getAmount() - quantity);
-           unloadingBeer.setAmount(unloadingBeer.getAmount() + quantity);
+           order.getOrderItems().add(orderItem);
        }
        order.setSummaryPrice(summaryPrice);
        order.setUser(user);
        order.setOrderDate(timeMark);
        orderRepository.save(order);
-       warehouseRepository.saveAll(warehouseList);
-       return order;
+       try {
+           warehouseService.updateWarehouseInfo(request,timeMark);
+           order.setStatus(OrderStatus.SUCCESSFUL);
+           orderRepository.save(order);
+           emailService.sendEmail(order.getOrderItems(), order.getSummaryPrice(), user);
+       }
+       catch (UpdatingWarehouseXmlError e)
+       {
+           logger.error(e.getMessage());
+           order.setStatus(OrderStatus.CANCELED);
+           orderRepository.save(order);
+       }
     }
-
-    @Transactional
-    @Override
-    public void cancelOrder(CartOrderRequest request, Long orderId)
-    {
-        orderRepository.delete(orderRepository.findOrderById(orderId));
-        Map<Long, Integer> cart=request.getCart();
-        List<Long> keyList=new ArrayList<>(cart.keySet());
-        List<WarehouseBeerInfo> warehouseList=warehouseRepository.findAllByBeerIdInSortingAndUnloadingZone(keyList);
-        Map<Long, WarehouseBeerInfo> sorting = new HashMap<>();
-        Map<Long, WarehouseBeerInfo> unloading = new HashMap<>();
-        for (WarehouseBeerInfo info : warehouseList) {
-            if (info.getZoneType()==(ZoneType.ZONE_SORTING)) {
-                sorting.put(info.getBeer().getId(), info);
-            } else {
-                unloading.put(info.getBeer().getId(), info);
-            }
-        }
-        for (Map.Entry<Long, Integer> entry:cart.entrySet())
-        {
-            Long id=entry.getKey();
-            Integer quantity=entry.getValue();
-            WarehouseBeerInfo sortingBeer = sorting.get(id);
-            WarehouseBeerInfo unloadingBeer = unloading.get(id);
-            sortingBeer.setAmount(sortingBeer.getAmount() + quantity);
-            unloadingBeer.setAmount(unloadingBeer.getAmount() - quantity);
-        }
-        warehouseRepository.saveAll(warehouseList);
-    }
-
-
-
-
-
-
-
-
 }

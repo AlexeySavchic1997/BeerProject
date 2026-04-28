@@ -17,7 +17,7 @@ public interface WarehouseMapper {
     @Mapping(target = "beer", ignore = true)
     WarehouseBeerInfo getWarehouseBeerInfoResponseToWarehouseBeerInfo(GetWarehouseBeerInfoResponse response);
 
-    @Mapping(target = "adding", ignore = true)
+    @Mapping(target = "plus", ignore = true)
     @Mapping(target = "timeMark", ignore = true)
     UpdateWarehouseInfoDTO warehouseBeerInfoToUpdateWarehouseInfoDTO(WarehouseBeerInfo request);
 

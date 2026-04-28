@@ -2,6 +2,7 @@ package by.alexeysavchic.beer_pet_project.service.Implementation;
 
 import by.alexeysavchic.beer_pet_project.dto.request.CartOrderRequest;
 import by.alexeysavchic.beer_pet_project.dto.request.GetWarehouseBeerInfoRequest;
+import by.alexeysavchic.beer_pet_project.dto.request.OrderItemRequest;
 import by.alexeysavchic.beer_pet_project.dto.request.UpdateWarehouseInfoDTO;
 import by.alexeysavchic.beer_pet_project.dto.response.GetWarehouseBeerInfoResponse;
 import by.alexeysavchic.beer_pet_project.entity.WarehouseBeerInfo;
@@ -66,6 +67,7 @@ public class WarehouseServiceImpl implements WarehouseService {
                     }
             );
         }
+
     }
 
     @Override
@@ -73,22 +75,14 @@ public class WarehouseServiceImpl implements WarehouseService {
         return clientService.getWarehouseBeerInfo(request);
     }
 
-    @Override
-    public void sendOrderToWarehouse(@Valid CartOrderRequest request, LocalDateTime timeMark)
+    public void updateWarehouseInfo(CartOrderRequest request, LocalDateTime timeMark)
     {
-        updateWarehouseInfo(request, timeMark, false);
-    }
-
-    @Override
-    public void cancelOrderToWarehouse(@Valid CartOrderRequest request, LocalDateTime timeMark)
-    {
-        updateWarehouseInfo(request, timeMark, true);
-    }
-
-    private void updateWarehouseInfo(CartOrderRequest request, LocalDateTime timeMark, boolean cancel)
-    {
-        Map<Long, Integer> cart = request.getCart();
-        List<Long> keyList=new ArrayList<>(cart.keySet());
+        List<OrderItemRequest> cart = request.getCart();
+        List<Long> keyList=new ArrayList<>();
+        for(OrderItemRequest item:cart)
+        {
+            keyList.add(item.getId());
+        }
         List<WarehouseBeerInfo> warehouseList=warehouseRepository.findAllByBeerIdInSortingAndUnloadingZone(keyList);
         Map<Long, WarehouseBeerInfo> sorting = new HashMap<>();
         Map<Long, WarehouseBeerInfo> unloading = new HashMap<>();
@@ -100,26 +94,22 @@ public class WarehouseServiceImpl implements WarehouseService {
             }
         }
         List<UpdateWarehouseInfoDTO> updateList = new ArrayList<>();
-        for (Map.Entry<Long, Integer> entry:cart.entrySet())
+        for (OrderItemRequest item:cart)
         {
-            Long id=entry.getKey();
+            Long id=item.getId();
             WarehouseBeerInfo sortingBeer = sorting.get(id);
             WarehouseBeerInfo unloadingBeer = unloading.get(id);
             UpdateWarehouseInfoDTO sortingUpdate=warehouseMapper.warehouseBeerInfoToUpdateWarehouseInfoDTO(sortingBeer);
             UpdateWarehouseInfoDTO unloadingUpdate=warehouseMapper.warehouseBeerInfoToUpdateWarehouseInfoDTO(unloadingBeer);
-            if (!cancel) {
-                sortingUpdate.setAdding(false);
-                unloadingUpdate.setAdding(true);
-            } else {
-                sortingUpdate.setAdding(true);
-                unloadingUpdate.setAdding(false);
-            }
             sortingUpdate.setTimeMark(timeMark);
             unloadingUpdate.setTimeMark(timeMark);
+            sortingUpdate.setPlus(false);
+            unloadingUpdate.setPlus(true);
             updateList.add(sortingUpdate);
             updateList.add(unloadingUpdate);
         }
         clientService.updateWarehouseInfo(updateList);
+        this.timeMark=timeMark;
     }
 
 

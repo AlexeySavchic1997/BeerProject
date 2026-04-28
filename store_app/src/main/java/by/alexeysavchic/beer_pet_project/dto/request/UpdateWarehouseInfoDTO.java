@@ -19,7 +19,7 @@ public class UpdateWarehouseInfoDTO {
     @PositiveOrZero
     private Integer amount;
 
-    private boolean isAdding;
+    private boolean plus;
 
     @PastOrPresent
     private LocalDateTime timeMark;

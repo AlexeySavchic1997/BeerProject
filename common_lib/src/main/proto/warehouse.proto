@@ -8,7 +8,7 @@ package warehouse_api;
 service WarehouseApi {
   rpc GetWarehouseInfo (GetWarehouseInfoRequest) returns (BeerInfoResponse);
 
-  rpc UpdateWarehouseInfo (UpdatePacket) returns (UpdateResponse);
+  rpc UpdateWarehouseInfo (UpdatePacketRequest) returns (UpdatePacketResponse);
 }
 
 enum Zone {
@@ -39,7 +39,7 @@ message BeerInfoResponse
   repeated WarehouseBeerInfoItem beer = 1;
 }
 
-message UpdatePacket
+message UpdatePacketRequest
 {
   repeated UpdateBeerRequest request=1;
 }
@@ -48,11 +48,11 @@ message UpdateBeerRequest
 {
   int64 id = 1;
   int32 amount = 2;
-  bool adding = 3;
+  bool plus = 3;
   google.protobuf.Timestamp timeMark = 4;
 }
 
-message UpdateResponse
+message UpdatePacketResponse
 {
   bool success = 1;
   string message = 2;

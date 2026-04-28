@@ -98,7 +98,7 @@ public class XMLParserServiceImpl implements XMLParserService {
             for (WarehouseXmlInfoDTO dto : warehouseList) {
                 Long id=dto.getId();
                 UpdateWarehouseDTO update=updateMap.get(id);
-                if (update.isAdding())
+                if (update.isPlus())
                 {
                     dto.setAmount(dto.getAmount()+update.getAmount());
                     dto.setLastModifiedDate(update.getTimeMark());

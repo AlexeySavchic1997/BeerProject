@@ -63,7 +63,7 @@ public interface GrpcMapper {
     @Mapping(target = "mergeUnknownFields", ignore = true)
     @Mapping(target = "allFields", ignore = true)
     @Mapping(target = "mergeTimeMark", ignore = true)
-    @Mapping(target = "adding", ignore = true)
+    @Mapping(target = "plus", ignore = true)
     @Mapping(target = "timeMark", ignore = true)
     @ValueMapping(source = "UNRECOGNIZED", target = MappingConstants.NULL)
     UpdateBeerRequest UpdateWarehouseInfoDTOToUpdateBeerRequest(UpdateWarehouseInfoDTO warehouseInfoDTO);

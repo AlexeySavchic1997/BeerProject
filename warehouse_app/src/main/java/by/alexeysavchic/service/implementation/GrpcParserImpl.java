@@ -7,9 +7,8 @@ import lombok.RequiredArgsConstructor;
 import net.devh.boot.grpc.server.service.GrpcService;
 import warehouse_api.BeerInfoResponse;
 import warehouse_api.GetWarehouseInfoRequest;
-import warehouse_api.UpdateBeerRequest;
-import warehouse_api.UpdatePacket;
-import warehouse_api.UpdateResponse;
+import warehouse_api.UpdatePacketRequest;
+import warehouse_api.UpdatePacketResponse;
 import warehouse_api.WarehouseApiGrpc;
 
 @GrpcService
@@ -28,17 +27,17 @@ public class GrpcParserImpl extends WarehouseApiGrpc.WarehouseApiImplBase {
     }
 
     @Override
-    public void updateWarehouseInfo(UpdatePacket packet, StreamObserver<UpdateResponse> responseObserver) {
+    public void updateWarehouseInfo(UpdatePacketRequest packet, StreamObserver<UpdatePacketResponse> responseObserver) {
         try {
             xmlParserService.setWarehouseInfo(beerMapper.updatePacketToListUpdateWarehouseDTO(packet.getRequestList()));
         } catch (RuntimeException e) {
-            UpdateResponse updateResponse = UpdateResponse.newBuilder().setSuccess(false).
+            UpdatePacketResponse updateResponse = UpdatePacketResponse.newBuilder().setSuccess(false).
                     setMessage(e.getMessage()).build();
             responseObserver.onNext(updateResponse);
             responseObserver.onCompleted();
             return;
         }
-        UpdateResponse updateResponse = UpdateResponse.newBuilder().setSuccess(true).
+        UpdatePacketResponse updateResponse = UpdatePacketResponse.newBuilder().setSuccess(true).
                 setMessage("success").build();
         responseObserver.onNext(updateResponse);
         responseObserver.onCompleted();

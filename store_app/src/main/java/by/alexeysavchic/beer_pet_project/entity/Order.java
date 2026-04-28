@@ -1,8 +1,11 @@
 package by.alexeysavchic.beer_pet_project.entity;
 
+import by.alexeysavchic.beer_pet_project.entity.enums.OrderStatus;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -40,10 +43,14 @@ public class Order {
     @Positive
     private BigDecimal summaryPrice;
 
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    OrderStatus status;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
-    private List<OrderItem> orderItems=new ArrayList<>();
+    private List<OrderItem> orderItems;
 }

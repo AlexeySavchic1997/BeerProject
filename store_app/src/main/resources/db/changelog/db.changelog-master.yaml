@@ -25,5 +25,3 @@ databaseChangeLog:
       file: db/changelog/changeset/12.create-beer-user-subscription-table.sql
   - include:
       file: db/changelog/changeset/13.create-shedlock-table.sql
-  - include:
-      file: db/changelog/changeset/14.create-transaction-outbox-table.sql

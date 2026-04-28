@@ -13,6 +13,10 @@ import java.util.Set;
 public interface WarehouseRepository extends JpaRepository<WarehouseBeerInfo, Long>
 {
     @Query(value = "select w from WarehouseBeerInfo w join fetch w.beer b " +
-            "where w.zoneType='SORTING' and w.zoneType='UNLOADING' and b.id in :ids")
+            "where (w.zoneType='SORTING' or w.zoneType='UNLOADING') and b.id in :ids")
     public List<WarehouseBeerInfo> findAllByBeerIdInSortingAndUnloadingZone(@Param("ids") List<Long> ids);
+
+    @Query(value = "select w from WarehouseBeerInfo w join fetch w.beer b " +
+            "where w.zoneType='SORTING' and b.id in :ids")
+    public List<WarehouseBeerInfo> findAllByBeerIdInSortingZone(@Param("ids") List<Long> ids);
 }

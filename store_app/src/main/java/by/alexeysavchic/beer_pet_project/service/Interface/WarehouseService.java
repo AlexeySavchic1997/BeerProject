@@ -14,7 +14,5 @@ public interface WarehouseService {
 
     public List<GetWarehouseBeerInfoResponse> getWarehouseInfo(GetWarehouseBeerInfoRequest request);
 
-    public void sendOrderToWarehouse(CartOrderRequest request, LocalDateTime timeMark);
-
-    public void cancelOrderToWarehouse(CartOrderRequest request, LocalDateTime timeMark);
+    public void updateWarehouseInfo(CartOrderRequest request, LocalDateTime timeMark);
 }
