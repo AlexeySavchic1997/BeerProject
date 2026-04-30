@@ -1,14 +1,10 @@
 package by.alexeysavchic.beer_pet_project.service.Interface;
 
-import by.alexeysavchic.beer_pet_project.dto.request.CartOrderRequest;
-import by.alexeysavchic.beer_pet_project.entity.Order;
-import by.alexeysavchic.beer_pet_project.entity.User;
+import by.alexeysavchic.beer_pet_project.dto.request.CreateOrderRequest;
+import by.alexeysavchic.beer_pet_project.dto.response.OrderResponse;
 
-import java.time.LocalDateTime;
-
-public interface OrderService
-{
-    public void createOrder(CartOrderRequest request);
+public interface OrderService {
+    public OrderResponse createOrder(CreateOrderRequest request);
 
 
 }

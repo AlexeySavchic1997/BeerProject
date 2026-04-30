@@ -25,9 +25,8 @@ public interface BeerMapper {
     @Mapping(target = "amount", expression = "java(listWarehouseInfoToAmount(beer.getWarehouseBeerInfos()))")
     BeerResponse beerToBeerResponse(Beer beer);
 
-    default Integer listWarehouseInfoToAmount (List<WarehouseBeerInfo> warehouseBeerInfoList)
-    {
-       return warehouseBeerInfoList.get(0).getAmount();
+    default Integer listWarehouseInfoToAmount(List<WarehouseBeerInfo> warehouseBeerInfoList) {
+        return warehouseBeerInfoList.get(0).getAmount();
     }
 
     CharacteristicsResponse beerCharacteristicsToCharacteristicsResponse(BeerCharacteristics characteristics);

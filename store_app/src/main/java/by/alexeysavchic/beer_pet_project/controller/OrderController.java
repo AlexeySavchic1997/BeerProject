@@ -1,6 +1,7 @@
 package by.alexeysavchic.beer_pet_project.controller;
 
-import by.alexeysavchic.beer_pet_project.dto.request.CartOrderRequest;
+import by.alexeysavchic.beer_pet_project.dto.request.CreateOrderRequest;
+import by.alexeysavchic.beer_pet_project.dto.response.OrderResponse;
 import by.alexeysavchic.beer_pet_project.service.Interface.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -11,13 +12,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController("/order")
 @RequiredArgsConstructor
-public class OrderController
-{
+public class OrderController {
     private final OrderService orderService;
 
     @PostMapping("/create")
-    public ResponseEntity<String> createOrder(@RequestBody CartOrderRequest request) {
-        orderService.createOrder(request);
-        return ResponseEntity.status(HttpStatus.OK).build();
+    public ResponseEntity<OrderResponse> createOrder(@RequestBody CreateOrderRequest request) {
+        OrderResponse order = orderService.createOrder(request);
+        return ResponseEntity.status(HttpStatus.OK).body(order);
     }
 }

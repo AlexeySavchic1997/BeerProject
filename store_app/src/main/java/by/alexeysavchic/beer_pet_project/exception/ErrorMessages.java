@@ -28,12 +28,4 @@ public final class ErrorMessages {
     public final static String beerNotFound = "Cannot find beer with received characteristics";
 
     public final static String beerBrandNotFound = "Cannot find beer brand with received characteristics";
-
-    public final static String beerIsAbsentInWarehouse = "Beer with ids: %s is absent in require quantity";
-
-    public final static String transactionDidNotPass = "Beers with ids: %s is absent in require quantity";
-
-    public final static String beersNotFoundException = "Beers with ids: %s doesn't exist";
-
-    public final static String updateWarehouseXmlException = "Beers is absent in require quantity in warehouse";
 }

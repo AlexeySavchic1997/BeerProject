@@ -34,7 +34,7 @@ public class Beer {
     private Long id;
 
     @Column(name = "sku")
-    @Size(min=1, max = 30, message = "sku must be between 1 and 30 symbols")
+    @Size(min = 1, max = 30, message = "sku must be between 1 and 30 symbols")
     @NotBlank
     private String sku;
 

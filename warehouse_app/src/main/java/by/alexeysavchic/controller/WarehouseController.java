@@ -18,4 +18,5 @@ public class WarehouseController {
     public void updateWarehouseInfo(@RequestBody List<UpdateWarehouseDTO> request) {
         parserService.setWarehouseInfo(request);
     }
+    //should we write logic for adding items from workers side?
 }

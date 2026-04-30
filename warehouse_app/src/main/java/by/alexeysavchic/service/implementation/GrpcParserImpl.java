@@ -1,5 +1,7 @@
 package by.alexeysavchic.service.implementation;
 
+import by.alexeysavchic.dto.UpdateResponseDTO;
+import by.alexeysavchic.exception.XmlWritingException;
 import by.alexeysavchic.mapper.BeerGRPCMapper;
 import by.alexeysavchic.service.interaface.XMLParserService;
 import io.grpc.stub.StreamObserver;
@@ -10,6 +12,9 @@ import warehouse_api.GetWarehouseInfoRequest;
 import warehouse_api.UpdatePacketRequest;
 import warehouse_api.UpdatePacketResponse;
 import warehouse_api.WarehouseApiGrpc;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @GrpcService
 @RequiredArgsConstructor
@@ -28,9 +33,11 @@ public class GrpcParserImpl extends WarehouseApiGrpc.WarehouseApiImplBase {
 
     @Override
     public void updateWarehouseInfo(UpdatePacketRequest packet, StreamObserver<UpdatePacketResponse> responseObserver) {
+        List<UpdateResponseDTO> unpassedOrders = new ArrayList<>();
         try {
-            xmlParserService.setWarehouseInfo(beerMapper.updatePacketToListUpdateWarehouseDTO(packet.getRequestList()));
-        } catch (RuntimeException e) {
+            unpassedOrders = xmlParserService.setWarehouseInfo
+                    (beerMapper.updatePacketToListUpdateWarehouseDTO(packet.getRequestList()));
+        } catch (XmlWritingException e) {
             UpdatePacketResponse updateResponse = UpdatePacketResponse.newBuilder().setSuccess(false).
                     setMessage(e.getMessage()).build();
             responseObserver.onNext(updateResponse);
@@ -38,7 +45,10 @@ public class GrpcParserImpl extends WarehouseApiGrpc.WarehouseApiImplBase {
             return;
         }
         UpdatePacketResponse updateResponse = UpdatePacketResponse.newBuilder().setSuccess(true).
-                setMessage("success").build();
+                setMessage("success").
+                addAllUnpassedList(beerMapper.listUpdateResponseDTOToListUnpassedOrderResponse(unpassedOrders)).
+                build();
+
         responseObserver.onNext(updateResponse);
         responseObserver.onCompleted();
     }

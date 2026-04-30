@@ -28,6 +28,6 @@ public class BeerBrand {
 
     @Column(name = "brandName")
     @NotBlank
-    @Size(min=1, max = 30, message = "beer brand name must be between 1 and 30 symbols")
+    @Size(min = 1, max = 30, message = "beer brand name must be between 1 and 30 symbols")
     private String brandName;
 }

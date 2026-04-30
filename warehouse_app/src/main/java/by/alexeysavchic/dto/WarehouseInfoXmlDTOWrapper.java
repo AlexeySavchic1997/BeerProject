@@ -16,5 +16,5 @@ import java.util.List;
 public class WarehouseInfoXmlDTOWrapper {
     @JacksonXmlElementWrapper(useWrapping = false)
     @JacksonXmlProperty(localName = "item")
-    List<WarehouseXmlInfoDTO> warehouseXmlInfoDTOS;
+    private List<WarehouseXmlInfoDTO> warehouseXmlInfoDTOS;
 }

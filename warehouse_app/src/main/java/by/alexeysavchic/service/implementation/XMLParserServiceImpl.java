@@ -1,13 +1,13 @@
 package by.alexeysavchic.service.implementation;
 
-import by.alexeysavchic.dto.UpdateWarehouseDTO;
-import by.alexeysavchic.dto.WarehouseXmlInfoDTO;
 import by.alexeysavchic.dto.InputConditionDTO;
+import by.alexeysavchic.dto.UpdateResponseDTO;
+import by.alexeysavchic.dto.UpdateWarehouseDTO;
 import by.alexeysavchic.dto.WarehouseInfoXmlDTOWrapper;
-import by.alexeysavchic.exception.NotEnoughItemsException;
+import by.alexeysavchic.dto.WarehouseXmlInfoDTO;
+import by.alexeysavchic.dto.ZoneType;
 import by.alexeysavchic.exception.NotValidXmlItemException;
 import by.alexeysavchic.exception.XmlReadingException;
-import by.alexeysavchic.exception.XmlUpdateException;
 import by.alexeysavchic.exception.XmlWritingException;
 import by.alexeysavchic.service.interaface.XMLParserService;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -86,44 +87,48 @@ public class XMLParserServiceImpl implements XMLParserService {
     }
 
     @Override
-    public void setWarehouseInfo(@Valid List<UpdateWarehouseDTO> updateList) {
+    public List<UpdateResponseDTO> setWarehouseInfo(@Valid List<UpdateWarehouseDTO> updateList) {
         try {
             lock.writeLock().lock();
             List<WarehouseXmlInfoDTO> warehouseList = getWarehouseInfo();
-            Map<Long, UpdateWarehouseDTO> updateMap=new HashMap<>();
-            for (UpdateWarehouseDTO update:updateList)
-            {
-                updateMap.put(update.getId(),update);
+            Map<String, Map<ZoneType, WarehouseXmlInfoDTO>> warehouseMap = new HashMap<>();
+            List<UpdateResponseDTO> orderResponse = new ArrayList<>();
+            LocalDateTime timeOfUpdate = LocalDateTime.now();
+            for (WarehouseXmlInfoDTO item : warehouseList) {
+                String sku = item.getSku();
+                ZoneType zoneType = item.getZoneType();
+                Map<ZoneType, WarehouseXmlInfoDTO> innerMap = warehouseMap.computeIfAbsent(sku, f -> new HashMap<>());
+                innerMap.put(zoneType, item);
             }
-            for (WarehouseXmlInfoDTO dto : warehouseList) {
-                Long id=dto.getId();
-                UpdateWarehouseDTO update=updateMap.get(id);
-                if (update.isPlus())
-                {
-                    dto.setAmount(dto.getAmount()+update.getAmount());
-                    dto.setLastModifiedDate(update.getTimeMark());
+            for (UpdateWarehouseDTO update : updateList) {
+                String sku = update.getSku();
+                Integer orderAmount = update.getAmount();
+                WarehouseXmlInfoDTO sortingItem = warehouseMap.get(sku).get(ZoneType.ZONE_SORTING);
+                WarehouseXmlInfoDTO unloadingItem = warehouseMap.get(sku).get(ZoneType.ZONE_UNLOADING);
+                Integer warehouseSortingAmount = sortingItem.getAmount();
+                Integer warehouseUnloadingAmount = unloadingItem.getAmount();
+                if (orderAmount > warehouseSortingAmount) {
+                    Integer unpassedQuantity = orderAmount - warehouseSortingAmount;
+                    UpdateResponseDTO updateResponse = new UpdateResponseDTO(sku, unpassedQuantity);
+                    orderResponse.add(updateResponse);
+                    unloadingItem.setAmount(warehouseUnloadingAmount + warehouseSortingAmount);
+                    sortingItem.setAmount(0);
+                } else {
+                    sortingItem.setAmount(warehouseSortingAmount - orderAmount);
+                    unloadingItem.setAmount(warehouseUnloadingAmount + orderAmount);
                 }
-                else
-                {
-                    if (dto.getAmount()<update.getAmount())
-                    {
-                        throw new NotEnoughItemsException();
-                    }
-                    else
-                    {
-                        dto.setAmount(dto.getAmount()-update.getAmount());
-                        dto.setLastModifiedDate(update.getTimeMark());
-                    }
-                }
-
+                sortingItem.setLastModifiedDate(timeOfUpdate);
+                unloadingItem.setLastModifiedDate(timeOfUpdate);
             }
             WarehouseInfoXmlDTOWrapper wrapper = new WarehouseInfoXmlDTOWrapper();
             wrapper.setWarehouseXmlInfoDTOS(warehouseList);
             mapper.writeValue(xmlPath, wrapper);
+            return orderResponse;
         } catch (IOException e) {
             throw new XmlWritingException(xmlPath.toString(), e);
         } finally {
             lock.writeLock().unlock();
         }
+
     }
 }

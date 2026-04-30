@@ -1,8 +1,9 @@
 package by.alexeysavchic.mapper;
 
-import by.alexeysavchic.dto.WarehouseXmlInfoDTO;
 import by.alexeysavchic.dto.InputConditionDTO;
+import by.alexeysavchic.dto.UpdateResponseDTO;
 import by.alexeysavchic.dto.UpdateWarehouseDTO;
+import by.alexeysavchic.dto.WarehouseXmlInfoDTO;
 import com.google.protobuf.Timestamp;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -12,6 +13,7 @@ import org.mapstruct.ReportingPolicy;
 import org.mapstruct.ValueMapping;
 import warehouse_api.BeerInfoResponse;
 import warehouse_api.GetWarehouseInfoRequest;
+import warehouse_api.UnpassedOrderResponse;
 import warehouse_api.UpdateBeerRequest;
 import warehouse_api.WarehouseBeerInfoItem;
 
@@ -56,6 +58,16 @@ public interface BeerGRPCMapper {
 
     List<UpdateWarehouseDTO> updatePacketToListUpdateWarehouseDTO(List<UpdateBeerRequest> updatePacket);
 
-    @Mapping(target = "timeMark", expression = "java(timestampToLocalDateTime(updateBeerRequest.getTimeMark()))")
     UpdateWarehouseDTO GrpcRequestToXml(UpdateBeerRequest updateBeerRequest);
+
+    List<UnpassedOrderResponse> listUpdateResponseDTOToListUnpassedOrderResponse(List<UpdateResponseDTO> listUpdateResponseDTO);
+
+    @Mapping(target = "mergeFrom", ignore = true)
+    @Mapping(target = "clearField", ignore = true)
+    @Mapping(target = "clearOneof", ignore = true)
+    @Mapping(target = "unknownFields", ignore = true)
+    @Mapping(target = "mergeUnknownFields", ignore = true)
+    @Mapping(target = "allFields", ignore = true)
+    @Mapping(target = "skuBytes", ignore = true)
+    UnpassedOrderResponse UpdateResponseDTOToUnpassedOrderResponse(UpdateResponseDTO updateResponseDTO);
 }

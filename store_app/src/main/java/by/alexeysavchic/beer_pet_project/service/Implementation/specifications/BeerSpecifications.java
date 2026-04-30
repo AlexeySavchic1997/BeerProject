@@ -11,7 +11,6 @@ import jakarta.persistence.criteria.Predicate;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
-import warehouse_api.Zone;
 
 import java.math.BigDecimal;
 

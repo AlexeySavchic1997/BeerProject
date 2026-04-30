@@ -10,7 +10,6 @@ import by.alexeysavchic.beer_pet_project.exception.BeerNotFoundException;
 import by.alexeysavchic.beer_pet_project.exception.UnknownBeerBrandException;
 import by.alexeysavchic.beer_pet_project.mapper.BeerMapper;
 import by.alexeysavchic.beer_pet_project.repository.BeerBrandRepository;
-import by.alexeysavchic.beer_pet_project.repository.BeerCharacteristicsRepository;
 import by.alexeysavchic.beer_pet_project.repository.BeerRepository;
 import by.alexeysavchic.beer_pet_project.service.Implementation.specifications.BeerSpecifications;
 import by.alexeysavchic.beer_pet_project.service.Interface.BeerService;
@@ -55,10 +54,10 @@ public class BeerServiceImpl implements BeerService {
                 specifications.getPriceSpecification(request.getLowerPrice(), request.getUpperPrice()),
                 specifications.getBrandNameSpecification(request.getBeerBrandName()));
         for (BeerCharacteristicsRequest characteristic : request.getCharacteristics()) {
-            specification=specification.and(specifications.getCharacteristicSpecification(characteristic.getCharacteristic(),
+            specification = specification.and(specifications.getCharacteristicSpecification(characteristic.getCharacteristic(),
                     characteristic.getLowerValue(), characteristic.getUpperValue()));
         }
-        specification=specification.and(specifications.getAccessibleBeer());
+        specification = specification.and(specifications.getAccessibleBeer());
 
         Page<Beer> beerPage = beerRepository.findAll(specification, pageable);
 

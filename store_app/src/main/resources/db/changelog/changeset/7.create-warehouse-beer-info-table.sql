@@ -8,5 +8,5 @@ sku varchar(30) not null,
 beer_id bigint references beer (id),
 zone zone_type not null,
 amount integer check(amount>=0) not null,
-unique (beer_id, sku)
+unique (zone, sku)
 );

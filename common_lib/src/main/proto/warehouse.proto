@@ -26,35 +26,40 @@ message  GetWarehouseInfoRequest {
   optional google.protobuf.Timestamp time = 5;
 }
 
-message WarehouseBeerInfoItem {
-  int64 id = 1 ;
-  string sku = 2;
-  Zone zoneType = 3;
-  int32 amount = 4;
-  google.protobuf.Timestamp time = 5;
-}
-
 message BeerInfoResponse
 {
   repeated WarehouseBeerInfoItem beer = 1;
 }
 
+message WarehouseBeerInfoItem {
+  int64 id = 1 ;
+  string sku = 2;
+  Zone zone_type = 3;
+  int32 amount = 4;
+  google.protobuf.Timestamp time = 5;
+}
+
 message UpdatePacketRequest
 {
-  repeated UpdateBeerRequest request=1;
+  repeated UpdateBeerRequest request = 1;
 }
 
 message UpdateBeerRequest
 {
-  int64 id = 1;
+  string sku = 1;
   int32 amount = 2;
-  bool plus = 3;
-  google.protobuf.Timestamp timeMark = 4;
 }
 
 message UpdatePacketResponse
 {
   bool success = 1;
   string message = 2;
+  repeated UnpassedOrderResponse unpassedList = 3;
+}
+
+message UnpassedOrderResponse
+{
+  string sku = 1;
+  int32 amount = 2;
 }
 

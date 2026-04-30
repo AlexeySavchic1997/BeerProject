@@ -1,9 +1,8 @@
 package by.alexeysavchic.beer_pet_project.service.Implementation;
 
 import by.alexeysavchic.beer_pet_project.dto.request.GetWarehouseBeerInfoRequest;
-import by.alexeysavchic.beer_pet_project.dto.request.UpdateWarehouseInfoDTO;
+import by.alexeysavchic.beer_pet_project.dto.request.OrderItemRequest;
 import by.alexeysavchic.beer_pet_project.dto.response.GetWarehouseBeerInfoResponse;
-import by.alexeysavchic.beer_pet_project.exception.UpdatingWarehouseXmlError;
 import by.alexeysavchic.beer_pet_project.exception.WarehouseServerException;
 import by.alexeysavchic.beer_pet_project.exception.WarehouseUpdateServerException;
 import by.alexeysavchic.beer_pet_project.mapper.GrpcMapper;
@@ -18,6 +17,7 @@ import lombok.Setter;
 import net.devh.boot.grpc.server.service.GrpcService;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import warehouse_api.BeerInfoResponse;
+import warehouse_api.UnpassedOrderResponse;
 import warehouse_api.UpdateBeerRequest;
 import warehouse_api.UpdatePacketRequest;
 import warehouse_api.UpdatePacketResponse;
@@ -59,19 +59,17 @@ public class GrpcClientService implements ClientService {
     }
 
     @Override
-    public void updateWarehouseInfo(List<UpdateWarehouseInfoDTO> updates) {
+    public List<UnpassedOrderResponse> updateWarehouseInfo(List<OrderItemRequest> updates) {
 
-        List<UpdateBeerRequest> updateList=mapper.listUpdateWarehouseInfoDTOToListUpdateBeerRequest(updates);
+        List<UpdateBeerRequest> updateList = mapper.listOrderItemRequestToListUpdateBeerRequest(updates);
 
-        UpdatePacketRequest packet= UpdatePacketRequest.newBuilder().addAllRequest(updateList).build();
+        UpdatePacketRequest packet = UpdatePacketRequest.newBuilder().addAllRequest(updateList).build();
         UpdatePacketResponse updateResponse = blockingStub.updateWarehouseInfo(packet);
 
-        if (!updateResponse.getSuccess() && updateResponse.getMessage().equals("There is no required amount items in warehouse")) {
-            throw new UpdatingWarehouseXmlError();
-        }
-        if (!updateResponse.getSuccess()) {
+        if (updateResponse.getSuccess()) {
+            return updateResponse.getUnpassedListList();
+        } else {
             throw new WarehouseUpdateServerException(updateResponse.getMessage());
         }
-
     }
 }

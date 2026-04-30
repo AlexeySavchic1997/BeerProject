@@ -10,8 +10,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class CartOrderRequest
-{
+public class CreateOrderRequest {
     @NotEmpty
-    List<OrderItemRequest> cart;
+    private List<OrderItemRequest> cart;
 }

@@ -1,7 +1,7 @@
 package by.alexeysavchic.beer_pet_project.mapper;
 
 import by.alexeysavchic.beer_pet_project.dto.request.GetWarehouseBeerInfoRequest;
-import by.alexeysavchic.beer_pet_project.dto.request.UpdateWarehouseInfoDTO;
+import by.alexeysavchic.beer_pet_project.dto.request.OrderItemRequest;
 import by.alexeysavchic.beer_pet_project.dto.response.GetWarehouseBeerInfoResponse;
 import com.google.protobuf.Timestamp;
 import org.mapstruct.Mapper;
@@ -15,7 +15,6 @@ import warehouse_api.GetWarehouseInfoRequest;
 import warehouse_api.UpdateBeerRequest;
 import warehouse_api.WarehouseBeerInfoItem;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
@@ -49,12 +48,7 @@ public interface GrpcMapper {
 
     GetWarehouseBeerInfoResponse WarehouseInfoDTOToWarehouseInfoBeerDTOResponse(WarehouseBeerInfoItem dto);
 
-
-    default LocalDateTime timestampToLocalDateTime(Timestamp timestamp) {
-        return LocalDateTime.ofInstant(Instant.ofEpochSecond(timestamp.getSeconds()), ZoneOffset.UTC);
-    }
-
-    List<UpdateBeerRequest> listUpdateWarehouseInfoDTOToListUpdateBeerRequest (List<UpdateWarehouseInfoDTO> warehouseInfoDTO);
+    List<UpdateBeerRequest> listOrderItemRequestToListUpdateBeerRequest(List<OrderItemRequest> orderRequest);
 
     @Mapping(target = "mergeFrom", ignore = true)
     @Mapping(target = "clearField", ignore = true)
@@ -62,11 +56,8 @@ public interface GrpcMapper {
     @Mapping(target = "unknownFields", ignore = true)
     @Mapping(target = "mergeUnknownFields", ignore = true)
     @Mapping(target = "allFields", ignore = true)
-    @Mapping(target = "mergeTimeMark", ignore = true)
-    @Mapping(target = "plus", ignore = true)
-    @Mapping(target = "timeMark", ignore = true)
-    @ValueMapping(source = "UNRECOGNIZED", target = MappingConstants.NULL)
-    UpdateBeerRequest UpdateWarehouseInfoDTOToUpdateBeerRequest(UpdateWarehouseInfoDTO warehouseInfoDTO);
+    @Mapping(target = "skuBytes", ignore = true)
+    UpdateBeerRequest OrderItemRequestToUpdateBeerRequest(OrderItemRequest request);
 
 
 }
