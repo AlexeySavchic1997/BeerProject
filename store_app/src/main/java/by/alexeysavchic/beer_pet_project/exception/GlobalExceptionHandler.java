@@ -22,7 +22,8 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
 
-    @ExceptionHandler({UsernameNotFoundException.class, UserNotFoundException.class, BeerNotFoundException.class})
+    @ExceptionHandler({UsernameNotFoundException.class, UserNotFoundException.class, BeerNotFoundException.class,
+            BeerBrandNotFoundException.class})
     public ResponseEntity<String> notFoundExceptions(
             RuntimeException ex) {
         logger.error(ex.getMessage(), ex.getCause());

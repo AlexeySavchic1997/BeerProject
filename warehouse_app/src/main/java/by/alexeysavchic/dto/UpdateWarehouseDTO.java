@@ -1,21 +1,17 @@
 package by.alexeysavchic.dto;
 
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import warehouse_api.Zone;
 
 @Getter
 @Setter
 @NoArgsConstructor
 public class UpdateWarehouseDTO {
-    @PositiveOrZero
-    private Long id;
+
+    private String sku;
 
     @PositiveOrZero
     private Integer amount;
-
-    private Zone zone;
 }

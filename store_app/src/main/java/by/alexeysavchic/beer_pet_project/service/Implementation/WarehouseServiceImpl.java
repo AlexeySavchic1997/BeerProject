@@ -1,7 +1,6 @@
 package by.alexeysavchic.beer_pet_project.service.Implementation;
 
 import by.alexeysavchic.beer_pet_project.dto.request.GetWarehouseBeerInfoRequest;
-import by.alexeysavchic.beer_pet_project.dto.request.UpdateWarehouseInfoDTO;
 import by.alexeysavchic.beer_pet_project.dto.response.GetWarehouseBeerInfoResponse;
 import by.alexeysavchic.beer_pet_project.entity.WarehouseBeerInfo;
 import by.alexeysavchic.beer_pet_project.mapper.WarehouseMapper;
@@ -31,7 +30,7 @@ public class WarehouseServiceImpl implements WarehouseService {
 
     private final BeerRepository beerRepository;
 
-    private final WarehouseMapper mapper;
+    private final WarehouseMapper warehouseMapper;
 
     private final Logger logger = LogManager.getLogger(WarehouseServiceImpl.class);
 
@@ -40,25 +39,27 @@ public class WarehouseServiceImpl implements WarehouseService {
     @Override
     public void getUpdatedWarehouseInfo() {
         if (timeMark == null) {
-            timeMark = LocalDateTime.now().minusMonths(1);
+            timeMark = LocalDateTime.now();
         }
         GetWarehouseBeerInfoRequest request = new GetWarehouseBeerInfoRequest();
         request.setLastModifiedDate(timeMark);
         List<GetWarehouseBeerInfoResponse> listDTO = clientService.getWarehouseBeerInfo(request);
 
         for (GetWarehouseBeerInfoResponse response : listDTO) {
-            WarehouseBeerInfo warehouseInfo = mapper.getWarehouseBeerInfoResponseToWarehouseBeerInfo(response);
+            WarehouseBeerInfo warehouseInfo = warehouseMapper.getWarehouseBeerInfoResponseToWarehouseBeerInfo(response);
             beerRepository.findBeerBySku(warehouseInfo.getSku()).ifPresentOrElse(
                     beer ->
                     {
                         warehouseInfo.setBeer(beer);
                         warehouseRepository.save(warehouseInfo);
+                        timeMark = LocalDateTime.now();
                     },
                     () -> {
                         logger.error("cannot add this beer in DB with unknown sku: " + warehouseInfo.getSku());
                     }
             );
         }
+
     }
 
     @Override
@@ -66,10 +67,5 @@ public class WarehouseServiceImpl implements WarehouseService {
         return clientService.getWarehouseBeerInfo(request);
     }
 
-    @Override
-    public void updateWarehouseInfo(@Valid UpdateWarehouseInfoDTO updateDTO) {
-        clientService.updateWarehouseInfo(updateDTO);
-        timeMark = LocalDateTime.now();
-    }
 
 }

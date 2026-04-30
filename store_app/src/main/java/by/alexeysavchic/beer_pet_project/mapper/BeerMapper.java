@@ -9,6 +9,7 @@ import by.alexeysavchic.beer_pet_project.dto.response.CharacteristicsResponse;
 import by.alexeysavchic.beer_pet_project.entity.Beer;
 import by.alexeysavchic.beer_pet_project.entity.BeerBrand;
 import by.alexeysavchic.beer_pet_project.entity.BeerCharacteristics;
+import by.alexeysavchic.beer_pet_project.entity.WarehouseBeerInfo;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -16,10 +17,17 @@ import org.mapstruct.MappingConstants;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.ReportingPolicy;
 
+import java.util.List;
+
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING, unmappedTargetPolicy = ReportingPolicy.ERROR)
 public interface BeerMapper {
     @Mapping(target = "beerBrand", expression = "java(beer.getBeerBrand().getBrandName())")
+    @Mapping(target = "amount", expression = "java(listWarehouseInfoToAmount(beer.getWarehouseBeerInfos()))")
     BeerResponse beerToBeerResponse(Beer beer);
+
+    default Integer listWarehouseInfoToAmount(List<WarehouseBeerInfo> warehouseBeerInfoList) {
+        return warehouseBeerInfoList.get(0).getAmount();
+    }
 
     CharacteristicsResponse beerCharacteristicsToCharacteristicsResponse(BeerCharacteristics characteristics);
 
@@ -31,6 +39,7 @@ public interface BeerMapper {
     @Mapping(target = "beerBrand", ignore = true)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "userSubscriptions", ignore = true)
+    @Mapping(target = "warehouseBeerInfos", ignore = true)
     Beer AddNewBeerToBeer(AddBeerRequest newBeer);
 
     @Mapping(target = "beer", ignore = true)

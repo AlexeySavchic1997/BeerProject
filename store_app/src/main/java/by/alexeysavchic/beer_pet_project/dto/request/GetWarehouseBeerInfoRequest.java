@@ -3,6 +3,7 @@ package by.alexeysavchic.beer_pet_project.dto.request;
 import by.alexeysavchic.beer_pet_project.entity.enums.ZoneType;
 import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,6 +19,7 @@ public class GetWarehouseBeerInfoRequest {
 
     private ZoneType zoneType;
 
+    @Size(min = 1, max = 30, message = "sku must be between 1 and 30 symbols")
     private String sku;
 
     @PositiveOrZero(message = "Amount of items can't be negative")

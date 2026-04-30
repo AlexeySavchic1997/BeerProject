@@ -3,17 +3,16 @@ package by.alexeysavchic.beer_pet_project.dto.response;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import warehouse_api.Zone;
+
+import java.math.BigDecimal;
 
 @Getter
 @Setter
 @NoArgsConstructor
-public class GetWarehouseBeerInfoResponse {
-    private Long id;
+public class OrderItemResponse {
+    private String beerName;
 
-    private String sku;
+    private Integer quantity;
 
-    private Integer amount;
-
-    private Zone zoneType;
+    private BigDecimal price;
 }

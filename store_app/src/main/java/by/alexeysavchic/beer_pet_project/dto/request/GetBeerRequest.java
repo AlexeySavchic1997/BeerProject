@@ -15,7 +15,7 @@ import java.util.List;
 public class GetBeerRequest {
     private Long id;
 
-    @Size(max = 30, message = "unvalid sku")
+    @Size(min = 1, max = 30, message = "sku must be between 1 and 30 symbols")
     private String sku;
 
     @Size(min = 2, max = 20, message = "beer name must be between 2 and 20 symbols")
