@@ -2,7 +2,7 @@ package by.alexeysavchic.beer_pet_project.controller;
 
 import by.alexeysavchic.beer_pet_project.dto.request.AddBeerRequest;
 import by.alexeysavchic.beer_pet_project.dto.request.GetBeerRequest;
-import by.alexeysavchic.beer_pet_project.dto.response.BeerResponse;
+import by.alexeysavchic.beer_pet_project.dto.response.GetBeerResponse;
 import by.alexeysavchic.beer_pet_project.service.Interface.BeerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -33,7 +33,7 @@ public class BeerController {
     }
 
     @PostMapping("/get")
-    public Page<BeerResponse> getBeers(@RequestBody(required = false) GetBeerRequest request, @PageableDefault(size = 20) Pageable pageable) {
+    public Page<GetBeerResponse> getBeers(@RequestBody(required = false) GetBeerRequest request, @PageableDefault(size = 20) Pageable pageable) {
         return beerService.findAll(request, pageable);
     }
 

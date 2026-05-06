@@ -1,7 +1,7 @@
 package by.alexeysavchic.beer_pet_project.service.Implementation;
 
 import by.alexeysavchic.beer_pet_project.dto.request.AddBeerBrandRequest;
-import by.alexeysavchic.beer_pet_project.dto.response.BeerBrandResponse;
+import by.alexeysavchic.beer_pet_project.dto.response.GetBeerBrandResponse;
 import by.alexeysavchic.beer_pet_project.entity.BeerBrand;
 import by.alexeysavchic.beer_pet_project.exception.BeerBrandNotFoundException;
 import by.alexeysavchic.beer_pet_project.mapper.BeerMapper;
@@ -47,7 +47,7 @@ public class BeerBrandServiceImpl implements BeerBrandService {
     }
 
     @Override
-    public Page<BeerBrandResponse> getBeerBrands(String brandName, Pageable pageable) {
+    public Page<GetBeerBrandResponse> getBeerBrands(String brandName, Pageable pageable) {
 
         Specification<BeerBrand> nameSpecification = Specification.where(specifications.getNameSpecification(brandName));
         Page<BeerBrand> brandPage = beerBrandRepository.findAll(nameSpecification, pageable);

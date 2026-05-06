@@ -10,7 +10,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class BeerResponse {
+public class GetBeerResponse {
 
     private Long id;
 
@@ -24,7 +24,7 @@ public class BeerResponse {
 
     private String beerBrand;
 
-    private List<CharacteristicsResponse> characteristics;
+    private List<GetCharacteristicsResponse> characteristics;
 
     private Integer amount;
 }

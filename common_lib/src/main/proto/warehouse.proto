@@ -54,7 +54,7 @@ message UpdatePacketResponse
 {
   bool success = 1;
   string message = 2;
-  repeated UnpassedOrderResponse unpassedList = 3;
+  repeated UnpassedOrderResponse unpassed_list = 3;
 }
 
 message UnpassedOrderResponse

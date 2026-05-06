@@ -1,5 +1,6 @@
 package by.alexeysavchic.beer_pet_project.dto.response;
 
+import by.alexeysavchic.beer_pet_project.entity.enums.BeerCharacteristic;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,10 +10,8 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @NoArgsConstructor
-public class OrderItemResponse {
-    private String beerName;
+public class GetCharacteristicsResponse {
+    private BeerCharacteristic characteristic;
 
-    private Integer quantity;
-
-    private BigDecimal price;
+    private BigDecimal value;
 }

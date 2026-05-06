@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class BeerBrandResponse {
+public class GetBeerBrandResponse {
     private String description;
 
     private String brandName;

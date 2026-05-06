@@ -3,7 +3,7 @@ package by.alexeysavchic.beer_pet_project.service.Implementation;
 import by.alexeysavchic.beer_pet_project.dto.request.AddBeerRequest;
 import by.alexeysavchic.beer_pet_project.dto.request.BeerCharacteristicsRequest;
 import by.alexeysavchic.beer_pet_project.dto.request.GetBeerRequest;
-import by.alexeysavchic.beer_pet_project.dto.response.BeerResponse;
+import by.alexeysavchic.beer_pet_project.dto.response.GetBeerResponse;
 import by.alexeysavchic.beer_pet_project.entity.Beer;
 import by.alexeysavchic.beer_pet_project.entity.BeerBrand;
 import by.alexeysavchic.beer_pet_project.exception.BeerNotFoundException;
@@ -46,7 +46,7 @@ public class BeerServiceImpl implements BeerService {
     }
 
     @Override
-    public Page<BeerResponse> findAll(GetBeerRequest request, Pageable pageable) {
+    public Page<GetBeerResponse> findAll(GetBeerRequest request, Pageable pageable) {
         Specification<Beer> specification = Specification.allOf(specifications.getIdSpecification(request.getId()),
                 specifications.getSkuSpecification(request.getSku()),
                 specifications.getNameSpecification(request.getName()),

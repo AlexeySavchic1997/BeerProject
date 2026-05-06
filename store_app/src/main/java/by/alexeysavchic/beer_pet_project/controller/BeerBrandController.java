@@ -1,7 +1,7 @@
 package by.alexeysavchic.beer_pet_project.controller;
 
 import by.alexeysavchic.beer_pet_project.dto.request.AddBeerBrandRequest;
-import by.alexeysavchic.beer_pet_project.dto.response.BeerBrandResponse;
+import by.alexeysavchic.beer_pet_project.dto.response.GetBeerBrandResponse;
 import by.alexeysavchic.beer_pet_project.service.Interface.BeerBrandService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -34,7 +34,7 @@ public class BeerBrandController {
     }
 
     @GetMapping
-    public Page<BeerBrandResponse> getBeerBrands(
+    public Page<GetBeerBrandResponse> getBeerBrands(
             @RequestParam(required = false, name = "name") String name, @PageableDefault(size = 20) Pageable pageable) {
         return beerBrandService.getBeerBrands(name, pageable);
     }

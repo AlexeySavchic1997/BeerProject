@@ -12,12 +12,12 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class OrderResponse {
+public class GetOrderResponse {
     private LocalDateTime orderDate;
 
     private BigDecimal summaryPrice;
 
     private OrderStatus status;
 
-    private List<OrderItemResponse> orderItems;
+    private List<GetOrderItemResponse> orderItems;
 }

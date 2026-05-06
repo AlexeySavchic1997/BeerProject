@@ -3,9 +3,9 @@ package by.alexeysavchic.beer_pet_project.mapper;
 import by.alexeysavchic.beer_pet_project.dto.request.AddBeerBrandRequest;
 import by.alexeysavchic.beer_pet_project.dto.request.AddBeerCharacteristicRequest;
 import by.alexeysavchic.beer_pet_project.dto.request.AddBeerRequest;
-import by.alexeysavchic.beer_pet_project.dto.response.BeerBrandResponse;
-import by.alexeysavchic.beer_pet_project.dto.response.BeerResponse;
-import by.alexeysavchic.beer_pet_project.dto.response.CharacteristicsResponse;
+import by.alexeysavchic.beer_pet_project.dto.response.GetBeerBrandResponse;
+import by.alexeysavchic.beer_pet_project.dto.response.GetBeerResponse;
+import by.alexeysavchic.beer_pet_project.dto.response.GetCharacteristicsResponse;
 import by.alexeysavchic.beer_pet_project.entity.Beer;
 import by.alexeysavchic.beer_pet_project.entity.BeerBrand;
 import by.alexeysavchic.beer_pet_project.entity.BeerCharacteristics;
@@ -23,18 +23,18 @@ import java.util.List;
 public interface BeerMapper {
     @Mapping(target = "beerBrand", expression = "java(beer.getBeerBrand().getBrandName())")
     @Mapping(target = "amount", expression = "java(listWarehouseInfoToAmount(beer.getWarehouseBeerInfos()))")
-    BeerResponse beerToBeerResponse(Beer beer);
+    GetBeerResponse beerToBeerResponse(Beer beer);
 
     default Integer listWarehouseInfoToAmount(List<WarehouseBeerInfo> warehouseBeerInfoList) {
         return warehouseBeerInfoList.get(0).getAmount();
     }
 
-    CharacteristicsResponse beerCharacteristicsToCharacteristicsResponse(BeerCharacteristics characteristics);
+    GetCharacteristicsResponse beerCharacteristicsToCharacteristicsResponse(BeerCharacteristics characteristics);
 
     @Mapping(target = "id", ignore = true)
     BeerBrand addBeerBrandInDBRequest(AddBeerBrandRequest request);
 
-    BeerBrandResponse beerBrandToBeerBrandResponse(BeerBrand beerBrand);
+    GetBeerBrandResponse beerBrandToBeerBrandResponse(BeerBrand beerBrand);
 
     @Mapping(target = "beerBrand", ignore = true)
     @Mapping(target = "id", ignore = true)
