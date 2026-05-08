@@ -1,6 +1,7 @@
 package by.alexeysavchic.beer_pet_project.entity;
 
 import by.alexeysavchic.beer_pet_project.entity.enums.OrderStatus;
+import by.alexeysavchic.beer_pet_project.entity.enums.OrderType;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -44,7 +45,11 @@ public class Order {
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
-    OrderStatus status;
+    private OrderStatus status;
+
+    @Column(name = "order_type")
+    @Enumerated(EnumType.STRING)
+    private OrderType orderType;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

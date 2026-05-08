@@ -16,5 +16,8 @@ public interface BeerRepository extends JpaRepository<Beer, Long>, JpaSpecificat
 
     @Query(value = "select * from beer b where b.sku in :listSku",
             nativeQuery = true)
-    List<Beer> findAllBySku(@Param("listSku") List<String> listSku);
+    public List<Beer> findAllBySku(@Param("listSku") List<String> listSku);
+
+    @Query(value = "select b.name from Beer b where b.sku in :listSku")
+    public List<String> findAllBeerNamesBySku(@Param("listSku") List<String> listSku);
 }

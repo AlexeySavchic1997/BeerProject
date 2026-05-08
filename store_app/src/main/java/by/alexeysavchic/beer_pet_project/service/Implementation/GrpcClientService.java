@@ -17,8 +17,12 @@ import lombok.Setter;
 import net.devh.boot.grpc.server.service.GrpcService;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import warehouse_api.BeerInfoResponse;
+import warehouse_api.SubscribeRequest;
 import warehouse_api.UnpassedOrderResponse;
+import warehouse_api.UnpassedOrderSubscription;
+import warehouse_api.UnpassedOrderSubscriptionResponse;
 import warehouse_api.UpdateBeerRequest;
+import warehouse_api.UpdateBySubscribeRequest;
 import warehouse_api.UpdatePacketRequest;
 import warehouse_api.UpdatePacketResponse;
 import warehouse_api.WarehouseApiGrpc;
@@ -59,7 +63,7 @@ public class GrpcClientService implements ClientService {
     }
 
     @Override
-    public List<UnpassedOrderResponse> updateWarehouseInfo(List<OrderItemRequest> updates) {
+    public List<UnpassedOrderResponse> updateWarehouseInfoByOrder(List<OrderItemRequest> updates) {
 
         List<UpdateBeerRequest> updateList = mapper.listOrderItemRequestToListUpdateBeerRequest(updates);
 
@@ -72,4 +76,16 @@ public class GrpcClientService implements ClientService {
             throw new WarehouseUpdateServerException(updateResponse.getMessage());
         }
     }
+
+    @Override
+    public List<UnpassedOrderSubscription> updateWarehouseInfoBySubscription(List<UpdateBySubscribeRequest> updates) {
+        SubscribeRequest request = SubscribeRequest.newBuilder().addAllSubscribesList(updates).build();
+        UnpassedOrderSubscriptionResponse unpassedOrders = blockingStub.updateBySubscribe(request);
+        if (unpassedOrders.getSuccess()) {
+            return unpassedOrders.getResponseList();
+        } else {
+            throw new WarehouseUpdateServerException(unpassedOrders.getMessage());
+        }
+    }
+
 }

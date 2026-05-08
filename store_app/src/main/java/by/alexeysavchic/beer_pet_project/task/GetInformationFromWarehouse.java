@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 @EnableScheduling
 @RequiredArgsConstructor
 public class GetInformationFromWarehouse {
+
     private final WarehouseService warehouseService;
 
     @Scheduled(fixedDelay = 300000)

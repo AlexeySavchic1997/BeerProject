@@ -11,4 +11,8 @@ public interface EmailService {
     public void confirmOrderEmail(List<OrderItem> orders, BigDecimal price, User user);
 
     public void insufficientInventoryOrderEmail(Map<String, Integer> unpassedOrdersMap, User user);
+
+    public void insufficientInventorySubscriptionEmail(List<String> unpassedBeerNames, User user);
+
+
 }

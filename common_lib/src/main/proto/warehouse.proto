@@ -9,6 +9,8 @@ service WarehouseApi {
   rpc GetWarehouseInfo (GetWarehouseInfoRequest) returns (BeerInfoResponse);
 
   rpc UpdateWarehouseInfo (UpdatePacketRequest) returns (UpdatePacketResponse);
+
+  rpc UpdateBySubscribe (SubscribeRequest) returns (UnpassedOrderSubscriptionResponse);
 }
 
 enum Zone {
@@ -21,7 +23,7 @@ enum Zone {
 message  GetWarehouseInfoRequest {
   optional int64 id = 1 ;
   optional string sku = 2;
-  optional Zone zoneType = 3;
+  optional Zone zone_type = 3;
   optional int32 amount = 4;
   optional google.protobuf.Timestamp time = 5;
 }
@@ -61,5 +63,29 @@ message UnpassedOrderResponse
 {
   string sku = 1;
   int32 amount = 2;
+}
+
+message UpdateBySubscribeRequest
+{
+  int64 user_id = 1;
+  repeated UpdateBeerRequest cart = 2;
+}
+
+message SubscribeRequest
+{
+  repeated UpdateBySubscribeRequest subscribes_list = 1;
+}
+
+message UnpassedOrderSubscription
+{
+  int64 user_id = 1;
+  repeated UnpassedOrderResponse unpassed_list = 2;
+}
+
+message UnpassedOrderSubscriptionResponse
+{
+  bool success = 1;
+  string message = 2;
+  repeated UnpassedOrderSubscription response = 3;
 }
 

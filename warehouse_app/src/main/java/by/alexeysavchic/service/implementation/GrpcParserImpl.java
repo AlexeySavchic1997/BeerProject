@@ -1,5 +1,7 @@
 package by.alexeysavchic.service.implementation;
 
+import by.alexeysavchic.dto.SubscriptionResponse;
+import by.alexeysavchic.dto.UpdateBySubscriptionDto;
 import by.alexeysavchic.dto.UpdateResponseDTO;
 import by.alexeysavchic.exception.XmlWritingException;
 import by.alexeysavchic.mapper.BeerGRPCMapper;
@@ -9,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import net.devh.boot.grpc.server.service.GrpcService;
 import warehouse_api.BeerInfoResponse;
 import warehouse_api.GetWarehouseInfoRequest;
+import warehouse_api.SubscribeRequest;
+import warehouse_api.UnpassedOrderSubscriptionResponse;
 import warehouse_api.UpdatePacketRequest;
 import warehouse_api.UpdatePacketResponse;
 import warehouse_api.WarehouseApiGrpc;
@@ -51,5 +55,26 @@ public class GrpcParserImpl extends WarehouseApiGrpc.WarehouseApiImplBase {
 
         responseObserver.onNext(updateResponse);
         responseObserver.onCompleted();
+    }
+
+    @Override
+    public void updateBySubscribe(SubscribeRequest request, StreamObserver<UnpassedOrderSubscriptionResponse> responseObserver) {
+        List<UpdateBySubscriptionDto> listUpdates = beerMapper.
+                listUpdateBySubscribeRequestToListUpdateBySubscriptionDto(request.getSubscribesListList());
+        List<SubscriptionResponse> unpassedOrders = new ArrayList<>();
+        try {
+            unpassedOrders = xmlParserService.updateWarehouseByOrder(listUpdates);
+        } catch (XmlWritingException e) {
+            UnpassedOrderSubscriptionResponse response = UnpassedOrderSubscriptionResponse.newBuilder().
+                    setSuccess(false).
+                    setMessage(e.getMessage()).build();
+            responseObserver.onNext(response);
+            return;
+        }
+        UnpassedOrderSubscriptionResponse response = UnpassedOrderSubscriptionResponse.newBuilder().
+                setSuccess(true).
+                addAllResponse(beerMapper.listSubscriptionResponseToListUnpassedOrderSubscription(unpassedOrders)).
+                build();
+        responseObserver.onNext(response);
     }
 }

@@ -13,6 +13,7 @@ import by.alexeysavchic.beer_pet_project.repository.BeerBrandRepository;
 import by.alexeysavchic.beer_pet_project.repository.BeerRepository;
 import by.alexeysavchic.beer_pet_project.service.Implementation.specifications.BeerSpecifications;
 import by.alexeysavchic.beer_pet_project.service.Interface.BeerService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -32,7 +33,7 @@ public class BeerServiceImpl implements BeerService {
 
 
     @Override
-    public void addNewBeer(AddBeerRequest newBeer) {
+    public void addNewBeer(@Valid AddBeerRequest newBeer) {
         BeerBrand beerBrand = beerBrandRepository.findByBrandName(newBeer.getBeerBrand()).
                 orElseThrow(() -> new UnknownBeerBrandException(newBeer.getBeerBrand()));
         Beer beer = mapper.AddNewBeerToBeer(newBeer);
@@ -46,7 +47,7 @@ public class BeerServiceImpl implements BeerService {
     }
 
     @Override
-    public Page<GetBeerResponse> findAll(GetBeerRequest request, Pageable pageable) {
+    public Page<GetBeerResponse> findAll(@Valid GetBeerRequest request, Pageable pageable) {
         Specification<Beer> specification = Specification.allOf(specifications.getIdSpecification(request.getId()),
                 specifications.getSkuSpecification(request.getSku()),
                 specifications.getNameSpecification(request.getName()),

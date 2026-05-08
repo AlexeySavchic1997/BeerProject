@@ -37,6 +37,7 @@ public class EmailServiceImpl implements EmailService {
         mailSender.send(message);
     }
 
+    @Override
     public void insufficientInventoryOrderEmail(Map<String, Integer> unpassedOrdersMap, User user) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(storeEmail);
@@ -45,4 +46,16 @@ public class EmailServiceImpl implements EmailService {
         message.setText(String.format(EmailMessages.insufficientInventory, unpassedOrdersMap));
         mailSender.send(message);
     }
+
+    @Override
+    public void insufficientInventorySubscriptionEmail(List<String> unpassedBeerNames, User user) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom(storeEmail);
+        message.setTo(user.getEmail());
+        message.setSubject("Order from beer shop");
+        message.setText(String.format(EmailMessages.insufficientInventory, unpassedBeerNames));
+        mailSender.send(message);
+    }
+
+
 }

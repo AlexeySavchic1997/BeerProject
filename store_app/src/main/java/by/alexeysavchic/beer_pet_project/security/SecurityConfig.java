@@ -27,7 +27,7 @@ public class SecurityConfig {
                 httpBasic(httpBasic -> httpBasic.disable()).
                 authorizeHttpRequests(auth -> auth.
                         requestMatchers("/api/v1/auth/**", "/api/v1/beer/**", "/api/v1/beer/brand/**").permitAll().
-                        requestMatchers("/api/v1/warehouse/**").hasRole("admin").
+                        requestMatchers("/api/v1/warehouse/**", "/api/v1/admin/**").hasRole("admin").
                         anyRequest().authenticated()).
                 sessionManagement(sess -> sess.
                         sessionCreationPolicy(SessionCreationPolicy.STATELESS)).
