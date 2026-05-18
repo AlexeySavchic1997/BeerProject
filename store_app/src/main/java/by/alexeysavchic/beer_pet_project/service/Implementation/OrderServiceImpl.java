@@ -6,6 +6,7 @@ import by.alexeysavchic.beer_pet_project.dto.response.GetOrderResponse;
 import by.alexeysavchic.beer_pet_project.entity.Beer;
 import by.alexeysavchic.beer_pet_project.entity.Order;
 import by.alexeysavchic.beer_pet_project.entity.OrderItem;
+import by.alexeysavchic.beer_pet_project.entity.OrderSet;
 import by.alexeysavchic.beer_pet_project.entity.User;
 import by.alexeysavchic.beer_pet_project.entity.enums.OrderStatus;
 import by.alexeysavchic.beer_pet_project.entity.enums.OrderType;
@@ -13,6 +14,7 @@ import by.alexeysavchic.beer_pet_project.exception.WarehouseUpdateServerExceptio
 import by.alexeysavchic.beer_pet_project.mapper.OrderMapper;
 import by.alexeysavchic.beer_pet_project.repository.BeerRepository;
 import by.alexeysavchic.beer_pet_project.repository.OrderRepository;
+import by.alexeysavchic.beer_pet_project.repository.OrderSetRepository;
 import by.alexeysavchic.beer_pet_project.security.SecurityContextService;
 import by.alexeysavchic.beer_pet_project.service.Implementation.messages.OrderMessages;
 import by.alexeysavchic.beer_pet_project.service.Interface.ClientService;
@@ -40,6 +42,8 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
 
     private final BeerRepository beerRepository;
+
+    private final OrderSetRepository orderSetRepository;
 
     private final ClientService clientService;
 
@@ -113,7 +117,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public void processingSubscriptionOrders(OrderType type) {
-        List<Order> orders = orderRepository.findAllOrdersByOrderType(type);
+        OrderSet orderSet = orderSetRepository.findOrderSetByOrderType(type);
+        List<Order> orders = orderSet.getOrders();
         List<UpdateBySubscribeRequest> updateList = new ArrayList<>();
         Map<Long, Order> orderMap = new HashMap<>();
         for (Order order : orders) {

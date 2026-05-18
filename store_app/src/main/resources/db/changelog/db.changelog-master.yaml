@@ -8,20 +8,24 @@ databaseChangeLog:
   - include:
       file: db/changelog/changeset/4.create-beer-table.sql
   - include:
-      file: db/changelog/changeset/5.create-beer-of-the-month-table.sql
+      file: db/changelog/changeset/5.create-wave-table.sql
   - include:
-      file: db/changelog/changeset/6.create-beer-characteristic-table.sql
+      file: db/changelog/changeset/6.create-order-set-table.sql
   - include:
-      file: db/changelog/changeset/7.create-warehouse-beer-info-table.sql
+      file: db/changelog/changeset/7.create-beer-of-the-month-table.sql
   - include:
-      file: db/changelog/changeset/8.create-subscription-table.sql
+      file: db/changelog/changeset/8.create-beer-characteristic-table.sql
   - include:
-      file: db/changelog/changeset/9.create-user-subscription-table.sql
+      file: db/changelog/changeset/9.create-warehouse-beer-info-table.sql
   - include:
-      file: db/changelog/changeset/10.create-orders-table.sql
+      file: db/changelog/changeset/10.create-subscription-table.sql
   - include:
-      file: db/changelog/changeset/11.create-order-item-table.sql
+      file: db/changelog/changeset/11.create-user-subscription-table.sql
   - include:
-      file: db/changelog/changeset/12.create-beer-user-subscription-table.sql
+      file: db/changelog/changeset/12.create-orders-table.sql
   - include:
-      file: db/changelog/changeset/13.create-shedlock-table.sql
+      file: db/changelog/changeset/13.create-order-item-table.sql
+  - include:
+      file: db/changelog/changeset/14.create-beer-user-subscription-table.sql
+  - include:
+      file: db/changelog/changeset/15.create-shedlock-table.sql

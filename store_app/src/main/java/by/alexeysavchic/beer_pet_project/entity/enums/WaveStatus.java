@@ -1,7 +1,7 @@
 package by.alexeysavchic.beer_pet_project.entity.enums;
 
-public enum WaveStatus
-{
-    PROCESS,
-    NOT_PROCESS;
+public enum WaveStatus {
+    NEW,
+    SUCCESSFUL,
+    CANCELED;
 }

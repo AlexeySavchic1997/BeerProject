@@ -3,13 +3,18 @@ package by.alexeysavchic.beer_pet_project.task;
 import by.alexeysavchic.beer_pet_project.entity.Beer;
 import by.alexeysavchic.beer_pet_project.entity.Order;
 import by.alexeysavchic.beer_pet_project.entity.OrderItem;
+import by.alexeysavchic.beer_pet_project.entity.OrderSet;
 import by.alexeysavchic.beer_pet_project.entity.UserSubscription;
+import by.alexeysavchic.beer_pet_project.entity.Wave;
 import by.alexeysavchic.beer_pet_project.entity.enums.OrderStatus;
 import by.alexeysavchic.beer_pet_project.entity.enums.OrderType;
-import by.alexeysavchic.beer_pet_project.repository.OrderRepository;
+import by.alexeysavchic.beer_pet_project.entity.enums.WaveStatus;
 import by.alexeysavchic.beer_pet_project.repository.UserSubscriptionRepository;
+import by.alexeysavchic.beer_pet_project.repository.WaveRepository;
 import lombok.RequiredArgsConstructor;
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -18,6 +23,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Component
 @EnableScheduling
@@ -25,25 +31,38 @@ import java.util.List;
 public class CreateSubscriptionsOrders {
     private final UserSubscriptionRepository userSubscriptionRepository;
 
-    private final OrderRepository orderRepository;
+    private final WaveRepository waveRepository;
 
-    @Scheduled(cron = "0 0 0 1 * *")
+    private final Logger logger = LogManager.getLogger(CreateSubscriptionsOrders.class);
+
+    @Scheduled(fixedDelay = 1, timeUnit = TimeUnit.DAYS)
     @SchedulerLock(name = "CreateSubscriptionsOrders", lockAtMostFor = "20m", lockAtLeastFor = "10s")
     protected void createOrders() {
-        List<UserSubscription> userSubscriptionList =
-                userSubscriptionRepository.findUserSubscriptionByUnexpiredDate();
-        if (userSubscriptionList.isEmpty()) {
+        Wave wave = waveRepository.findTopByStatus(WaveStatus.NEW);
+        if (wave == null) {
             return;
         }
-        List<Order> orders = new ArrayList<>();
+        List<UserSubscription> userSubscriptionList =
+                userSubscriptionRepository.findUserSubscriptionByUnexpiredDateAndSubscription(wave.getTypeOfSubscription());
+        if (userSubscriptionList.isEmpty()) {
+            logger.info(wave.getTypeOfSubscription() + " subscribes is absent");
+            return;
+        }
+        OrderSet orderSet = new OrderSet();
         for (UserSubscription userSubscription : userSubscriptionList) {
             Order order = new Order();
             order.setOrderDate(LocalDateTime.now());
             order.setStatus(OrderStatus.NEW);
             order.setSummaryPrice(BigDecimal.ZERO);
             switch (userSubscription.getSubscription().getSubscriptionType()) {
-                case BEER_OF_THE_MONTH -> order.setOrderType(OrderType.BEER_OF_THE_MONTH);
-                case YOUR_FAVORITE_BEER -> order.setOrderType(OrderType.YOUR_FAVORITE_BEER);
+                case BEER_OF_THE_MONTH -> {
+                    order.setOrderType(OrderType.BEER_OF_THE_MONTH);
+                    orderSet.setOrderType(OrderType.BEER_OF_THE_MONTH);
+                }
+                case YOUR_FAVORITE_BEER -> {
+                    order.setOrderType(OrderType.YOUR_FAVORITE_BEER);
+                    orderSet.setOrderType(OrderType.BEER_OF_THE_MONTH);
+                }
             }
             order.setUser(userSubscription.getUser());
             List<OrderItem> orderItems = new ArrayList<>();
@@ -56,8 +75,11 @@ public class CreateSubscriptionsOrders {
                 orderItems.add(orderItem);
             }
             order.setOrderItems(orderItems);
-            orders.add(order);
+            orderSet.addOrder(order);
+            wave.addOrder(order);
         }
-        orderRepository.saveAll(orders);
+        wave.setOrderSet(orderSet);
+        wave.setStatus(WaveStatus.SUCCESSFUL);
+        waveRepository.save(wave);
     }
 }

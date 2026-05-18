@@ -57,4 +57,12 @@ public class Order {
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItem> orderItems;
+
+    @ManyToOne
+    @JoinColumn(name = "wave_id")
+    private Wave wave;
+
+    @ManyToOne
+    @JoinColumn(name = "set_id")
+    private OrderSet orderSet;
 }
