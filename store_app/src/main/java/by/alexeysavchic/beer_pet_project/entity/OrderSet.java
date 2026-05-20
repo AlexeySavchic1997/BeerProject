@@ -9,13 +9,11 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
 
 @Getter
 @Setter
@@ -27,9 +25,6 @@ public class OrderSet {
     @Column(name = "id")
     private Long id;
 
-    @OneToMany(mappedBy = "orderSet")
-    private List<Order> orders;
-
     @OneToOne
     @JoinColumn(name = "wave_id")
     private Wave wave;
@@ -37,11 +32,4 @@ public class OrderSet {
     @Column(name = "order_type")
     @Enumerated(EnumType.STRING)
     private OrderType orderType;
-
-    public void addOrder(Order order) {
-        if (order.getOrderSet() == null) {
-            order.setOrderSet(this);
-        }
-        orders.add(order);
-    }
 }

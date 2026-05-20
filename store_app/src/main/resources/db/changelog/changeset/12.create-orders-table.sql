@@ -1,6 +1,6 @@
 --liquibase formatted sql
 --changeset Alexey Savchic:orders-table
-create type order_status AS ENUM ('PROCESSING', 'SUCCESSFUL', 'CANCELED');
+create type order_status AS ENUM ('NEW', 'PROCESSING', 'INSUFFICIENT_INVENTORY', 'PAUSED', 'COMPLETED', 'CANCELLED');
 create table orders
 (
 id bigserial primary key,

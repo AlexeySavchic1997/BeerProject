@@ -47,7 +47,7 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
-    @Column(name = "order_type")
+    @Column(name = "type")
     @Enumerated(EnumType.STRING)
     private OrderType orderType;
 

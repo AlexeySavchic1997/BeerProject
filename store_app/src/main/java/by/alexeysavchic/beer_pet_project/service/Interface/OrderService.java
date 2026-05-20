@@ -8,4 +8,6 @@ public interface OrderService {
     public GetOrderResponse createOrder(CreateOrderRequest request);
 
     public void processingSubscriptionOrders(OrderType type);
+
+    public void createOrdersFromSubscriptions();
 }

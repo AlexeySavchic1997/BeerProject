@@ -14,9 +14,9 @@ public class GetInformationFromWarehouse {
 
     private final WarehouseService warehouseService;
 
-    @Scheduled(fixedDelay = 300000)
-    @SchedulerLock(name = "GetInformationFromWarehouse", lockAtMostFor = "5m", lockAtLeastFor = "10s")
-    protected void GetInformation() {
+    @Scheduled(cron = "*/5 * * * *")
+    @SchedulerLock(name = "GetInformationFromWarehouse", lockAtMostFor = "10m", lockAtLeastFor = "10s")
+    protected void run() {
         warehouseService.getUpdatedWarehouseInfo();
     }
 }

@@ -8,13 +8,17 @@ import by.alexeysavchic.beer_pet_project.entity.Order;
 import by.alexeysavchic.beer_pet_project.entity.OrderItem;
 import by.alexeysavchic.beer_pet_project.entity.OrderSet;
 import by.alexeysavchic.beer_pet_project.entity.User;
+import by.alexeysavchic.beer_pet_project.entity.UserSubscription;
+import by.alexeysavchic.beer_pet_project.entity.Wave;
 import by.alexeysavchic.beer_pet_project.entity.enums.OrderStatus;
 import by.alexeysavchic.beer_pet_project.entity.enums.OrderType;
+import by.alexeysavchic.beer_pet_project.entity.enums.WaveStatus;
 import by.alexeysavchic.beer_pet_project.exception.WarehouseUpdateServerException;
 import by.alexeysavchic.beer_pet_project.mapper.OrderMapper;
 import by.alexeysavchic.beer_pet_project.repository.BeerRepository;
 import by.alexeysavchic.beer_pet_project.repository.OrderRepository;
-import by.alexeysavchic.beer_pet_project.repository.OrderSetRepository;
+import by.alexeysavchic.beer_pet_project.repository.UserSubscriptionRepository;
+import by.alexeysavchic.beer_pet_project.repository.WaveRepository;
 import by.alexeysavchic.beer_pet_project.security.SecurityContextService;
 import by.alexeysavchic.beer_pet_project.service.Implementation.messages.OrderMessages;
 import by.alexeysavchic.beer_pet_project.service.Interface.ClientService;
@@ -43,7 +47,9 @@ public class OrderServiceImpl implements OrderService {
 
     private final BeerRepository beerRepository;
 
-    private final OrderSetRepository orderSetRepository;
+    private final WaveRepository waveRepository;
+
+    private final UserSubscriptionRepository userSubscriptionRepository;
 
     private final ClientService clientService;
 
@@ -116,9 +122,57 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public void createOrdersFromSubscriptions() {
+        Wave wave = waveRepository.findTopByStatus(WaveStatus.NEW);
+        if (wave == null) {
+            logger.info("there is no waves for processing");
+            return;
+        }
+        List<UserSubscription> userSubscriptionList =
+                userSubscriptionRepository.findUserSubscriptionByUnexpiredDateAndSubscription(wave.getTypeOfSubscription());
+        if (userSubscriptionList.isEmpty()) {
+            logger.info(wave.getTypeOfSubscription() + " subscribes is absent");
+            return;
+        }
+        OrderSet orderSet = new OrderSet();
+        List<Order> orders = new ArrayList<>();
+        for (UserSubscription userSubscription : userSubscriptionList) {
+            Order order = new Order();
+            order.setOrderDate(LocalDateTime.now());
+            order.setStatus(OrderStatus.NEW);
+            order.setSummaryPrice(BigDecimal.ZERO);
+            switch (userSubscription.getSubscription().getSubscriptionType()) {
+                case BEER_OF_THE_MONTH -> {
+                    order.setOrderType(OrderType.BEER_OF_THE_MONTH);
+                    orderSet.setOrderType(OrderType.BEER_OF_THE_MONTH);
+                }
+                case YOUR_FAVORITE_BEER -> {
+                    order.setOrderType(OrderType.YOUR_FAVORITE_BEER);
+                    orderSet.setOrderType(OrderType.BEER_OF_THE_MONTH);
+                }
+            }
+            order.setUser(userSubscription.getUser());
+            List<OrderItem> orderItems = new ArrayList<>();
+            for (Beer beer : userSubscription.getBeers()) {
+                OrderItem orderItem = new OrderItem();
+                orderItem.setPrice(BigDecimal.ZERO);
+                orderItem.setQuantity(1);
+                orderItem.setBeer(beer);
+                orderItem.setOrder(order);
+                orderItems.add(orderItem);
+            }
+            order.setOrderItems(orderItems);
+            order.setWave(wave);
+            order.setOrderSet(orderSet);
+            orders.add(order);
+        }
+        wave.setStatus(WaveStatus.PROCESSED);
+        orderRepository.saveAll(orders);
+    }
+
+    @Override
     public void processingSubscriptionOrders(OrderType type) {
-        OrderSet orderSet = orderSetRepository.findOrderSetByOrderType(type);
-        List<Order> orders = orderSet.getOrders();
+        List<Order> orders = orderRepository.findAllByOrderSetType(type);
         List<UpdateBySubscribeRequest> updateList = new ArrayList<>();
         Map<Long, Order> orderMap = new HashMap<>();
         for (Order order : orders) {
