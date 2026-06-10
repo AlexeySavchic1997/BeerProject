@@ -15,6 +15,7 @@ import jakarta.validation.constraints.PastOrPresent;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -22,6 +23,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@ToString(onlyExplicitlyIncluded = true)
 @NoArgsConstructor
 @Entity
 @Table(name = "user_subscription")
@@ -29,6 +31,7 @@ public class UserSubscription {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
+    @ToString.Include
     private Long id;
 
     @Column(name = "subscribe_date")
@@ -41,6 +44,7 @@ public class UserSubscription {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @ToString.Include
     private User user;
 
     @ManyToMany

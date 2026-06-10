@@ -1,5 +1,7 @@
 package by.alexeysavchic.beer_pet_project.entity;
 
+import by.alexeysavchic.beer_pet_project.entity.enums.Gender;
+import by.alexeysavchic.beer_pet_project.entity.enums.Location;
 import by.alexeysavchic.beer_pet_project.entity.enums.OrderStatus;
 import by.alexeysavchic.beer_pet_project.entity.enums.OrderType;
 import jakarta.persistence.CascadeType;
@@ -50,6 +52,13 @@ public class Order {
     @Column(name = "type")
     @Enumerated(EnumType.STRING)
     private OrderType orderType;
+
+    @Column(name = "order_location")
+    @Enumerated(EnumType.STRING)
+    private Location orderLocation;
+
+    @Column(name = "order_gender")
+    private Gender orderGender;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

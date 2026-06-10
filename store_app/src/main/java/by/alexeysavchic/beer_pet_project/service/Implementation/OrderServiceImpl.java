@@ -10,6 +10,7 @@ import by.alexeysavchic.beer_pet_project.entity.OrderSet;
 import by.alexeysavchic.beer_pet_project.entity.User;
 import by.alexeysavchic.beer_pet_project.entity.UserSubscription;
 import by.alexeysavchic.beer_pet_project.entity.Wave;
+import by.alexeysavchic.beer_pet_project.entity.enums.OrderSetStatus;
 import by.alexeysavchic.beer_pet_project.entity.enums.OrderStatus;
 import by.alexeysavchic.beer_pet_project.entity.enums.OrderType;
 import by.alexeysavchic.beer_pet_project.entity.enums.WaveStatus;
@@ -94,6 +95,8 @@ public class OrderServiceImpl implements OrderService {
         }
         order.setSummaryPrice(summaryPrice);
         order.setUser(user);
+        order.setOrderGender(user.getUserGender());
+        order.setOrderLocation(user.getUserLocation());
         order.setOrderDate(timeMark);
         orderRepository.save(order);
         try {
@@ -122,7 +125,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void createOrdersFromSubscriptions() {
+    public void saveOrdersFromSubscriptions() {
         Wave wave = waveRepository.findTopByStatus(WaveStatus.NEW);
         if (wave == null) {
             logger.info("there is no waves for processing");
@@ -135,39 +138,58 @@ public class OrderServiceImpl implements OrderService {
             return;
         }
         OrderSet orderSet = new OrderSet();
+        orderSet.setOrderSetStatus(OrderSetStatus.NEW);
         List<Order> orders = new ArrayList<>();
         for (UserSubscription userSubscription : userSubscriptionList) {
             Order order = new Order();
-            order.setOrderDate(LocalDateTime.now());
-            order.setStatus(OrderStatus.NEW);
-            order.setSummaryPrice(BigDecimal.ZERO);
-            switch (userSubscription.getSubscription().getSubscriptionType()) {
-                case BEER_OF_THE_MONTH -> {
-                    order.setOrderType(OrderType.BEER_OF_THE_MONTH);
-                    orderSet.setOrderType(OrderType.BEER_OF_THE_MONTH);
-                }
-                case YOUR_FAVORITE_BEER -> {
-                    order.setOrderType(OrderType.YOUR_FAVORITE_BEER);
-                    orderSet.setOrderType(OrderType.BEER_OF_THE_MONTH);
-                }
+            try {
+                order = createOrderFromSubscribe(userSubscription, orderSet, wave);
+            } catch (RuntimeException e) {
+                logger.error("cannot create order from subscription " + userSubscription.toString());
+                wave.setStatus(WaveStatus.ERROR);
+                continue;
             }
-            order.setUser(userSubscription.getUser());
-            List<OrderItem> orderItems = new ArrayList<>();
-            for (Beer beer : userSubscription.getBeers()) {
-                OrderItem orderItem = new OrderItem();
-                orderItem.setPrice(BigDecimal.ZERO);
-                orderItem.setQuantity(1);
-                orderItem.setBeer(beer);
-                orderItem.setOrder(order);
-                orderItems.add(orderItem);
-            }
-            order.setOrderItems(orderItems);
-            order.setWave(wave);
-            order.setOrderSet(orderSet);
             orders.add(order);
         }
-        wave.setStatus(WaveStatus.PROCESSED);
+        if (wave.getStatus() != WaveStatus.ERROR) {
+            wave.setStatus(WaveStatus.PROCESSED);
+        }
         orderRepository.saveAll(orders);
+    }
+
+    private Order createOrderFromSubscribe(UserSubscription userSubscription, OrderSet orderSet, Wave wave) {
+        Order order = new Order();
+        order.setOrderDate(LocalDateTime.now());
+        order.setStatus(OrderStatus.NEW);
+        order.setSummaryPrice(BigDecimal.ZERO);
+        switch (userSubscription.getSubscription().getSubscriptionType()) {
+            case BEER_OF_THE_MONTH -> {
+                order.setOrderType(OrderType.BEER_OF_THE_MONTH);
+                orderSet.setOrderType(OrderType.BEER_OF_THE_MONTH);
+            }
+            case YOUR_FAVORITE_BEER -> {
+                order.setOrderType(OrderType.YOUR_FAVORITE_BEER);
+                orderSet.setOrderType(OrderType.YOUR_FAVORITE_BEER);
+            }
+        }
+        User user = userSubscription.getUser();
+        order.setUser(user);
+        order.setOrderLocation(user.getUserLocation());
+        order.setOrderGender(user.getUserGender());
+        List<OrderItem> orderItems = new ArrayList<>();
+        for (Beer beer : userSubscription.getBeers()) {
+            OrderItem orderItem = new OrderItem();
+            orderItem.setPrice(beer.getPrice());
+            orderItem.setQuantity(1);
+            orderItem.setBeer(beer);
+            orderItem.setOrder(order);
+            orderItems.add(orderItem);
+        }
+        order.setOrderItems(orderItems);
+        order.setWave(wave);
+        order.setOrderSet(orderSet);
+        orderSet.setOrderSetStatus(OrderSetStatus.READY_TO_SPLIT);
+        return order;
     }
 
     @Override

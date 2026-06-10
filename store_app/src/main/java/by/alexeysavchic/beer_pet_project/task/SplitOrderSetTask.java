@@ -1,6 +1,7 @@
 package by.alexeysavchic.beer_pet_project.task;
 
-import by.alexeysavchic.beer_pet_project.service.Interface.OrderService;
+
+import by.alexeysavchic.beer_pet_project.service.Interface.OrderSetService;
 import lombok.RequiredArgsConstructor;
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -10,12 +11,12 @@ import org.springframework.stereotype.Component;
 @Component
 @EnableScheduling
 @RequiredArgsConstructor
-public class CreateSubscriptionsOrders {
-    private final OrderService orderService;
+public class SplitOrderSetTask {
+    private final OrderSetService orderSetService;
 
-    @Scheduled(cron = "0/30 * 2 * *")
-    @SchedulerLock(name = "CreateSubscriptionsOrders", lockAtMostFor = "20m", lockAtLeastFor = "10s")
-    protected void run() {
-        orderService.createOrdersFromSubscriptions();
+    @Scheduled(cron = "0 0/5 * * * *")
+    @SchedulerLock(name = "SplitOrderSetTask", lockAtMostFor = "2m", lockAtLeastFor = "10s")
+    public void run() {
+        orderSetService.split();
     }
 }

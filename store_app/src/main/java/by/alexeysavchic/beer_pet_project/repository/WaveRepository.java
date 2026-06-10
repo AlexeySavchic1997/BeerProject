@@ -11,7 +11,8 @@ import java.util.List;
 
 @Repository
 public interface WaveRepository extends JpaRepository<Wave, Long> {
-    @Query("select w.typeOfSubscription from Wave w where w.status='NEW'")
+
+    @Query("select w.typeOfSubscription from Wave w where w.status ='NEW'")
     public List<TypeOfSubscription> findCreatedNewSubscriptions();
 
     public Wave findTopByStatus(WaveStatus status);

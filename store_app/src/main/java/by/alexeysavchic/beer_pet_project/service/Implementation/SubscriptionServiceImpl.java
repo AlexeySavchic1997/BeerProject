@@ -45,7 +45,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         userSubscription.setUser(securityContextService.getCurrentUser());
         userSubscription.setSubscribeDate(timeOfCreation);
         userSubscription.setTimeOfExpiration(timeOfExpiration);
-        userSubscription.setBeers(beerRepository.findAllBySku(request.getListSKU()));
+        userSubscription.setBeers(beerRepository.findAllBySku(request.getSkuList()));
 
         userSubscriptionRepository.save(userSubscription);
     }

@@ -1,5 +1,7 @@
 package by.alexeysavchic.beer_pet_project.dto.request;
 
+import by.alexeysavchic.beer_pet_project.entity.enums.Gender;
+import by.alexeysavchic.beer_pet_project.entity.enums.Location;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -22,4 +24,8 @@ public class UserRegisterRequest {
     @NotBlank
     @Size(min = 8, max = 15, message = "password must be between 8 and 15 symbols")
     private String password;
+
+    private Location userLocation;
+
+    private Gender userGender;
 }

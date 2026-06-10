@@ -1,5 +1,7 @@
 package by.alexeysavchic.beer_pet_project.entity;
 
+import by.alexeysavchic.beer_pet_project.entity.enums.Gender;
+import by.alexeysavchic.beer_pet_project.entity.enums.Location;
 import by.alexeysavchic.beer_pet_project.security.Role;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
@@ -20,6 +22,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.List;
 import java.util.Set;
@@ -27,6 +30,7 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
+@ToString(onlyExplicitlyIncluded = true)
 @Entity
 @Table(name = "users")
 public class User {
@@ -38,6 +42,7 @@ public class User {
     @Column(name = "username")
     @Size(min = 2, max = 20, message = "username must be between 2 and 20 symbols")
     @NotBlank
+    @ToString.Include
     private String username;
 
     @Column(name = "password")
@@ -47,7 +52,15 @@ public class User {
     @Column(name = "email")
     @Email
     @NotBlank
+    @ToString.Include
     private String email;
+
+    @Column(name = "user_location")
+    @Enumerated(EnumType.STRING)
+    private Location userLocation;
+
+    @Column(name = "user_gender")
+    private Gender userGender;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "role", joinColumns = @JoinColumn(name = "user_id"))

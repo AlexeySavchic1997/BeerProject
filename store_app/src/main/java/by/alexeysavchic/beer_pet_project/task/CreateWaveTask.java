@@ -10,12 +10,12 @@ import org.springframework.stereotype.Component;
 @Component
 @EnableScheduling
 @RequiredArgsConstructor
-public class CreateWave {
+public class CreateWaveTask {
 
     private final WaveService waveService;
 
-    @Scheduled(cron = "0 0 1 * *")
-    @SchedulerLock(name = "CreateWave", lockAtMostFor = "5m", lockAtLeastFor = "10s")
+    @Scheduled(cron = "0 0 0 1 * *")
+    @SchedulerLock(name = "CreateWaveTask", lockAtMostFor = "5m", lockAtLeastFor = "10s")
     public void run() {
         waveService.createWaves();
     }

@@ -21,5 +21,5 @@ public class CreateSubscriptionRequest {
     @Max(value = 12, message = "Duration should not be greater than 12")
     private Integer durationMonths;
 
-    private List<String> listSKU;
+    private List<String> skuList;
 }

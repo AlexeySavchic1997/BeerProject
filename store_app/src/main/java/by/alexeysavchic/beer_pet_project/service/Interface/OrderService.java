@@ -9,5 +9,5 @@ public interface OrderService {
 
     public void processingSubscriptionOrders(OrderType type);
 
-    public void createOrdersFromSubscriptions();
+    public void saveOrdersFromSubscriptions();
 }

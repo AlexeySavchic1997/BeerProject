@@ -1,0 +1,22 @@
+package by.alexeysavchic.beer_pet_project.task;
+
+import by.alexeysavchic.beer_pet_project.service.Interface.WarehouseService;
+import lombok.RequiredArgsConstructor;
+import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
+
+@Component
+@EnableScheduling
+@RequiredArgsConstructor
+public class GetInformationFromWarehouseTask {
+
+    private final WarehouseService warehouseService;
+
+    @Scheduled(cron = "0 */5 * * * *")
+    @SchedulerLock(name = "GetInformationFromWarehouse", lockAtMostFor = "10m", lockAtLeastFor = "10s")
+    protected void run() {
+        warehouseService.getUpdatedWarehouseInfo();
+    }
+}
