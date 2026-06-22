@@ -30,4 +30,6 @@ public final class ErrorMessages {
     public final static String beerBrandNotFound = "Cannot find beer brand with received characteristics";
 
     public final static String orderSetNotFound = "Cannot find orderSet with id: id=%d";
+
+    public final static String typeOfSubscriptionNotFound = "Type of subscription: %s is absent";
 }

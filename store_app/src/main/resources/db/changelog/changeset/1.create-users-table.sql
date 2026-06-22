@@ -1,6 +1,6 @@
 --liquibase formatted sql
 --changeset Alexey Savchic:users-table
-create type location AS ENUM ('BELARUS', 'RUSSIA', 'UKRAINE', 'KAZAKHSTAN', 'POLAND');
+create type location AS ENUM ('BLR', 'RUS', 'UKR', 'KAZ', 'POL');
 create type gender AS ENUM ('MALE', 'FEMALE');
 create table users
 (

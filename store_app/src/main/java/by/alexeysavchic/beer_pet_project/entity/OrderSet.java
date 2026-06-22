@@ -2,7 +2,7 @@ package by.alexeysavchic.beer_pet_project.entity;
 
 import by.alexeysavchic.beer_pet_project.entity.enums.OrderSetStatus;
 import by.alexeysavchic.beer_pet_project.entity.enums.OrderType;
-import by.alexeysavchic.beer_pet_project.entity.enums.Tag;
+import by.alexeysavchic.beer_pet_project.entity.enums.SplitType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -36,7 +36,7 @@ public class OrderSet {
 
     @Column(name = "tag")
     @Enumerated(EnumType.STRING)
-    private Tag tag;
+    private SplitType splitType;
 
     @OneToOne
     @JoinColumn(name = "wave_id")

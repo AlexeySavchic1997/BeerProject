@@ -1,8 +1,8 @@
 package by.alexeysavchic.beer_pet_project.controller;
 
-import by.alexeysavchic.beer_pet_project.dto.request.SplitRequest;
+import by.alexeysavchic.beer_pet_project.dto.request.GetOrderSetsRequest;
+import by.alexeysavchic.beer_pet_project.dto.request.OrderSetSplitRequest;
 import by.alexeysavchic.beer_pet_project.dto.response.GetOrderSetResponse;
-import by.alexeysavchic.beer_pet_project.entity.enums.OrderType;
 import by.alexeysavchic.beer_pet_project.service.Interface.OrderSetService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,23 +14,18 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/sets")
+@RequestMapping("/api/v1/set")
 @RequiredArgsConstructor
 public class OrderSetController {
     private final OrderSetService orderSetService;
 
     @GetMapping
-    public List<GetOrderSetResponse> getAllOrderSets() {
-        return orderSetService.findAll();
+    public List<GetOrderSetResponse> getAllOrderSets(GetOrderSetsRequest request) {
+        return orderSetService.getOrderSets(request);
     }
 
-    @PostMapping
-    public List<GetOrderSetResponse> getOrderSetsByType(@RequestBody OrderType orderType) {
-        return orderSetService.findAllByOrderType(orderType);
-    }
-
-    @PostMapping("/mark_split")
-    public void markSplit(@RequestBody SplitRequest request) {
+    @PostMapping("/split")
+    public void markSplit(@RequestBody OrderSetSplitRequest request) {
         orderSetService.markSplit(request);
     }
 }

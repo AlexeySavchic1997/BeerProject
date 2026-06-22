@@ -13,7 +13,9 @@ import by.alexeysavchic.beer_pet_project.entity.Wave;
 import by.alexeysavchic.beer_pet_project.entity.enums.OrderSetStatus;
 import by.alexeysavchic.beer_pet_project.entity.enums.OrderStatus;
 import by.alexeysavchic.beer_pet_project.entity.enums.OrderType;
+import by.alexeysavchic.beer_pet_project.entity.enums.TypeOfSubscription;
 import by.alexeysavchic.beer_pet_project.entity.enums.WaveStatus;
+import by.alexeysavchic.beer_pet_project.exception.TypeOfSubscriptionIsAbsent;
 import by.alexeysavchic.beer_pet_project.exception.WarehouseUpdateServerException;
 import by.alexeysavchic.beer_pet_project.mapper.OrderMapper;
 import by.alexeysavchic.beer_pet_project.repository.BeerRepository;
@@ -162,14 +164,18 @@ public class OrderServiceImpl implements OrderService {
         order.setOrderDate(LocalDateTime.now());
         order.setStatus(OrderStatus.NEW);
         order.setSummaryPrice(BigDecimal.ZERO);
-        switch (userSubscription.getSubscription().getSubscriptionType()) {
+        TypeOfSubscription type = userSubscription.getSubscription().getSubscriptionType();
+        switch (type) {
             case BEER_OF_THE_MONTH -> {
                 order.setOrderType(OrderType.BEER_OF_THE_MONTH);
                 orderSet.setOrderType(OrderType.BEER_OF_THE_MONTH);
             }
             case YOUR_FAVORITE_BEER -> {
-                order.setOrderType(OrderType.YOUR_FAVORITE_BEER);
-                orderSet.setOrderType(OrderType.YOUR_FAVORITE_BEER);
+                order.setOrderType(OrderType.FAVORITE_BEER);
+                orderSet.setOrderType(OrderType.FAVORITE_BEER);
+            }
+            default -> {
+                throw new TypeOfSubscriptionIsAbsent(type);
             }
         }
         User user = userSubscription.getUser();
