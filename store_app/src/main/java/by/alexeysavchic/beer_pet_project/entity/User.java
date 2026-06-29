@@ -50,7 +50,8 @@ public class User {
     private String password;
 
     @Column(name = "email")
-    @Email
+    @Email(regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$",
+            message = "Wrong email pattern")
     @NotBlank
     @ToString.Include
     private String email;

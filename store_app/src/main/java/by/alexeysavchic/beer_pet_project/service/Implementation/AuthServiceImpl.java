@@ -33,7 +33,7 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public JwtResponseDTO signUp(@Valid UserRegisterRequest request) {
+    public JwtResponseDTO signUp(UserRegisterRequest request) {
         User user = userMapper.userRegisterRequestToUser(request);
 
         if (userRepository.existsByUsername(request.getUsername())) {

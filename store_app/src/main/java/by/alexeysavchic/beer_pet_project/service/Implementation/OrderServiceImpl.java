@@ -65,7 +65,7 @@ public class OrderServiceImpl implements OrderService {
     private static final Logger logger = LogManager.getLogger(OrderServiceImpl.class);
 
     @Override
-    public GetOrderResponse createOrder(@Valid CreateOrderRequest request) {
+    public GetOrderResponse createOrder(CreateOrderRequest request) {
         LocalDateTime timeMark = LocalDateTime.now();
         User user = securityContextService.getCurrentUser();
         List<OrderItemRequest> cart = request.getCart();
@@ -170,7 +170,7 @@ public class OrderServiceImpl implements OrderService {
                 order.setOrderType(OrderType.BEER_OF_THE_MONTH);
                 orderSet.setOrderType(OrderType.BEER_OF_THE_MONTH);
             }
-            case YOUR_FAVORITE_BEER -> {
+            case FAVORITE_BEER -> {
                 order.setOrderType(OrderType.FAVORITE_BEER);
                 orderSet.setOrderType(OrderType.FAVORITE_BEER);
             }

@@ -5,6 +5,7 @@ import by.alexeysavchic.beer_pet_project.dto.request.UserRegisterRequest;
 import by.alexeysavchic.beer_pet_project.dto.response.JwtResponseDTO;
 import by.alexeysavchic.beer_pet_project.service.Interface.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,14 +22,14 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/signup")
-    public ResponseEntity<JwtResponseDTO> signUp(@RequestBody UserRegisterRequest request) {
+    public ResponseEntity<JwtResponseDTO> signUp(@RequestBody @Valid UserRegisterRequest request) {
         JwtResponseDTO tokens = authService.signUp(request);
 
         return ResponseEntity.status(HttpStatus.OK).body(tokens);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<JwtResponseDTO> logIn(@RequestBody LogInRequest request) {
+    public ResponseEntity<JwtResponseDTO> logIn(@RequestBody @Valid LogInRequest request) {
         JwtResponseDTO tokens = authService.logIn(request);
 
         return ResponseEntity.status(HttpStatus.OK).body(tokens);

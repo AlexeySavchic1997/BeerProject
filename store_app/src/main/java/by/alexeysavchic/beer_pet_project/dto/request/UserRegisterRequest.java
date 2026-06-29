@@ -4,7 +4,9 @@ import by.alexeysavchic.beer_pet_project.entity.enums.Gender;
 import by.alexeysavchic.beer_pet_project.entity.enums.Location;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,12 +14,14 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class UserRegisterRequest {
     @Size(min = 2, max = 20, message = "username must be between 2 and 20 symbols")
     @NotBlank
     private String username;
 
-    @Email
+    @Email(regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$",
+            message = "Wrong email pattern")
     @NotBlank
     private String email;
 
@@ -25,7 +29,9 @@ public class UserRegisterRequest {
     @Size(min = 8, max = 15, message = "password must be between 8 and 15 symbols")
     private String password;
 
+    @NotNull
     private Location userLocation;
 
+    @NotNull
     private Gender userGender;
 }

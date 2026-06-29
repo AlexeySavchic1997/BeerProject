@@ -2,6 +2,7 @@ package by.alexeysavchic.beer_pet_project.controller;
 
 import by.alexeysavchic.beer_pet_project.dto.request.GetWarehouseBeerInfoRequest;
 import by.alexeysavchic.beer_pet_project.service.Interface.WarehouseService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,7 @@ public class WarehouseController {
     private final WarehouseService warehouseService;
 
     @PostMapping
-    public ResponseEntity<String> getBeerFromWarehouse(@RequestBody GetWarehouseBeerInfoRequest request) {
+    public ResponseEntity<String> getBeerFromWarehouse(@RequestBody @Valid GetWarehouseBeerInfoRequest request) {
         warehouseService.getWarehouseInfo(request);
         return ResponseEntity.status(HttpStatus.OK).build();
     }

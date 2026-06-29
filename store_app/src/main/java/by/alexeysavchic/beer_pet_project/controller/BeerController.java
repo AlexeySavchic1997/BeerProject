@@ -4,6 +4,7 @@ import by.alexeysavchic.beer_pet_project.dto.request.AddBeerRequest;
 import by.alexeysavchic.beer_pet_project.dto.request.GetBeerRequest;
 import by.alexeysavchic.beer_pet_project.dto.response.GetBeerResponse;
 import by.alexeysavchic.beer_pet_project.service.Interface.BeerService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,14 +28,14 @@ public class BeerController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/add")
-    public ResponseEntity<String> addBeer(@RequestBody AddBeerRequest newBeer) {
+    public ResponseEntity<String> addBeer(@RequestBody @Valid AddBeerRequest newBeer) {
         beerService.addNewBeer(newBeer);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @PostMapping("/get")
-    public Page<GetBeerResponse> getBeers(@RequestBody(required = false) GetBeerRequest request, @PageableDefault(size = 20) Pageable pageable) {
-        return beerService.findAll(request, pageable);
+    public ResponseEntity<Page<GetBeerResponse>> getBeers(@RequestBody(required = false) GetBeerRequest request, @PageableDefault(size = 20) Pageable pageable) {
+        return ResponseEntity.status(HttpStatus.OK).body(beerService.findAll(request, pageable));
     }
 
     @PreAuthorize("hasRole('ADMIN')")

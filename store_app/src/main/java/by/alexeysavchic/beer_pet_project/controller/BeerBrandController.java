@@ -3,6 +3,7 @@ package by.alexeysavchic.beer_pet_project.controller;
 import by.alexeysavchic.beer_pet_project.dto.request.AddBeerBrandRequest;
 import by.alexeysavchic.beer_pet_project.dto.response.GetBeerBrandResponse;
 import by.alexeysavchic.beer_pet_project.service.Interface.BeerBrandService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,22 +29,22 @@ public class BeerBrandController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
-    public ResponseEntity<String> addNewBeerBrand(@RequestBody AddBeerBrandRequest newBeerBrand) {
+    public ResponseEntity<String> addNewBeerBrand(@RequestBody @Valid AddBeerBrandRequest newBeerBrand) {
         beerBrandService.addBeerBrand(newBeerBrand);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @GetMapping
-    public Page<GetBeerBrandResponse> getBeerBrands(
+    public ResponseEntity<Page<GetBeerBrandResponse>> getBeerBrands(
             @RequestParam(required = false, name = "name") String name, @PageableDefault(size = 20) Pageable pageable) {
-        return beerBrandService.getBeerBrands(name, pageable);
+        return ResponseEntity.status(HttpStatus.OK).body(beerBrandService.getBeerBrands(name, pageable));
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("{name}")
-    public ResponseEntity<String> deleteBeerBrad(@PathVariable("name") String name) {
+    public ResponseEntity<String> deleteBeerBrand(@PathVariable("name") String name) {
         beerBrandService.deleteBeerBrand(name);
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
 }

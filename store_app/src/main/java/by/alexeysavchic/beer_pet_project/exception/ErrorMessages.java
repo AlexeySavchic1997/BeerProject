@@ -15,7 +15,7 @@ public final class ErrorMessages {
 
     public final static String wrongPassword = "User with email %s have entered invalid password";
 
-    public final static String absentRefreshToken = "Refresh cookie is absent";
+    public final static String absentRefreshToken = "Refresh token is absent";
 
     public final static String wrongTokenType = "Wrong token type. Type %s received but %s type expected";
 
@@ -28,6 +28,8 @@ public final class ErrorMessages {
     public final static String beerNotFound = "Cannot find beer with received characteristics";
 
     public final static String beerBrandNotFound = "Cannot find beer brand with received characteristics";
+
+    public final static String beerBrandAlreadyExists = "Beer brand with name: %s already exists";
 
     public final static String orderSetNotFound = "Cannot find orderSet with id: id=%d";
 

@@ -33,7 +33,7 @@ public class BeerServiceImpl implements BeerService {
 
 
     @Override
-    public void addNewBeer(@Valid AddBeerRequest newBeer) {
+    public void addNewBeer(AddBeerRequest newBeer) {
         BeerBrand beerBrand = beerBrandRepository.findByBrandName(newBeer.getBeerBrand()).
                 orElseThrow(() -> new UnknownBeerBrandException(newBeer.getBeerBrand()));
         Beer beer = mapper.AddNewBeerToBeer(newBeer);
@@ -47,7 +47,7 @@ public class BeerServiceImpl implements BeerService {
     }
 
     @Override
-    public Page<GetBeerResponse> findAll(@Valid GetBeerRequest request, Pageable pageable) {
+    public Page<GetBeerResponse> findAll(GetBeerRequest request, Pageable pageable) {
         Specification<Beer> specification = Specification.allOf(specifications.getIdSpecification(request.getId()),
                 specifications.getSkuSpecification(request.getSku()),
                 specifications.getNameSpecification(request.getName()),

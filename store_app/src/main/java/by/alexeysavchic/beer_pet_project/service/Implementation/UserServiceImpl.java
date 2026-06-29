@@ -24,7 +24,7 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public void changeCredentials(@Valid ChangeCredentialsRequest request) {
+    public void changeCredentials(ChangeCredentialsRequest request) {
         Long userId = securityContextService.getCurrentUser().getId();
         User user = userRepository.findUserById(userId).orElseThrow(() ->
                 new UserNotFoundException(userId));

@@ -3,6 +3,7 @@ package by.alexeysavchic.beer_pet_project.dto.response;
 import by.alexeysavchic.beer_pet_project.entity.enums.Gender;
 import by.alexeysavchic.beer_pet_project.entity.enums.Location;
 import by.alexeysavchic.beer_pet_project.entity.enums.OrderSetStatus;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

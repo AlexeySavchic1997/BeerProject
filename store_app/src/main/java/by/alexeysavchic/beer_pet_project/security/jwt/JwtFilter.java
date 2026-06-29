@@ -9,35 +9,49 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import java.io.IOException;
 
 @Component
-@AllArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
     private final CustomUserDetailsService customUserDetailsService;
+    private final HandlerExceptionResolver exceptionResolver;
+
+    public JwtFilter(JwtService jwtService, CustomUserDetailsService customUserDetailsService,
+                     @Qualifier("handlerExceptionResolver") HandlerExceptionResolver exceptionResolver) {
+        this.jwtService = jwtService;
+        this.customUserDetailsService = customUserDetailsService;
+        this.exceptionResolver = exceptionResolver;
+    }
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
                                     @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain) throws ServletException, IOException {
+        try{
         String token = getTokenFromRequest(request);
         if (token != null &&
-                ((!request.getRequestURI().equals("/auth/refresh") && jwtService.getTypeFromToken(token).equals("Refresh"))
-                        || (request.getRequestURI().equals("/auth/refresh") && !jwtService.getTypeFromToken(token).equals("Refresh")))) {
-            String expectedType = (request.getRequestURI().equals("/auth/refresh") ? "Refresh" : "Base");
+                ((!request.getRequestURI().equals("/api/v1/auth/refresh") && jwtService.getTypeFromToken(token).equals("Refresh"))
+                        || (request.getRequestURI().equals("/api/v1/auth/refresh") && !jwtService.getTypeFromToken(token).equals("Refresh")))) {
+            String expectedType = (request.getRequestURI().equals("/api/v1/auth/refresh") ? "Refresh" : "Base");
             throw new WrongTokenTypeException(jwtService.getTypeFromToken(token), expectedType);
         }
         if (token != null && jwtService.validateJwtToken(token)) {
             setCustomUserDetailsToSecurityContextHolder(token);
         }
-        filterChain.doFilter(request, response);
+        filterChain.doFilter(request, response);}
+        catch (RuntimeException ex)
+        {
+            exceptionResolver.resolveException(request, response, null, ex);
+        }
     }
 
     private void setCustomUserDetailsToSecurityContextHolder(String token) {

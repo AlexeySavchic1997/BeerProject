@@ -36,7 +36,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     @Override
-    public void createUserSubscription(@Valid CreateSubscriptionRequest request) {
+    public void createUserSubscription(CreateSubscriptionRequest request) {
         LocalDateTime timeOfCreation = LocalDateTime.now();
         LocalDateTime timeOfExpiration = timeOfCreation.plusMonths(request.getDurationMonths());
 

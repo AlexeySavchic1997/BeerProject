@@ -63,7 +63,7 @@ public class WarehouseServiceImpl implements WarehouseService {
     }
 
     @Override
-    public List<GetWarehouseBeerInfoResponse> getWarehouseInfo(@Valid GetWarehouseBeerInfoRequest request) {
+    public List<GetWarehouseBeerInfoResponse> getWarehouseInfo(GetWarehouseBeerInfoRequest request) {
         return clientService.getWarehouseBeerInfo(request);
     }
 

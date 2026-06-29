@@ -55,7 +55,7 @@ public class OrderSetServiceImpl implements OrderSetService {
     }
 
     @Override
-    public void markSplit(@Valid OrderSetSplitRequest request) {
+    public void markSplit(OrderSetSplitRequest request) {
         List<OrderSet> orderSets = orderSetRepository.findAllByIdIn(request.getIds());
         for (OrderSet orderSet : orderSets) {
             orderSet.setSplitType(request.getSplitType());
