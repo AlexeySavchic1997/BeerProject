@@ -1,18 +1,13 @@
 package by.alexeysavchic.beer_pet_project.controller;
 
 import by.alexeysavchic.beer_pet_project.dto.request.CreateSubscriptionRequest;
-import by.alexeysavchic.beer_pet_project.dto.request.GetOrderSetsRequest;
-import by.alexeysavchic.beer_pet_project.dto.response.GetOrderSetResponse;
-import by.alexeysavchic.beer_pet_project.entity.enums.OrderSetStatus;
 import by.alexeysavchic.beer_pet_project.entity.enums.OrderType;
-import by.alexeysavchic.beer_pet_project.entity.enums.SplitType;
 import by.alexeysavchic.beer_pet_project.entity.enums.TypeOfSubscription;
 import by.alexeysavchic.beer_pet_project.security.CustomUserDetailsService;
 import by.alexeysavchic.beer_pet_project.security.SecurityConfig;
 import by.alexeysavchic.beer_pet_project.security.jwt.JwtFilter;
 import by.alexeysavchic.beer_pet_project.security.jwt.JwtService;
 import by.alexeysavchic.beer_pet_project.service.Interface.OrderService;
-import by.alexeysavchic.beer_pet_project.service.Interface.OrderSetService;
 import by.alexeysavchic.beer_pet_project.service.Interface.SubscriptionService;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -28,19 +23,14 @@ import tools.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.hamcrest.Matchers.hasItem;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(SubscriptionController.class)
 @Import({SecurityConfig.class, JwtFilter.class})
-public class SubscriptionControllerTest
-{
+public class SubscriptionControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
@@ -60,8 +50,7 @@ public class SubscriptionControllerTest
     private CustomUserDetailsService customUserDetailsService;
 
     @Nested
-    class CreateSubscriptionTests
-    {
+    class CreateSubscriptionTests {
         @Test
         @WithMockUser(username = "regularUser@gmail.com", authorities = {"ROLE_USER"})
         void successfulCreateSubscription() throws Exception {
@@ -95,8 +84,7 @@ public class SubscriptionControllerTest
     }
 
     @Nested
-    class ProcessSubscriptions
-    {
+    class ProcessSubscriptions {
         @Test
         @WithMockUser(username = "adminUser@gmail.com", authorities = {"ROLE_ADMIN"})
         void successfulProcessSubscriptions() throws Exception {

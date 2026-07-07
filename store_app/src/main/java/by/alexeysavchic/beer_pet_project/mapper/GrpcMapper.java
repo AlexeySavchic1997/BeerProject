@@ -3,6 +3,7 @@ package by.alexeysavchic.beer_pet_project.mapper;
 import by.alexeysavchic.beer_pet_project.dto.request.GetWarehouseBeerInfoRequest;
 import by.alexeysavchic.beer_pet_project.dto.request.OrderItemRequest;
 import by.alexeysavchic.beer_pet_project.dto.response.GetWarehouseBeerInfoResponse;
+import by.alexeysavchic.beer_pet_project.entity.enums.ZoneType;
 import com.google.protobuf.Timestamp;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -14,6 +15,7 @@ import org.mapstruct.ValueMapping;
 import warehouse_api.GetWarehouseInfoRequest;
 import warehouse_api.UpdateBeerRequest;
 import warehouse_api.WarehouseBeerInfoItem;
+import warehouse_api.Zone;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -41,12 +43,15 @@ public interface GrpcMapper {
         return Timestamp.newBuilder().setSeconds(time.toInstant(ZoneOffset.UTC).getEpochSecond()).build();
     }
 
-    @ValueMapping(source = "UNRECOGNIZED", target = MappingConstants.NULL)
-    @Mapping(target = "lastModifiedDate", expression = "java(localDateTimeToTimestamp(dto.getLastModifiedDate()))")
+
     List<GetWarehouseBeerInfoResponse> listWarehouseBeerInfoToListGetWarehouseBeerInfoResponse(List<WarehouseBeerInfoItem> beerInfoList);
 
-
+    @Mapping(target = "zoneType", expression = "java(mapZone(dto.getZoneType()))")
     GetWarehouseBeerInfoResponse WarehouseInfoDTOToWarehouseInfoBeerDTOResponse(WarehouseBeerInfoItem dto);
+
+    default Zone mapZone (Zone zone){
+        return zone == warehouse_api.Zone.UNRECOGNIZED ? null : zone;
+    }
 
     List<UpdateBeerRequest> listOrderItemRequestToListUpdateBeerRequest(List<OrderItemRequest> orderRequest);
 

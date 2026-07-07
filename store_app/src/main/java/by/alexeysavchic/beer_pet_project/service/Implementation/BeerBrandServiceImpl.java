@@ -9,7 +9,6 @@ import by.alexeysavchic.beer_pet_project.mapper.BeerMapper;
 import by.alexeysavchic.beer_pet_project.repository.BeerBrandRepository;
 import by.alexeysavchic.beer_pet_project.service.Implementation.specifications.BeerBrandSpecifications;
 import by.alexeysavchic.beer_pet_project.service.Interface.BeerBrandService;
-import jakarta.validation.Valid;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;

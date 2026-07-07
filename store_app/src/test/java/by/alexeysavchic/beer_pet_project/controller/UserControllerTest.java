@@ -1,14 +1,10 @@
 package by.alexeysavchic.beer_pet_project.controller;
 
 import by.alexeysavchic.beer_pet_project.dto.request.ChangeCredentialsRequest;
-import by.alexeysavchic.beer_pet_project.dto.request.OrderSetSplitRequest;
-import by.alexeysavchic.beer_pet_project.entity.enums.SplitType;
 import by.alexeysavchic.beer_pet_project.security.CustomUserDetailsService;
 import by.alexeysavchic.beer_pet_project.security.SecurityConfig;
 import by.alexeysavchic.beer_pet_project.security.jwt.JwtFilter;
 import by.alexeysavchic.beer_pet_project.security.jwt.JwtService;
-import by.alexeysavchic.beer_pet_project.service.Interface.OrderService;
-import by.alexeysavchic.beer_pet_project.service.Interface.SubscriptionService;
 import by.alexeysavchic.beer_pet_project.service.Interface.UserService;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -21,18 +17,14 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import tools.jackson.databind.ObjectMapper;
 
-import java.util.List;
-
 import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(UserController.class)
 @Import({SecurityConfig.class, JwtFilter.class})
-public class UserControllerTest
-{
+public class UserControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
@@ -49,12 +41,10 @@ public class UserControllerTest
     private CustomUserDetailsService customUserDetailsService;
 
     @Nested
-    class changeCredentialsTests
-    {
+    class changeCredentialsTests {
         @Test
         @WithMockUser(username = "regularUser@gmail.com", authorities = {"ROLE_USER"})
-        void successfulChangeCredentials() throws Exception
-        {
+        void successfulChangeCredentials() throws Exception {
             ChangeCredentialsRequest request = new ChangeCredentialsRequest("validUsername", "validEmail@gmail.com", "validPassword", "nValidPassword");
             String jsonBody = objectMapper.writeValueAsString(request);
 
@@ -66,8 +56,7 @@ public class UserControllerTest
 
         @Test
         @WithMockUser(username = "regularUser@gmail.com", authorities = {"ROLE_USER"})
-        void invalidChangeCredentials() throws Exception
-        {
+        void invalidChangeCredentials() throws Exception {
             ChangeCredentialsRequest request = new ChangeCredentialsRequest("", "", "", "");
             String jsonBody = objectMapper.writeValueAsString(request);
 

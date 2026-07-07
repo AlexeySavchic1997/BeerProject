@@ -82,6 +82,7 @@ public class OrderServiceImpl implements OrderService {
         Order order = new Order();
         order.setStatus(OrderStatus.NEW);
         order.setOrderType(OrderType.REGULAR_ORDER);
+        order.setOrderItems(new ArrayList<>());
         BigDecimal summaryPrice = BigDecimal.ZERO;
         for (OrderItemRequest item : cart) {
             Beer beer = beerMap.get(item.getSku());

@@ -1,12 +1,10 @@
 package by.alexeysavchic.beer_pet_project.controller;
 
-import by.alexeysavchic.beer_pet_project.dto.request.AddBeerBrandRequest;
 import by.alexeysavchic.beer_pet_project.dto.request.AddBeerRequest;
 import by.alexeysavchic.beer_pet_project.security.CustomUserDetailsService;
 import by.alexeysavchic.beer_pet_project.security.SecurityConfig;
 import by.alexeysavchic.beer_pet_project.security.jwt.JwtFilter;
 import by.alexeysavchic.beer_pet_project.security.jwt.JwtService;
-import by.alexeysavchic.beer_pet_project.service.Interface.BeerBrandService;
 import by.alexeysavchic.beer_pet_project.service.Interface.BeerService;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -22,16 +20,15 @@ import tools.jackson.databind.ObjectMapper;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
+import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.hamcrest.Matchers.hasItem;
 
 @WebMvcTest(BeerController.class)
 @Import({SecurityConfig.class, JwtFilter.class})
-public class BeerControllerTest
-{
+public class BeerControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
@@ -48,8 +45,7 @@ public class BeerControllerTest
     private CustomUserDetailsService customUserDetailsService;
 
     @Nested
-    class AddNewBeerTests
-    {
+    class AddNewBeerTests {
         @Test
         @WithMockUser(username = "adminUser@gmail.com", authorities = {"ROLE_ADMIN"})
         void successfulAddBeerRequest() throws Exception {
@@ -94,8 +90,7 @@ public class BeerControllerTest
     }
 
     @Nested
-    class DeleteBeerTests
-    {
+    class DeleteBeerTests {
         @Test
         @WithMockUser(username = "adminUser@gmail.com", authorities = {"ROLE_ADMIN"})
         void successfulDeleteBeerBrandRequest() throws Exception {

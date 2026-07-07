@@ -1,13 +1,8 @@
 package by.alexeysavchic.beer_pet_project.controller;
 
-import by.alexeysavchic.beer_pet_project.dto.request.CreateOrderRequest;
 import by.alexeysavchic.beer_pet_project.dto.request.GetOrderSetsRequest;
-import by.alexeysavchic.beer_pet_project.dto.request.LogInRequest;
-import by.alexeysavchic.beer_pet_project.dto.request.OrderItemRequest;
 import by.alexeysavchic.beer_pet_project.dto.request.OrderSetSplitRequest;
 import by.alexeysavchic.beer_pet_project.dto.response.GetOrderSetResponse;
-import by.alexeysavchic.beer_pet_project.entity.enums.Gender;
-import by.alexeysavchic.beer_pet_project.entity.enums.Location;
 import by.alexeysavchic.beer_pet_project.entity.enums.OrderSetStatus;
 import by.alexeysavchic.beer_pet_project.entity.enums.OrderType;
 import by.alexeysavchic.beer_pet_project.entity.enums.SplitType;
@@ -15,10 +10,7 @@ import by.alexeysavchic.beer_pet_project.security.CustomUserDetailsService;
 import by.alexeysavchic.beer_pet_project.security.SecurityConfig;
 import by.alexeysavchic.beer_pet_project.security.jwt.JwtFilter;
 import by.alexeysavchic.beer_pet_project.security.jwt.JwtService;
-import by.alexeysavchic.beer_pet_project.service.Interface.OrderService;
 import by.alexeysavchic.beer_pet_project.service.Interface.OrderSetService;
-import jakarta.servlet.http.HttpServletRequest;
-import org.aspectj.weaver.ast.Or;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,18 +27,15 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.hasItem;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.endsWith;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 @WebMvcTest(OrderSetController.class)
 @Import({SecurityConfig.class, JwtFilter.class})
-public class OrderSetControllerTest
-{
+public class OrderSetControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
@@ -63,8 +52,7 @@ public class OrderSetControllerTest
     private CustomUserDetailsService customUserDetailsService;
 
     @Nested
-    class getAllOrderSetsTests
-    {
+    class getAllOrderSetsTests {
         @Test
         @WithMockUser(username = "adminUser@gmail.com", authorities = {"ROLE_ADMIN"})
         void successfulGetAllOrderSetsRequest() throws Exception {
@@ -80,8 +68,8 @@ public class OrderSetControllerTest
             when(orderSetService.getOrderSets(any(GetOrderSetsRequest.class))).thenReturn(responseList);
 
             mockMvc.perform(post("/api/v1/set/get").
-                    contentType(MediaType.APPLICATION_JSON_VALUE).
-                    content(jsonBody)).
+                            contentType(MediaType.APPLICATION_JSON_VALUE).
+                            content(jsonBody)).
                     andExpect(status().isOk()).
                     andExpect(content().contentType(MediaType.APPLICATION_JSON)).
                     andExpect(jsonPath("$[0].id").value(1L)).
@@ -103,13 +91,11 @@ public class OrderSetControllerTest
         }
 
         @Nested
-        class MarkSplitTests
-        {
+        class MarkSplitTests {
             @Test
             @WithMockUser(username = "adminUser@gmail.com", authorities = {"ROLE_ADMIN"})
-            void successfulMarkSplitRequest() throws Exception
-            {
-                OrderSetSplitRequest request = new OrderSetSplitRequest(List.of(1L,2L,3L), SplitType.GENDER);
+            void successfulMarkSplitRequest() throws Exception {
+                OrderSetSplitRequest request = new OrderSetSplitRequest(List.of(1L, 2L, 3L), SplitType.GENDER);
                 String jsonBody = objectMapper.writeValueAsString(request);
 
                 mockMvc.perform(post("/api/v1/set/split").
@@ -120,9 +106,8 @@ public class OrderSetControllerTest
 
             @Test
             @WithMockUser(username = "regularUser@gmail.com", authorities = {"ROLE_USER"})
-            void insufficientPrivilegesMarkSplitRequest() throws Exception
-            {
-                OrderSetSplitRequest request = new OrderSetSplitRequest(List.of(1L,2L,3L), SplitType.GENDER);
+            void insufficientPrivilegesMarkSplitRequest() throws Exception {
+                OrderSetSplitRequest request = new OrderSetSplitRequest(List.of(1L, 2L, 3L), SplitType.GENDER);
                 String jsonBody = objectMapper.writeValueAsString(request);
 
                 mockMvc.perform(post("/api/v1/set/split").
@@ -133,9 +118,8 @@ public class OrderSetControllerTest
 
             @Test
             @WithMockUser(username = "adminUser@gmail.com", authorities = {"ROLE_ADMIN"})
-            void invalidMarkSplitRequest() throws Exception
-            {
-                List<Long> ids=new ArrayList<>();
+            void invalidMarkSplitRequest() throws Exception {
+                List<Long> ids = new ArrayList<>();
                 OrderSetSplitRequest request = new OrderSetSplitRequest(ids, SplitType.GENDER);
                 String jsonBody = objectMapper.writeValueAsString(request);
 
@@ -143,7 +127,7 @@ public class OrderSetControllerTest
                                 contentType(MediaType.APPLICATION_JSON_VALUE).
                                 content(jsonBody)).
                         andExpect(status().isBadRequest()).
-                andExpect(jsonPath("$.ids", hasItem("must not be empty")));
+                        andExpect(jsonPath("$.ids", hasItem("must not be empty")));
 
             }
         }

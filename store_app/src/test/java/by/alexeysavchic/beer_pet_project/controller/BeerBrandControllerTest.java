@@ -6,30 +6,26 @@ import by.alexeysavchic.beer_pet_project.security.SecurityConfig;
 import by.alexeysavchic.beer_pet_project.security.jwt.JwtFilter;
 import by.alexeysavchic.beer_pet_project.security.jwt.JwtService;
 import by.alexeysavchic.beer_pet_project.service.Interface.BeerBrandService;
-import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import tools.jackson.databind.ObjectMapper;
 
-
 import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(BeerBrandController.class)
 @Import({SecurityConfig.class, JwtFilter.class})
-public class BeerBrandControllerTest
-{
+public class BeerBrandControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
@@ -46,8 +42,7 @@ public class BeerBrandControllerTest
     private CustomUserDetailsService customUserDetailsService;
 
     @Nested
-    class AddNewBeerTests
-    {
+    class AddNewBeerTests {
         @Test
         @WithMockUser(username = "adminUser@gmail.com", authorities = {"ROLE_ADMIN"})
         void successfulAddBeerBrandRequest() throws Exception {
@@ -88,8 +83,7 @@ public class BeerBrandControllerTest
     }
 
     @Nested
-    class getBeerBrandsTests
-    {
+    class getBeerBrandsTests {
         @Test
         void successfulGetBeerBrands() throws Exception {
             AddBeerBrandRequest request = new AddBeerBrandRequest("", "description");
@@ -105,8 +99,7 @@ public class BeerBrandControllerTest
     }
 
     @Nested
-    class DeleteBeerBrandsTests
-    {
+    class DeleteBeerBrandsTests {
         @Test
         @WithMockUser(username = "adminUser@gmail.com", authorities = {"ROLE_ADMIN"})
         void successfulDeleteBeerBrandRequest() throws Exception {

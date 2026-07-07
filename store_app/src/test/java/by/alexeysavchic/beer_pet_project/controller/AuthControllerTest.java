@@ -6,10 +6,8 @@ import by.alexeysavchic.beer_pet_project.dto.response.JwtResponseDTO;
 import by.alexeysavchic.beer_pet_project.entity.enums.Gender;
 import by.alexeysavchic.beer_pet_project.entity.enums.Location;
 import by.alexeysavchic.beer_pet_project.exception.EmailAlreadyExistsException;
-import by.alexeysavchic.beer_pet_project.exception.GlobalExceptionHandler;
 import by.alexeysavchic.beer_pet_project.exception.RefreshTokenIsAbsentException;
 import by.alexeysavchic.beer_pet_project.exception.WrongPasswordException;
-import by.alexeysavchic.beer_pet_project.exception.WrongTokenTypeException;
 import by.alexeysavchic.beer_pet_project.security.CustomUserDetailsService;
 import by.alexeysavchic.beer_pet_project.security.SecurityConfig;
 import by.alexeysavchic.beer_pet_project.security.jwt.JwtFilter;
@@ -27,19 +25,18 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import tools.jackson.databind.ObjectMapper;
 
+import static org.hamcrest.Matchers.hasItem;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.hamcrest.Matchers.hasItem;
 
 @WebMvcTest(AuthController.class)
 @Import({SecurityConfig.class, JwtFilter.class})
-public class AuthControllerTest
-{
+public class AuthControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
@@ -56,8 +53,7 @@ public class AuthControllerTest
     private CustomUserDetailsService customUserDetailsService;
 
     @Nested
-    class SignUpTests
-    {
+    class SignUpTests {
         @Test
         void successfulRegisterRequest() throws Exception {
             UserRegisterRequest request = new UserRegisterRequest("validUsername", "validEmail@gmail.com", "validPass1234", Location.BLR, Gender.MALE);
@@ -111,8 +107,7 @@ public class AuthControllerTest
     }
 
     @Nested
-    class LogInTests
-    {
+    class LogInTests {
         @Test
         void successfulLoginRequest() throws Exception {
             LogInRequest request = new LogInRequest("validEmail@gmail.com", "validPass1234");
@@ -162,8 +157,7 @@ public class AuthControllerTest
     }
 
     @Nested
-    class RefreshTests
-    {
+    class RefreshTests {
         @Test
         void successfulRefreshRequest() throws Exception {
 
@@ -172,7 +166,7 @@ public class AuthControllerTest
             when(jwtService.getTypeFromToken(any())).thenReturn("Refresh");
 
             mockMvc.perform(get("/api/v1/auth/refresh").
-                    header(HttpHeaders.AUTHORIZATION, "Bearer " + "mockRefreshToken")).
+                            header(HttpHeaders.AUTHORIZATION, "Bearer " + "mockRefreshToken")).
                     andExpect(status().isOk()).
                     andExpect(content().contentType(MediaType.APPLICATION_JSON)).
                     andExpect(jsonPath("$.baseToken").value("mockBaseToken")).

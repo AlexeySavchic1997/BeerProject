@@ -1,13 +1,11 @@
 package by.alexeysavchic.beer_pet_project.controller;
 
-import by.alexeysavchic.beer_pet_project.dto.request.ChangeCredentialsRequest;
 import by.alexeysavchic.beer_pet_project.dto.request.GetWarehouseBeerInfoRequest;
 import by.alexeysavchic.beer_pet_project.entity.enums.ZoneType;
 import by.alexeysavchic.beer_pet_project.security.CustomUserDetailsService;
 import by.alexeysavchic.beer_pet_project.security.SecurityConfig;
 import by.alexeysavchic.beer_pet_project.security.jwt.JwtFilter;
 import by.alexeysavchic.beer_pet_project.security.jwt.JwtService;
-import by.alexeysavchic.beer_pet_project.service.Interface.UserService;
 import by.alexeysavchic.beer_pet_project.service.Interface.WarehouseService;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -24,14 +22,12 @@ import java.time.LocalDateTime;
 
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(WarehouseController.class)
 @Import({SecurityConfig.class, JwtFilter.class})
-public class WarehouseControllerTest
-{
+public class WarehouseControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
@@ -48,12 +44,10 @@ public class WarehouseControllerTest
     private CustomUserDetailsService customUserDetailsService;
 
     @Nested
-    class getBeerFromWarehouseTests
-    {
+    class getBeerFromWarehouseTests {
         @Test
         @WithMockUser(username = "adminUser@gmail.com", authorities = {"ROLE_ADMIN"})
-        void successfulGetBeerFromWarehouse() throws Exception
-        {
+        void successfulGetBeerFromWarehouse() throws Exception {
             GetWarehouseBeerInfoRequest request = new GetWarehouseBeerInfoRequest(1L, ZoneType.ZONE_SORTING, "1", 100, LocalDateTime.now());
             String jsonBody = objectMapper.writeValueAsString(request);
 
@@ -65,8 +59,7 @@ public class WarehouseControllerTest
 
         @Test
         @WithMockUser(username = "regularUser@gmail.com", authorities = {"ROLE_USER"})
-        void insufficientPrivilegesGetBeerFromWarehouse() throws Exception
-        {
+        void insufficientPrivilegesGetBeerFromWarehouse() throws Exception {
             GetWarehouseBeerInfoRequest request = new GetWarehouseBeerInfoRequest(1L, ZoneType.ZONE_SORTING, "1", 100, LocalDateTime.now());
             String jsonBody = objectMapper.writeValueAsString(request);
 
@@ -78,8 +71,7 @@ public class WarehouseControllerTest
 
         @Test
         @WithMockUser(username = "adminUser@gmail.com", authorities = {"ROLE_ADMIN"})
-        void invalidGetBeerFromWarehouse() throws Exception
-        {
+        void invalidGetBeerFromWarehouse() throws Exception {
             GetWarehouseBeerInfoRequest request = new GetWarehouseBeerInfoRequest(-1L, ZoneType.ZONE_SORTING, "", -100, LocalDateTime.now().plusDays(1));
             String jsonBody = objectMapper.writeValueAsString(request);
 

@@ -12,4 +12,5 @@ public interface BeerBrandRepository extends JpaRepository<BeerBrand, Long>, Jpa
     public boolean existsByBrandName(String name);
 
     public Optional<BeerBrand> findByBrandName(String brandName);
+
 }

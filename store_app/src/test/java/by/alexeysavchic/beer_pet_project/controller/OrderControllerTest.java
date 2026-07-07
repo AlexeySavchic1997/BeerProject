@@ -1,14 +1,12 @@
 package by.alexeysavchic.beer_pet_project.controller;
 
 
-import by.alexeysavchic.beer_pet_project.dto.request.AddBeerBrandRequest;
 import by.alexeysavchic.beer_pet_project.dto.request.CreateOrderRequest;
 import by.alexeysavchic.beer_pet_project.dto.request.OrderItemRequest;
 import by.alexeysavchic.beer_pet_project.security.CustomUserDetailsService;
 import by.alexeysavchic.beer_pet_project.security.SecurityConfig;
 import by.alexeysavchic.beer_pet_project.security.jwt.JwtFilter;
 import by.alexeysavchic.beer_pet_project.security.jwt.JwtService;
-import by.alexeysavchic.beer_pet_project.service.Interface.BeerService;
 import by.alexeysavchic.beer_pet_project.service.Interface.OrderService;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -31,8 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(OrderController.class)
 @Import({SecurityConfig.class, JwtFilter.class})
-public class OrderControllerTest
-{
+public class OrderControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
@@ -49,13 +46,12 @@ public class OrderControllerTest
     private CustomUserDetailsService customUserDetailsService;
 
     @Nested
-    class CreateOrderTests
-    {
+    class CreateOrderTests {
         @Test
         @WithMockUser(username = "regularUser@gmail.com", authorities = {"ROLE_USER"})
         void successfulOrderRequest() throws Exception {
-            OrderItemRequest orderItemRequest=new OrderItemRequest("validSku",5);
-            List<OrderItemRequest> list=List.of(orderItemRequest);
+            OrderItemRequest orderItemRequest = new OrderItemRequest("validSku", 5);
+            List<OrderItemRequest> list = List.of(orderItemRequest);
             CreateOrderRequest request = new CreateOrderRequest(list);
             String jsonBody = objectMapper.writeValueAsString(request);
 
@@ -68,8 +64,8 @@ public class OrderControllerTest
         @Test
         @WithMockUser(username = "regularUser@gmail.com", authorities = {"ROLE_USER"})
         void invalidOrderRequest() throws Exception {
-            OrderItemRequest orderItemRequest=new OrderItemRequest("",-5);
-            List<OrderItemRequest> list=List.of(orderItemRequest);
+            OrderItemRequest orderItemRequest = new OrderItemRequest("", -5);
+            List<OrderItemRequest> list = List.of(orderItemRequest);
             CreateOrderRequest request = new CreateOrderRequest(list);
             String jsonBody = objectMapper.writeValueAsString(request);
 
@@ -86,7 +82,7 @@ public class OrderControllerTest
         @Test
         @WithMockUser(username = "regularUser@gmail.com", authorities = {"ROLE_USER"})
         void emptyCartRequest() throws Exception {
-            List<OrderItemRequest> list=new ArrayList<>();
+            List<OrderItemRequest> list = new ArrayList<>();
             CreateOrderRequest request = new CreateOrderRequest(list);
             String jsonBody = objectMapper.writeValueAsString(request);
 
@@ -100,8 +96,8 @@ public class OrderControllerTest
 
         @Test
         void notAuthenticatedRequest() throws Exception {
-            OrderItemRequest orderItemRequest=new OrderItemRequest("validSku",5);
-            List<OrderItemRequest> list=List.of(orderItemRequest);
+            OrderItemRequest orderItemRequest = new OrderItemRequest("validSku", 5);
+            List<OrderItemRequest> list = List.of(orderItemRequest);
             CreateOrderRequest request = new CreateOrderRequest(list);
             String jsonBody = objectMapper.writeValueAsString(request);
 
