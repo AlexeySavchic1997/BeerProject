@@ -3,7 +3,6 @@ package by.alexeysavchic.beer_pet_project.mapper;
 import by.alexeysavchic.beer_pet_project.dto.request.GetWarehouseBeerInfoRequest;
 import by.alexeysavchic.beer_pet_project.dto.request.OrderItemRequest;
 import by.alexeysavchic.beer_pet_project.dto.response.GetWarehouseBeerInfoResponse;
-import by.alexeysavchic.beer_pet_project.entity.enums.ZoneType;
 import com.google.protobuf.Timestamp;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -11,7 +10,6 @@ import org.mapstruct.MappingConstants;
 import org.mapstruct.NullValueCheckStrategy;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
-import org.mapstruct.ValueMapping;
 import warehouse_api.GetWarehouseInfoRequest;
 import warehouse_api.UpdateBeerRequest;
 import warehouse_api.WarehouseBeerInfoItem;
@@ -49,7 +47,7 @@ public interface GrpcMapper {
     @Mapping(target = "zoneType", expression = "java(mapZone(dto.getZoneType()))")
     GetWarehouseBeerInfoResponse WarehouseInfoDTOToWarehouseInfoBeerDTOResponse(WarehouseBeerInfoItem dto);
 
-    default Zone mapZone (Zone zone){
+    default Zone mapZone(Zone zone) {
         return zone == warehouse_api.Zone.UNRECOGNIZED ? null : zone;
     }
 

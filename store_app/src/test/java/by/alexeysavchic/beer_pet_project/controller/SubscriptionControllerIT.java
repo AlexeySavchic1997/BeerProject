@@ -30,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(SubscriptionController.class)
 @Import({SecurityConfig.class, JwtFilter.class})
-public class SubscriptionControllerTest {
+public class SubscriptionControllerIT {
     @Autowired
     private MockMvc mockMvc;
 

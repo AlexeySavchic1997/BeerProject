@@ -11,7 +11,6 @@ import by.alexeysavchic.beer_pet_project.entity.enums.OrderSetStatus;
 import by.alexeysavchic.beer_pet_project.repository.OrderSetRepository;
 import by.alexeysavchic.beer_pet_project.service.Implementation.specifications.OrderSetSpecifications;
 import by.alexeysavchic.beer_pet_project.service.Interface.OrderSetService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -43,6 +42,8 @@ public class OrderSetServiceImpl implements OrderSetService {
             response.setStatus(orderSet.getOrderSetStatus());
             response.setId(orderSet.getId());
             response.setCommonQuantity(orderSet.getOrders().size());
+            response.setGenderSplit(new EnumMap<>(Gender.class));
+            response.setLocationSplit(new EnumMap<>(Location.class));
             Map<Gender, Integer> genderMap = response.getGenderSplit();
             Map<Location, Integer> locationMap = response.getLocationSplit();
             for (Order order : orderSet.getOrders()) {
@@ -84,23 +85,27 @@ public class OrderSetServiceImpl implements OrderSetService {
     private void splitByLocation(OrderSet orderSet, List<OrderSet> splitSets, Iterator<Order> iterator) {
         Map<Location, OrderSet> splitSetsMap = new EnumMap<>(Location.class);
         while (iterator.hasNext()) {
-            Order order = iterator.next();
-            splitSetsMap.compute(order.getOrderLocation(), (key, value) ->
-            {
-                if (value == null) {
-                    OrderSet splitSet = new OrderSet();
-                    splitSet.setOrderType(order.getOrderType());
-                    splitSet.setOrderSetStatus(OrderSetStatus.READY_TO_SPLIT);
-                    List<Order> splitOrders = new ArrayList<>();
-                    splitOrders.add(order);
-                    splitSet.setOrders(splitOrders);
-                    return splitSet;
-                } else {
-                    value.getOrders().add(order);
-                    return value;
-                }
-            });
-            iterator.remove();
+            try {
+                Order order = iterator.next();
+                splitSetsMap.compute(order.getOrderLocation(), (key, value) ->
+                {
+                    if (value == null) {
+                        OrderSet splitSet = new OrderSet();
+                        splitSet.setOrderType(order.getOrderType());
+                        splitSet.setOrderSetStatus(OrderSetStatus.READY_TO_SPLIT);
+                        List<Order> splitOrders = new ArrayList<>();
+                        splitOrders.add(order);
+                        splitSet.setOrders(splitOrders);
+                        return splitSet;
+                    } else {
+                        value.getOrders().add(order);
+                        return value;
+                    }
+                });
+                iterator.remove();
+            } catch (NullPointerException e) {
+                continue;
+            }
         }
         splitSets.addAll(splitSetsMap.values());
         splitCheck(orderSet);
@@ -110,23 +115,27 @@ public class OrderSetServiceImpl implements OrderSetService {
     private void splitByGender(OrderSet orderSet, List<OrderSet> splitSets, Iterator<Order> iterator) {
         Map<Gender, OrderSet> splitSetsMap = new EnumMap<>(Gender.class);
         while (iterator.hasNext()) {
-            Order order = iterator.next();
-            splitSetsMap.compute(order.getOrderGender(), (key, value) ->
-            {
-                if (value == null) {
-                    OrderSet splitSet = new OrderSet();
-                    splitSet.setOrderType(order.getOrderType());
-                    splitSet.setOrderSetStatus(OrderSetStatus.READY_TO_SPLIT);
-                    List<Order> splitOrders = new ArrayList<>();
-                    splitOrders.add(order);
-                    splitSet.setOrders(splitOrders);
-                    return splitSet;
-                } else {
-                    value.getOrders().add(order);
-                    return value;
-                }
-            });
-            iterator.remove();
+            try {
+                Order order = iterator.next();
+                splitSetsMap.compute(order.getOrderGender(), (key, value) ->
+                {
+                    if (value == null) {
+                        OrderSet splitSet = new OrderSet();
+                        splitSet.setOrderType(order.getOrderType());
+                        splitSet.setOrderSetStatus(OrderSetStatus.READY_TO_SPLIT);
+                        List<Order> splitOrders = new ArrayList<>();
+                        splitOrders.add(order);
+                        splitSet.setOrders(splitOrders);
+                        return splitSet;
+                    } else {
+                        value.getOrders().add(order);
+                        return value;
+                    }
+                });
+                iterator.remove();
+            } catch (NullPointerException e) {
+                continue;
+            }
         }
         splitSets.addAll(splitSetsMap.values());
         splitCheck(orderSet);

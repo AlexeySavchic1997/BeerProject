@@ -27,7 +27,6 @@ import by.alexeysavchic.beer_pet_project.service.Implementation.messages.OrderMe
 import by.alexeysavchic.beer_pet_project.service.Interface.ClientService;
 import by.alexeysavchic.beer_pet_project.service.Interface.EmailService;
 import by.alexeysavchic.beer_pet_project.service.Interface.OrderService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

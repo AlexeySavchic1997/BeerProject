@@ -9,7 +9,6 @@ import by.alexeysavchic.beer_pet_project.exception.WrongPasswordException;
 import by.alexeysavchic.beer_pet_project.repository.UserRepository;
 import by.alexeysavchic.beer_pet_project.security.SecurityContextService;
 import by.alexeysavchic.beer_pet_project.service.Interface.UserService;
-import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

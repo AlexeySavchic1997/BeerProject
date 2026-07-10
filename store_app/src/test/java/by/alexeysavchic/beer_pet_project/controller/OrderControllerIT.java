@@ -29,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(OrderController.class)
 @Import({SecurityConfig.class, JwtFilter.class})
-public class OrderControllerTest {
+public class OrderControllerIT {
     @Autowired
     private MockMvc mockMvc;
 

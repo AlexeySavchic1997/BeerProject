@@ -8,7 +8,6 @@ import by.alexeysavchic.beer_pet_project.repository.BeerRepository;
 import by.alexeysavchic.beer_pet_project.repository.WarehouseRepository;
 import by.alexeysavchic.beer_pet_project.service.Interface.ClientService;
 import by.alexeysavchic.beer_pet_project.service.Interface.WarehouseService;
-import jakarta.validation.Valid;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;

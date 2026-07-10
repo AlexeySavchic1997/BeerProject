@@ -1,4 +1,5 @@
 package by.alexeysavchic.beer_pet_project.service;
+
 import by.alexeysavchic.beer_pet_project.dto.request.CreateOrderRequest;
 import by.alexeysavchic.beer_pet_project.dto.request.OrderItemRequest;
 import by.alexeysavchic.beer_pet_project.dto.response.GetOrderResponse;
@@ -37,9 +38,16 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.anyList;
+import static org.mockito.Mockito.anyMap;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class OrderServiceTest {

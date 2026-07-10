@@ -13,7 +13,6 @@ import by.alexeysavchic.beer_pet_project.repository.BeerBrandRepository;
 import by.alexeysavchic.beer_pet_project.repository.BeerRepository;
 import by.alexeysavchic.beer_pet_project.service.Implementation.specifications.BeerSpecifications;
 import by.alexeysavchic.beer_pet_project.service.Interface.BeerService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

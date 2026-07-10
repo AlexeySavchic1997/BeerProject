@@ -1,7 +1,6 @@
 package by.alexeysavchic.beer_pet_project.dto.request;
 
 import by.alexeysavchic.beer_pet_project.entity.enums.ZoneType;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;

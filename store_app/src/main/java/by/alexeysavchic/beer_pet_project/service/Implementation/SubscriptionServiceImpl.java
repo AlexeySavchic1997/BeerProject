@@ -9,7 +9,6 @@ import by.alexeysavchic.beer_pet_project.repository.SubscriptionRepository;
 import by.alexeysavchic.beer_pet_project.repository.UserSubscriptionRepository;
 import by.alexeysavchic.beer_pet_project.security.SecurityContextService;
 import by.alexeysavchic.beer_pet_project.service.Interface.SubscriptionService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

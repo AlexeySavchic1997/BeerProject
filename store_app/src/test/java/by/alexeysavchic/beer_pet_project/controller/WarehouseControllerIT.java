@@ -1,11 +1,12 @@
 package by.alexeysavchic.beer_pet_project.controller;
 
-import by.alexeysavchic.beer_pet_project.dto.request.AddBeerRequest;
+import by.alexeysavchic.beer_pet_project.dto.request.GetWarehouseBeerInfoRequest;
+import by.alexeysavchic.beer_pet_project.entity.enums.ZoneType;
 import by.alexeysavchic.beer_pet_project.security.CustomUserDetailsService;
 import by.alexeysavchic.beer_pet_project.security.SecurityConfig;
 import by.alexeysavchic.beer_pet_project.security.jwt.JwtFilter;
 import by.alexeysavchic.beer_pet_project.security.jwt.JwtService;
-import by.alexeysavchic.beer_pet_project.service.Interface.BeerService;
+import by.alexeysavchic.beer_pet_project.service.Interface.WarehouseService;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,18 +18,16 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import tools.jackson.databind.ObjectMapper;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 
 import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(BeerController.class)
+@WebMvcTest(WarehouseController.class)
 @Import({SecurityConfig.class, JwtFilter.class})
-public class BeerControllerTest {
+public class WarehouseControllerIT {
     @Autowired
     private MockMvc mockMvc;
 
@@ -39,20 +38,20 @@ public class BeerControllerTest {
     private JwtService jwtService;
 
     @MockitoBean
-    private BeerService beerService;
+    private WarehouseService warehouseService;
 
     @MockitoBean
     private CustomUserDetailsService customUserDetailsService;
 
     @Nested
-    class AddNewBeerTests {
+    class getBeerFromWarehouseTests {
         @Test
         @WithMockUser(username = "adminUser@gmail.com", authorities = {"ROLE_ADMIN"})
-        void successfulAddBeerRequest() throws Exception {
-            AddBeerRequest request = new AddBeerRequest("validSku", "validName", "description", BigDecimal.ONE, BigDecimal.TEN, "beerBrand", new ArrayList<>());
+        void successfulGetBeerFromWarehouse() throws Exception {
+            GetWarehouseBeerInfoRequest request = new GetWarehouseBeerInfoRequest(1L, ZoneType.ZONE_SORTING, "1", 100, LocalDateTime.now());
             String jsonBody = objectMapper.writeValueAsString(request);
 
-            mockMvc.perform(post("/api/v1/beer/add").
+            mockMvc.perform(post("/api/v1/warehouse").
                             contentType(MediaType.APPLICATION_JSON_VALUE).
                             content(jsonBody)).
                     andExpect(status().isOk());
@@ -60,11 +59,11 @@ public class BeerControllerTest {
 
         @Test
         @WithMockUser(username = "regularUser@gmail.com", authorities = {"ROLE_USER"})
-        void insufficientPrivilegesBeerRequest() throws Exception {
-            AddBeerRequest request = new AddBeerRequest("validSku", "validName", "description", BigDecimal.ONE, BigDecimal.TEN, "beerBrand", new ArrayList<>());
+        void insufficientPrivilegesGetBeerFromWarehouse() throws Exception {
+            GetWarehouseBeerInfoRequest request = new GetWarehouseBeerInfoRequest(1L, ZoneType.ZONE_SORTING, "1", 100, LocalDateTime.now());
             String jsonBody = objectMapper.writeValueAsString(request);
 
-            mockMvc.perform(post("/api/v1/beer/add").
+            mockMvc.perform(post("/api/v1/warehouse").
                             contentType(MediaType.APPLICATION_JSON_VALUE).
                             content(jsonBody)).
                     andExpect(status().isForbidden());
@@ -72,39 +71,18 @@ public class BeerControllerTest {
 
         @Test
         @WithMockUser(username = "adminUser@gmail.com", authorities = {"ROLE_ADMIN"})
-        void invalidAddBeerBrandRequest() throws Exception {
-            AddBeerRequest request = new AddBeerRequest("", "", "description", BigDecimal.ONE.negate(), BigDecimal.TEN.negate(), "beerBrand", new ArrayList<>());
+        void invalidGetBeerFromWarehouse() throws Exception {
+            GetWarehouseBeerInfoRequest request = new GetWarehouseBeerInfoRequest(-1L, ZoneType.ZONE_SORTING, "", -100, LocalDateTime.now().plusDays(1));
             String jsonBody = objectMapper.writeValueAsString(request);
 
-            mockMvc.perform(post("/api/v1/beer/add").
+            mockMvc.perform(post("/api/v1/warehouse").
                             contentType(MediaType.APPLICATION_JSON_VALUE).
                             content(jsonBody)).
                     andExpect(status().isBadRequest()).
+                    andExpect(jsonPath("$.id", hasItem("Id can't be negative"))).
                     andExpect(jsonPath("$.sku", hasItem("sku must be between 1 and 30 symbols"))).
-                    andExpect(jsonPath("$.sku", hasItem("must not be blank"))).
-                    andExpect(jsonPath("$.name", hasItem("beer name must be between 2 and 20 symbols"))).
-                    andExpect(jsonPath("$.name", hasItem("must not be blank"))).
-                    andExpect(jsonPath("$.volume", hasItem("volume must be positive"))).
-                    andExpect(jsonPath("$.price", hasItem("price must be positive")));
-        }
-    }
-
-    @Nested
-    class DeleteBeerTests {
-        @Test
-        @WithMockUser(username = "adminUser@gmail.com", authorities = {"ROLE_ADMIN"})
-        void successfulDeleteBeerBrandRequest() throws Exception {
-
-            mockMvc.perform(delete("/api/v1/beer/beerSKU")).
-                    andExpect(status().isNoContent());
-        }
-
-        @Test
-        @WithMockUser(username = "regularUser@gmail.com", authorities = {"ROLE_USER"})
-        void insufficientPrivilegesDeleteBeerBrandRequest() throws Exception {
-
-            mockMvc.perform(delete("/api/v1/beer/beerSKU")).
-                    andExpect(status().isForbidden());
+                    andExpect(jsonPath("$.amount", hasItem("Amount of items can't be negative"))).
+                    andExpect(jsonPath("$.lastModifiedDate", hasItem("Date of modifications can't be in future")));
         }
     }
 }

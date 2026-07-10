@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(BeerBrandController.class)
 @Import({SecurityConfig.class, JwtFilter.class})
-public class BeerBrandControllerTest {
+public class BeerBrandControllerIT {
     @Autowired
     private MockMvc mockMvc;
 

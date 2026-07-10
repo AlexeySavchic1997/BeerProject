@@ -35,7 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(OrderSetController.class)
 @Import({SecurityConfig.class, JwtFilter.class})
-public class OrderSetControllerTest {
+public class OrderSetControllerIT {
     @Autowired
     private MockMvc mockMvc;
 

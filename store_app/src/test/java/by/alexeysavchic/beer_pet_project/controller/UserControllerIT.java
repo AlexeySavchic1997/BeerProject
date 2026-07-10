@@ -24,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(UserController.class)
 @Import({SecurityConfig.class, JwtFilter.class})
-public class UserControllerTest {
+public class UserControllerIT {
     @Autowired
     private MockMvc mockMvc;
 
