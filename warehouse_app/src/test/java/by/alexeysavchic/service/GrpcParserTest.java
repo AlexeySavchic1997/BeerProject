@@ -28,7 +28,6 @@ public class GrpcParserTest {
     @Mock
     private XMLParserService xmlParserService;
 
-    // Мокаем StreamObserver, так как это интерфейс gRPC, через который отправляются ответы
     @Mock
     private StreamObserver<BeerInfoResponse> responseObserver;
 

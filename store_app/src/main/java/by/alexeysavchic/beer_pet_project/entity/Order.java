@@ -74,4 +74,8 @@ public class Order {
     @ManyToOne
     @JoinColumn(name = "set_id")
     private OrderSet orderSet;
+
+    @ManyToOne
+    @JoinColumn(name = "batch_id")
+    private Batch batch;
 }

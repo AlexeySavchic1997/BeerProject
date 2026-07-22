@@ -10,8 +10,6 @@ import java.util.List;
 
 @Repository
 public interface OrderSetRepository extends JpaRepository<OrderSet, Long>, JpaSpecificationExecutor<OrderSet> {
-
-
     public List<OrderSet> findAllByIdIn(List<Long> ids);
 
     public OrderSet findTopByOrderSetStatus(OrderSetStatus orderSetStatus);

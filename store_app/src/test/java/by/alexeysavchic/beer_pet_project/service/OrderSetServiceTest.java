@@ -113,7 +113,6 @@ public class OrderSetServiceTest {
 
             orderSetService.markSplit(request);
 
-            // Захватываем список, который ушел в сохранение
             verify(orderSetRepository, times(1)).saveAll(orderSetListCaptor.capture());
             List<OrderSet> savedSets = orderSetListCaptor.getValue();
 
@@ -130,7 +129,6 @@ public class OrderSetServiceTest {
 
         @Test
         void successfullySplitsByGender() {
-            // Подготовка: создаем сет, ожидающий разделения по полу
             Order orderMale = new Order();
             orderMale.setOrderGender(Gender.MALE);
             orderMale.setOrderType(OrderType.FAVORITE_BEER);
@@ -155,7 +153,6 @@ public class OrderSetServiceTest {
             assertTrue(originalSet.getOrders().isEmpty());
             assertEquals(OrderSetStatus.DONE, originalSet.getOrderSetStatus());
 
-            // Ищем новые сеты
             long maleSets = savedSets.stream()
                     .filter(set -> !set.getOrders().isEmpty() && set.getOrders().get(0).getOrderGender() == Gender.MALE)
                     .count();

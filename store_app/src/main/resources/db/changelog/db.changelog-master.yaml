@@ -22,10 +22,12 @@ databaseChangeLog:
   - include:
       file: db/changelog/changeset/11.create-user-subscription-table.sql
   - include:
-      file: db/changelog/changeset/12.create-orders-table.sql
+      file: db/changelog/changeset/12.create-batch-table.sql
   - include:
-      file: db/changelog/changeset/13.create-order-item-table.sql
+      file: db/changelog/changeset/13.create-orders-table.sql
   - include:
-      file: db/changelog/changeset/14.create-beer-user-subscription-table.sql
+      file: db/changelog/changeset/14.create-order-item-table.sql
   - include:
-      file: db/changelog/changeset/15.create-shedlock-table.sql
+      file: db/changelog/changeset/15.create-beer-user-subscription-table.sql
+  - include:
+      file: db/changelog/changeset/16.create-shedlock-table.sql
