@@ -8,7 +8,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -17,7 +16,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 @Setter
@@ -31,12 +29,15 @@ public class Batch {
     private Long id;
 
     @Column(name = "time_of_processing")
-    private LocalDateTime timeOfProcessing;
+    private LocalDateTime createdOrLastModifiedDate;
 
     @Column(name = "count")
     @Min(value = 10, message = "count of orders must be more or equal than 10")
     @Max(value = 100, message = "count of orders must be less or equal than 100")
     private Integer count;
+
+    @Column(name = "batch_number")
+    private String batchNumber;
 
     @Column(name = "status")
     private BatchStatus status;
@@ -44,7 +45,4 @@ public class Batch {
     @ManyToOne
     @JoinColumn(name = "set_id")
     private OrderSet orderSet;
-
-    @OneToMany(mappedBy = "batch")
-    private List<Order> orders;
 }

@@ -21,5 +21,5 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     @Query(value = "select o from Order o join o.orderSet" +
             " where o.orderSet.id=:id")
-    public List<Order> findAllByOrderSetId(@Param("id") Long id, Limit limit);
+    public List<Order> findAllByOrderSetId(@Param("id") Long id);
 }

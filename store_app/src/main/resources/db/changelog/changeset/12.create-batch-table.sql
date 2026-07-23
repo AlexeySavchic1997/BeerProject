@@ -7,5 +7,6 @@ id bigserial primary key,
 time_of_processing timestamp without time zone,
 status batch_status not null,
 count integer unique not null,
+batch_number varchar unique not null,
 set_id bigint references order_set(id)
 );

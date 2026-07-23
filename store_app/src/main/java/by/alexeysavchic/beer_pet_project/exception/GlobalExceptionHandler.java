@@ -33,7 +33,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({ExpiredJwtTokenException.class, InvalidTokenException.class, MalformedJwtTokenException.class,
             SecurityJwtException.class, UnsupportedJwtTokenException.class, WrongPasswordException.class,
             RefreshTokenIsAbsentException.class, WrongTokenTypeException.class, UsernameAlreadyExistsException.class,
-            EmailAlreadyExistsException.class, UnknownBeerBrandException.class, BeerBrandAlreadyExistsException.class})
+            EmailAlreadyExistsException.class, UnknownBeerBrandException.class, BeerBrandAlreadyExistsException.class,
+            OrderSetWrongStatusException.class})
     public ResponseEntity<String> authentificationExceptions(
             RuntimeException ex) {
         logger.error(ex.getMessage(), ex.getCause());
