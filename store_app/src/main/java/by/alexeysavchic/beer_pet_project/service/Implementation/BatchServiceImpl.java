@@ -12,6 +12,7 @@ import by.alexeysavchic.beer_pet_project.repository.BatchRepository;
 import by.alexeysavchic.beer_pet_project.repository.OrderRepository;
 import by.alexeysavchic.beer_pet_project.repository.OrderSetRepository;
 import by.alexeysavchic.beer_pet_project.service.Interface.BatchService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +31,7 @@ public class BatchServiceImpl implements BatchService {
     private final OrderSetRepository orderSetRepository;
 
     @Override
+    @Transactional
     public void generateBatch(GenerateBatchRequest request) {
         OrderSet orderSet = orderSetRepository.findById(request.getSetId()).orElseThrow(() -> new OrderSetNotFoundException());
         if (!orderSet.getOrderSetStatus().equals(OrderSetStatus.READY_TO_SPLIT))
@@ -45,18 +47,18 @@ public class BatchServiceImpl implements BatchService {
         {
             regularSorting(orderSet, batchAmount, lastBatchSize, orders, count, batches);
         }
-        else if (lastBatchSize<10 && request.getCount()<90)
+        else if (request.getCount()<90)
         {
             lastBatchTooSmallSorting(orderSet, batchAmount, lastBatchSize, orders, count, batches);
         }
-        else if (lastBatchSize<10 && request.getCount()>90)
+        else
         {
             LastBatchTooSmallPreviousTooLargeSorting(orderSet, batchAmount, lastBatchSize, orders, count, batches);
         }
         batches=batchRepository.saveAll(batches);
         for (Batch batch: batches)
         {
-            batch.setBatchNumber("id: "+batch.getId()+ " date of creation/modification: "+batch.getCreatedOrLastModifiedDate()+ " count "+ batch.getCount());
+            batch.setBatchNumber("<"+batch.getId()+">/<"+batch.getCreatedOrLastModifiedDate()+ ">/<"+ batch.getCount()+">");
         }
         batchRepository.saveAll(batches);
         orderRepository.saveAll(orders);
@@ -66,44 +68,7 @@ public class BatchServiceImpl implements BatchService {
     {
         for (int i=0;i<batchAmount;i++)
         {
-            Batch batch=new Batch();
-            batch.setStatus(BatchStatus.NEW);
-            batch.setCount(count);
-            batch.setOrderSet(orderSet);
-            batch.setCreatedOrLastModifiedDate(LocalDateTime.now());
-            List<Order> batchOrders=orders.subList(i*count, (i+1)*count);
-            for (Order order:batchOrders)
-            {
-                order.setBatch(batch);
-            }
-            batches.add(batch);
-            if (lastBatchSize==0)
-            {
-                return;
-            }
-        }
-        List<Order> batchOrders=orders.subList(orders.size()-lastBatchSize, orders.size());
-        Batch batch=new Batch();
-        batch.setStatus(BatchStatus.NEW);
-        batch.setCount(batchOrders.size());
-        batch.setOrderSet(orderSet);
-        batch.setCreatedOrLastModifiedDate(LocalDateTime.now());
-        for (Order order:batchOrders)
-        {
-            order.setBatch(batch);
-        }
-        batches.add(batch);
-    }
-
-    private void LastBatchTooSmallPreviousTooLargeSorting(OrderSet orderSet, Integer batchAmount, Integer lastBatchSize, List<Order> orders, Integer count, List<Batch> batches)
-    {
-        for (int i=0;i<batchAmount-1;i++)
-        {
-            Batch batch=new Batch();
-            batch.setStatus(BatchStatus.NEW);
-            batch.setCount(count);
-            batch.setOrderSet(orderSet);
-            batch.setCreatedOrLastModifiedDate(LocalDateTime.now());
+            Batch batch=createBatch(orderSet, count);
             List<Order> batchOrders=orders.subList(i*count, (i+1)*count);
             for (Order order:batchOrders)
             {
@@ -115,56 +80,8 @@ public class BatchServiceImpl implements BatchService {
         {
             return;
         }
-        List<Order> batchOrders1=orders.subList(orders.size()-(lastBatchSize+count), orders.size()-(lastBatchSize+count)/2);
-        Batch batch1=new Batch();
-        batch1.setStatus(BatchStatus.NEW);
-        batch1.setCount(batchOrders1.size());
-        batch1.setOrderSet(orderSet);
-        batch1.setCreatedOrLastModifiedDate(LocalDateTime.now());
-        for (Order order:batchOrders1)
-        {
-            order.setBatch(batch1);
-        }
-        batches.add(batch1);
-        List<Order> batchOrders2=orders.subList(orders.size()-(lastBatchSize+count)/2, orders.size());
-        Batch batch2=new Batch();
-        batch2.setStatus(BatchStatus.NEW);
-        batch2.setCount(batchOrders2.size());
-        batch2.setOrderSet(orderSet);
-        batch2.setCreatedOrLastModifiedDate(LocalDateTime.now());
-        for (Order order:batchOrders2)
-        {
-            order.setBatch(batch2);
-        }
-        batches.add(batch2);
-    }
-
-    private void lastBatchTooSmallSorting(OrderSet orderSet, Integer batchAmount, Integer lastBatchSize, List<Order> orders, Integer count, List<Batch> batches)
-    {
-        for (int i=0;i<batchAmount-1;i++)
-        {
-            Batch batch=new Batch();
-            batch.setStatus(BatchStatus.NEW);
-            batch.setCount(count);
-            batch.setOrderSet(orderSet);
-            batch.setCreatedOrLastModifiedDate(LocalDateTime.now());
-            List<Order> batchOrders=orders.subList(i*count, (i+1)*count);
-            for (Order order:batchOrders)
-            {
-                order.setBatch(batch);
-            }
-            batches.add(batch);
-            if (lastBatchSize==0)
-            {
-                return;
-            }
-        }
-        List<Order> batchOrders=orders.subList(orders.size()-lastBatchSize+count, orders.size());
-        Batch batch=new Batch();
-        batch.setStatus(BatchStatus.NEW);
-        batch.setCount(batchOrders.size());
-        batch.setOrderSet(orderSet);
-        batch.setCreatedOrLastModifiedDate(LocalDateTime.now());
+        List<Order> batchOrders=orders.subList(orders.size()-lastBatchSize, orders.size());
+        Batch batch=createBatch(orderSet, batchOrders.size());
         for (Order order:batchOrders)
         {
             order.setBatch(batch);
@@ -172,5 +89,62 @@ public class BatchServiceImpl implements BatchService {
         batches.add(batch);
     }
 
+    private void lastBatchTooSmallSorting(OrderSet orderSet, Integer batchAmount, Integer lastBatchSize, List<Order> orders, Integer count, List<Batch> batches)
+    {
+        for (int i=0;i<batchAmount-1;i++)
+        {
+            Batch batch=createBatch(orderSet, count);
+            List<Order> batchOrders=orders.subList(i*count, (i+1)*count);
+            for (Order order:batchOrders)
+            {
+                order.setBatch(batch);
+            }
+            batches.add(batch);
+        }
+        List<Order> batchOrders=orders.subList(orders.size()-(lastBatchSize+count), orders.size());
+        Batch batch=createBatch(orderSet, batchOrders.size());
+        for (Order order:batchOrders)
+        {
+            order.setBatch(batch);
+        }
+        batches.add(batch);
+    }
 
+    private void LastBatchTooSmallPreviousTooLargeSorting(OrderSet orderSet, Integer batchAmount, Integer lastBatchSize, List<Order> orders, Integer count, List<Batch> batches)
+    {
+        for (int i=0;i<batchAmount-1;i++)
+        {
+            Batch batch=createBatch(orderSet, count);
+            List<Order> batchOrders=orders.subList(i*count, (i+1)*count);
+            for (Order order:batchOrders)
+            {
+                order.setBatch(batch);
+            }
+            batches.add(batch);
+        }
+        List<Order> batchOrders1=orders.subList(orders.size()-(lastBatchSize+count), orders.size()-(lastBatchSize+count)/2);
+        Batch batch1=createBatch(orderSet, batchOrders1.size());
+        for (Order order:batchOrders1)
+        {
+            order.setBatch(batch1);
+        }
+        batches.add(batch1);
+        List<Order> batchOrders2=orders.subList(orders.size()-(lastBatchSize+count)/2, orders.size());
+        Batch batch2=createBatch(orderSet, batchOrders2.size());
+        for (Order order:batchOrders2)
+        {
+            order.setBatch(batch2);
+        }
+        batches.add(batch2);
+    }
+
+    private Batch createBatch(OrderSet orderSet, Integer count)
+    {
+        Batch batch=new Batch();
+        batch.setStatus(BatchStatus.NEW);
+        batch.setCount(count);
+        batch.setOrderSet(orderSet);
+        batch.setCreatedOrLastModifiedDate(LocalDateTime.now());
+        return batch;
+    }
 }

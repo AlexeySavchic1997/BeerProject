@@ -11,6 +11,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -28,7 +29,7 @@ public class Batch {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "time_of_processing")
+    @Column(name = "created_or_last_modified_date")
     private LocalDateTime createdOrLastModifiedDate;
 
     @Column(name = "count")

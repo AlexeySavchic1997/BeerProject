@@ -4,7 +4,7 @@ create type batch_status AS ENUM ('NEW', 'PROCESSING', 'COMPLETE', 'ERROR');
 create table batch
 (
 id bigserial primary key,
-time_of_processing timestamp without time zone,
+created_or_last_modified_date timestamp without time zone,
 status batch_status not null,
 count integer unique not null,
 batch_number varchar unique not null,
