@@ -9,6 +9,8 @@ import java.util.List;
 public interface OrderSetService {
     public List<GetOrderSetResponse> getOrderSets(GetOrderSetsRequest request);
 
+    public void createRegularOrderSet();
+
     public void markSplit(OrderSetSplitRequest request);
 
     public void split();

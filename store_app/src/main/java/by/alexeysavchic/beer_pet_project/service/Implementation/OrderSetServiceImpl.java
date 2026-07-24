@@ -8,6 +8,9 @@ import by.alexeysavchic.beer_pet_project.entity.OrderSet;
 import by.alexeysavchic.beer_pet_project.entity.enums.Gender;
 import by.alexeysavchic.beer_pet_project.entity.enums.Location;
 import by.alexeysavchic.beer_pet_project.entity.enums.OrderSetStatus;
+import by.alexeysavchic.beer_pet_project.entity.enums.OrderStatus;
+import by.alexeysavchic.beer_pet_project.entity.enums.OrderType;
+import by.alexeysavchic.beer_pet_project.repository.OrderRepository;
 import by.alexeysavchic.beer_pet_project.repository.OrderSetRepository;
 import by.alexeysavchic.beer_pet_project.service.Implementation.specifications.OrderSetSpecifications;
 import by.alexeysavchic.beer_pet_project.service.Interface.OrderSetService;
@@ -26,6 +29,8 @@ import java.util.Map;
 public class OrderSetServiceImpl implements OrderSetService {
 
     private final OrderSetRepository orderSetRepository;
+
+    private final OrderRepository orderRepository;
 
     private final OrderSetSpecifications specifications;
 
@@ -53,6 +58,19 @@ public class OrderSetServiceImpl implements OrderSetService {
             responses.add(response);
         }
         return responses;
+    }
+
+    @Override
+    public void createRegularOrderSet() {
+        List<Order> regularOrders = orderRepository.findAllByOrderTypeAndStatus(OrderType.REGULAR_ORDER, OrderStatus.NEW);
+        OrderSet regularOrderSet = new OrderSet();
+        for (Order order : regularOrders) {
+            order.setOrderSet(regularOrderSet);
+        }
+        regularOrderSet.setOrderType(OrderType.REGULAR_ORDER);
+        regularOrderSet.setOrders(regularOrders);
+        regularOrderSet.setOrderSetStatus(OrderSetStatus.READY_TO_SPLIT);
+        orderSetRepository.save(regularOrderSet);
     }
 
     @Override

@@ -60,7 +60,6 @@ public class SubscriptionServiceTest {
 
         @Test
         void successfulGetSubscriptionsTest() {
-            // Подготовка
             Subscription subscription = new Subscription();
             List<Subscription> subscriptions = List.of(subscription);
 
@@ -70,10 +69,8 @@ public class SubscriptionServiceTest {
             when(subscriptionRepository.findAll()).thenReturn(subscriptions);
             when(subscriptionMapper.listSubscriptionToListGetSubscriptionsResponse(subscriptions)).thenReturn(responseDtos);
 
-            // Выполнение
             List<GetSubscriptionsResponse> result = subscriptionService.getSubscriptions();
 
-            // Проверки
             assertNotNull(result);
             assertEquals(1, result.size());
             verify(subscriptionRepository, times(1)).findAll();
@@ -86,7 +83,6 @@ public class SubscriptionServiceTest {
 
         @Test
         void successfulCreateUserSubscriptionTest() {
-            // Подготовка
             CreateSubscriptionRequest request = new CreateSubscriptionRequest();
             request.setTypeOfSubscription(TypeOfSubscription.BEER_OF_THE_MONTH);
             request.setDurationMonths(6); // Подписка на 6 месяцев

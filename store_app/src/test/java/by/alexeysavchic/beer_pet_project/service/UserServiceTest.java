@@ -135,9 +135,7 @@ public class UserServiceTest {
             when(securityContextService.getCurrentUser()).thenReturn(contextUser);
             when(userRepository.findUserById(1L)).thenReturn(Optional.of(dbUser));
 
-            // Имитируем, что username остался прежним
             when(userRepository.existsByUsername("sameUsername")).thenReturn(true);
-            // Имитируем, что новый email занят
             when(userRepository.existsByEmail("takenEmail@gmail.com")).thenReturn(true);
 
             assertThrows(EmailAlreadyExistsException.class, () -> userService.changeCredentials(request));

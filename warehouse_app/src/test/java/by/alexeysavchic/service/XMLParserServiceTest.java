@@ -81,7 +81,6 @@ public class XMLParserServiceTest {
 
         @Test
         void successfulRetrievalWithFilteringByDate() throws IOException {
-            // Подготовка условия: ищем изменения после 1 января 2026 года
             LocalDateTime conditionDate = LocalDateTime.of(2026, 1, 1, 12, 0);
             InputConditionDTO condition = new InputConditionDTO();
             condition.setLastModifiedDate(conditionDate);

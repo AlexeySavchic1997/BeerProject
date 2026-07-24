@@ -2,9 +2,9 @@ package by.alexeysavchic.beer_pet_project.service;
 
 import by.alexeysavchic.beer_pet_project.dto.request.CreateOrderRequest;
 import by.alexeysavchic.beer_pet_project.dto.request.OrderItemRequest;
-import by.alexeysavchic.beer_pet_project.dto.response.GetOrderResponse;
 import by.alexeysavchic.beer_pet_project.entity.Beer;
 import by.alexeysavchic.beer_pet_project.entity.Order;
+import by.alexeysavchic.beer_pet_project.entity.OrderItem;
 import by.alexeysavchic.beer_pet_project.entity.Subscription;
 import by.alexeysavchic.beer_pet_project.entity.User;
 import by.alexeysavchic.beer_pet_project.entity.UserSubscription;
@@ -12,9 +12,9 @@ import by.alexeysavchic.beer_pet_project.entity.Wave;
 import by.alexeysavchic.beer_pet_project.entity.enums.Gender;
 import by.alexeysavchic.beer_pet_project.entity.enums.Location;
 import by.alexeysavchic.beer_pet_project.entity.enums.OrderStatus;
+import by.alexeysavchic.beer_pet_project.entity.enums.OrderType;
 import by.alexeysavchic.beer_pet_project.entity.enums.TypeOfSubscription;
 import by.alexeysavchic.beer_pet_project.entity.enums.WaveStatus;
-import by.alexeysavchic.beer_pet_project.exception.WarehouseUpdateServerException;
 import by.alexeysavchic.beer_pet_project.mapper.OrderMapper;
 import by.alexeysavchic.beer_pet_project.repository.BeerRepository;
 import by.alexeysavchic.beer_pet_project.repository.OrderRepository;
@@ -32,7 +32,6 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import warehouse_api.UnpassedOrderResponse;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -41,9 +40,6 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.anyList;
-import static org.mockito.Mockito.anyMap;
-import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -82,91 +78,78 @@ public class OrderServiceTest {
     class createOrderTests {
 
         @Test
-        void successfulCreateOrderTest() {
-            User user = new User();
-            user.setUserGender(Gender.MALE);
-            user.setUserLocation(Location.BLR);
+        void successfullyCreatesOrderWithCorrectCalculations() {
 
-            OrderItemRequest itemRequest = new OrderItemRequest("BEER-1", 2);
-            CreateOrderRequest request = new CreateOrderRequest(List.of(itemRequest));
+            User mockUser = new User();
+            mockUser.setUserGender(Gender.MALE);
+            mockUser.setUserLocation(Location.BLR);
+            when(securityContextService.getCurrentUser()).thenReturn(mockUser);
 
-            Beer beer = new Beer();
-            beer.setSku("BEER-1");
-            beer.setPrice(new BigDecimal("10.00"));
-            beer.setName("Guinness");
+            OrderItemRequest item1 = new OrderItemRequest();
+            item1.setSku("BEER-1");
+            item1.setAmount(2);
 
-            when(securityContextService.getCurrentUser()).thenReturn(user);
-            when(beerRepository.findAllBySku(List.of("BEER-1"))).thenReturn(List.of(beer));
+            OrderItemRequest item2 = new OrderItemRequest();
+            item2.setSku("BEER-2");
+            item2.setAmount(3);
 
-            when(clientService.updateWarehouseInfoByOrder(anyList())).thenReturn(new ArrayList<>());
+            CreateOrderRequest request = new CreateOrderRequest();
+            request.setCart(List.of(item1, item2));
 
-            GetOrderResponse response = new GetOrderResponse();
-            when(orderMapper.orderToOrderResponse(any(Order.class))).thenReturn(response);
+            Beer beer1 = new Beer();
+            beer1.setSku("BEER-1");
+            beer1.setPrice(new BigDecimal("10.00"));
 
-            GetOrderResponse result = orderService.createOrder(request);
+            Beer beer2 = new Beer();
+            beer2.setSku("BEER-2");
+            beer2.setPrice(new BigDecimal("5.00"));
 
-            assertNotNull(result);
-
-            verify(orderRepository, times(2)).save(orderCaptor.capture());
-            Order savedOrder = orderCaptor.getValue(); // Берем последнее сохранение (из finally)
-
-            assertEquals(OrderStatus.COMPLETED, savedOrder.getStatus());
-            assertEquals(new BigDecimal("20.00"), savedOrder.getSummaryPrice()); // 2 шт * 10.00
-
-            verify(emailService, times(1)).confirmOrderEmail(anyList(), eq(new BigDecimal("20.00")), eq(user));
-            verify(emailService, never()).insufficientInventoryOrderEmail(any(), any());
-        }
-
-        @Test
-        void createsOrderWithInsufficientInventoryTest() {
-            User user = new User();
-            OrderItemRequest itemRequest = new OrderItemRequest("BEER-1", 5);
-            CreateOrderRequest request = new CreateOrderRequest(List.of(itemRequest));
-
-            Beer beer = new Beer();
-            beer.setSku("BEER-1");
-            beer.setPrice(new BigDecimal("10.00"));
-            beer.setName("Guinness");
-
-
-            when(securityContextService.getCurrentUser()).thenReturn(user);
-            when(beerRepository.findAllBySku(List.of("BEER-1"))).thenReturn(List.of(beer));
-
-            UnpassedOrderResponse unpassed = UnpassedOrderResponse.newBuilder().setSku("BEER-1").setAmount(3).build();
-            when(clientService.updateWarehouseInfoByOrder(anyList())).thenReturn(List.of(unpassed));
+            when(beerRepository.findAllBySku(List.of("BEER-1", "BEER-2"))).thenReturn(List.of(beer1, beer2));
 
             orderService.createOrder(request);
 
-            verify(orderRepository, times(2)).save(orderCaptor.capture());
-            assertEquals(OrderStatus.INSUFFICIENT_INVENTORY, orderCaptor.getValue().getStatus());
+            verify(orderRepository, times(1)).save(orderCaptor.capture());
+            Order savedOrder = orderCaptor.getValue();
 
-            verify(emailService, times(1)).insufficientInventoryOrderEmail(anyMap(), eq(user));
-            verify(emailService, never()).confirmOrderEmail(any(), any(), any());
+            assertNotNull(savedOrder);
+            assertEquals(OrderStatus.NEW, savedOrder.getStatus());
+            assertEquals(OrderType.REGULAR_ORDER, savedOrder.getOrderType());
+            assertNotNull(savedOrder.getOrderDate());
+            assertEquals(mockUser, savedOrder.getUser());
+            assertEquals(Gender.MALE, savedOrder.getOrderGender());
+            assertEquals(Location.BLR, savedOrder.getOrderLocation());
+
+            assertEquals(new BigDecimal("35.00"), savedOrder.getSummaryPrice());
+
+            List<OrderItem> items = savedOrder.getOrderItems();
+            assertEquals(2, items.size());
+
+            OrderItem savedItem1 = items.stream().filter(i -> i.getBeer().getSku().equals("BEER-1")).findFirst().get();
+            assertEquals(2, savedItem1.getQuantity());
+            assertEquals(new BigDecimal("20.00"), savedItem1.getPrice());
+            assertEquals(savedOrder, savedItem1.getOrder()); // Проверка двунаправленной связи
+
+            OrderItem savedItem2 = items.stream().filter(i -> i.getBeer().getSku().equals("BEER-2")).findFirst().get();
+            assertEquals(3, savedItem2.getQuantity());
+            assertEquals(new BigDecimal("15.00"), savedItem2.getPrice());
         }
 
         @Test
-        void handlesWarehouseExceptionTest() {
-            User user = new User();
-            OrderItemRequest itemRequest = new OrderItemRequest("BEER-1", 2);
-            CreateOrderRequest request = new CreateOrderRequest(List.of(itemRequest));
+        void successfullyCreatesEmptyOrderWhenCartIsEmpty() {
+            User mockUser = new User();
+            when(securityContextService.getCurrentUser()).thenReturn(mockUser);
 
-            Beer beer = new Beer();
-            beer.setSku("BEER-1");
-            beer.setPrice(new BigDecimal("10.00"));
-
-            when(securityContextService.getCurrentUser()).thenReturn(user);
-            when(beerRepository.findAllBySku(List.of("BEER-1"))).thenReturn(List.of(beer));
-
-            when(clientService.updateWarehouseInfoByOrder(anyList()))
-                    .thenThrow(new WarehouseUpdateServerException("Server unavailable"));
+            CreateOrderRequest request = new CreateOrderRequest();
+            request.setCart(List.of()); // Пустая корзина
 
             orderService.createOrder(request);
 
-            verify(orderRepository, times(2)).save(orderCaptor.capture());
-            assertEquals(OrderStatus.CANCELLED, orderCaptor.getValue().getStatus());
+            verify(orderRepository).save(orderCaptor.capture());
+            Order savedOrder = orderCaptor.getValue();
 
-            verify(emailService, never()).confirmOrderEmail(any(), any(), any());
-            verify(emailService, never()).insufficientInventoryOrderEmail(any(), any());
+            assertEquals(BigDecimal.ZERO, savedOrder.getSummaryPrice());
+            assertEquals(0, savedOrder.getOrderItems().size());
+            verify(beerRepository).findAllBySku(List.of());
         }
     }
 

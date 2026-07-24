@@ -34,4 +34,6 @@ public final class ErrorMessages {
     public final static String orderSetNotFound = "Cannot find orderSet with id: id=%d";
 
     public final static String typeOfSubscriptionNotFound = "Type of subscription: %s is absent";
+
+    public final static String orderSetWrongType = "Type of order set unsuitable for batching";
 }

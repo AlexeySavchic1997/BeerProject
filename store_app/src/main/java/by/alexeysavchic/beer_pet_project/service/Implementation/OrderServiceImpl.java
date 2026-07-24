@@ -2,7 +2,6 @@ package by.alexeysavchic.beer_pet_project.service.Implementation;
 
 import by.alexeysavchic.beer_pet_project.dto.request.CreateOrderRequest;
 import by.alexeysavchic.beer_pet_project.dto.request.OrderItemRequest;
-import by.alexeysavchic.beer_pet_project.dto.response.GetOrderResponse;
 import by.alexeysavchic.beer_pet_project.entity.Beer;
 import by.alexeysavchic.beer_pet_project.entity.Order;
 import by.alexeysavchic.beer_pet_project.entity.OrderItem;
@@ -16,7 +15,6 @@ import by.alexeysavchic.beer_pet_project.entity.enums.OrderType;
 import by.alexeysavchic.beer_pet_project.entity.enums.TypeOfSubscription;
 import by.alexeysavchic.beer_pet_project.entity.enums.WaveStatus;
 import by.alexeysavchic.beer_pet_project.exception.TypeOfSubscriptionIsAbsent;
-import by.alexeysavchic.beer_pet_project.exception.WarehouseUpdateServerException;
 import by.alexeysavchic.beer_pet_project.mapper.OrderMapper;
 import by.alexeysavchic.beer_pet_project.repository.BeerRepository;
 import by.alexeysavchic.beer_pet_project.repository.OrderRepository;
@@ -64,7 +62,7 @@ public class OrderServiceImpl implements OrderService {
     private static final Logger logger = LogManager.getLogger(OrderServiceImpl.class);
 
     @Override
-    public GetOrderResponse createOrder(CreateOrderRequest request) {
+    public void createOrder(CreateOrderRequest request) {
         LocalDateTime timeMark = LocalDateTime.now();
         User user = securityContextService.getCurrentUser();
         List<OrderItemRequest> cart = request.getCart();
@@ -101,29 +99,6 @@ public class OrderServiceImpl implements OrderService {
         order.setOrderLocation(user.getUserLocation());
         order.setOrderDate(timeMark);
         orderRepository.save(order);
-        try {
-            order.setStatus(OrderStatus.PROCESSING);
-            List<UnpassedOrderResponse> unpassedOrders = clientService.updateWarehouseInfoByOrder(request.getCart());
-            if (unpassedOrders.isEmpty()) {
-                order.setStatus(OrderStatus.COMPLETED);
-                emailService.confirmOrderEmail(order.getOrderItems(), order.getSummaryPrice(), user);
-                logger.info(String.format(OrderMessages.processingOrder, order.getId()));
-            } else {
-                order.setStatus(OrderStatus.INSUFFICIENT_INVENTORY);
-                Map<String, Integer> unpassedOrdersMap = new HashMap<>();
-                for (UnpassedOrderResponse unpassedOrder : unpassedOrders) {
-                    unpassedOrdersMap.put(beerMap.get(unpassedOrder.getSku()).getName(), unpassedOrder.getAmount());
-                }
-                logger.info(String.format(OrderMessages.insufficientInventory, order.getId()));
-                emailService.insufficientInventoryOrderEmail(unpassedOrdersMap, user);
-            }
-        } catch (WarehouseUpdateServerException e) {
-            order.setStatus(OrderStatus.CANCELLED);
-            logger.error(e.getMessage());
-        } finally {
-            orderRepository.save(order);
-        }
-        return orderMapper.orderToOrderResponse(order);
     }
 
     @Override
@@ -230,5 +205,6 @@ public class OrderServiceImpl implements OrderService {
         }
         orderRepository.saveAll(orders);
     }
+
 }
 
